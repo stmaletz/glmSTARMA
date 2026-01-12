@@ -83,12 +83,7 @@ $$
 
 and define $\boldsymbol{\psi}_t := \log(\boldsymbol{\mu}_t)$ elementwise. The linear predictor is given by
 
-$$
-\boldsymbol{\psi}_t
-= \beta_0 \mathbf{1}
-+ \sum_{i = 1}^4 \sum_{\ell = 0}^2 \beta_{i,\ell} \mathbf{W}^{(\ell)} \log(\mathbf{Y}_{t - i} + \mathbf{1})
-+ \sum_{k = 1}^{6} \gamma_k \mathbf{X}_{k, t},
-$$
+$$ \boldsymbol{\psi}_t = \beta_0 \mathbf{1} + \sum_{i = 1}^4 \sum_{\ell = 0}^2 \beta_{i,\ell} \mathbf{W}^{(\ell)} \log(\mathbf{Y}_{t - i} + \mathbf{1}) + \sum_{k = 1}^{6} \gamma_k \mathbf{X}_{k, t}, $$
 
 where $\mathbf{X}_{k,t}$, $k = 1, \ldots, 6$, are covariates describing population size, indicators for former German Democratic Republic regions, yearly seasonal effects, and vaccination effects for eastern and western Germany.  
 The matrices $\mathbf{W}^{(0)}$, $\mathbf{W}^{(1)}$, and $\mathbf{W}^{(2)}$ denote the identity matrix, a row-normalized adjacency matrix, and a row-normalized second-order adjacency matrix, respectively.
