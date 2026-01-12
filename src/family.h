@@ -7,6 +7,15 @@
 -----------------------------------------------------------------------------
 */
 
+/* 
+ Parts of the following algorithm are translated and adapted from
+ the R package 'RNGforGDP', licensed under the GNU General Public License.
+ The translated code is used in the QuasiPoisson family for random number generation,
+ See lines 307-358 for the relevant functions.
+ Original source: Function GenUniGpois in RNGforGDP package
+ Original authors: Hesen Li, Ruizhe Chen, Hai Nguyen, Yu-Che Chung, Ran Gao, Hakan Demirtas
+*/
+
 #ifndef FAMILY_H
 #define FAMILY_H
 
@@ -309,19 +318,6 @@ class QuasiPoisson : public Family
       }
       return total;
     };
-    int rquasi_negbin(const double &mu, const double &phi, const double &u) const {
-      // Only for phi >= 1
-      int sample;
-      if(phi > 1.0)
-      {
-        double size = mu / (phi - 1.0);  // r
-        double prob = size / (size + mu);
-        sample = R::qnbinom(u, size, prob, true, false);
-      } else {
-        sample = R::qpois(u, mu, true, false);
-      }
-      return sample;
-    };
     // Translated code from RNGforGDP package with suitable transformation of dispersion parameter
     int rgpoisson_chop_down(const double &mu, const double &phi, const double &u) const {
       double theta = mu / std::sqrt(phi);
@@ -359,6 +355,19 @@ class QuasiPoisson : public Family
         s += px;
       }
       return total;
+    };
+    int rquasi_negbin(const double &mu, const double &phi, const double &u) const {
+      // Only for phi >= 1
+      int sample;
+      if(phi > 1.0)
+      {
+        double size = mu / (phi - 1.0);  // r
+        double prob = size / (size + mu);
+        sample = R::qnbinom(u, size, prob, true, false);
+      } else {
+        sample = R::qpois(u, mu, true, false);
+      }
+      return sample;
     };
   protected:
     const std::string sampling_method;
