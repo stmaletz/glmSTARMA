@@ -39,23 +39,13 @@ The following datasets are included:
 
 This dataset contains weekly counts of reported rotavirus infections in the 411 German counties from January 2001 to December 2024, along with population data and additional covariates.
 
-The infection data were retrieved from the Robert Koch Institute (RKI) via the SurvStat@RKI 2.0 application  
-(https://survstat.rki.de). Population data at the county level were obtained from the Federal Statistical Office of Germany (Destatis)  
-(https://www.destatis.de). To disaggregate population data for Berlin into its districts, census data from 2022 were used  
-(https://ergebnisse.zensus2022.de). Since population figures are only available on an annual basis, they were linearly interpolated to obtain weekly values.
+The infection data were retrieved from the Robert Koch Institute (RKI) via the SurvStat@RKI 2.0 application (https://survstat.rki.de). Population data at the county level were obtained from the Federal Statistical Office of Germany (Destatis) (https://www.destatis.de). To disaggregate population data for Berlin into its districts, census data from 2022 were used (https://ergebnisse.zensus2022.de). Since population figures are only available on an annual basis, they were linearly interpolated to obtain weekly values.
 
-The directory `data-raw/rota/` additionally contains shapefiles for the German counties, which were copied from  
-https://github.com/ostojanovic/BSTIM. The original shapefiles are provided by the German Federal Agency for Cartography and Geodesy  
-(Bundesamt für Kartographie und Geodäsie; © GeoBasis-DE / BKG 2018) and are licensed under the  
-[Data licence Germany – attribution – version 2.0](https://www.govdata.de/dl-de/by-2-0).  
-The row-normalized adjacency matrices were constructed based on these shapefiles.
+The directory `data-raw/rota/` additionally contains shapefiles for the German counties, which were copied from https://github.com/ostojanovic/BSTIM. The original shapefiles are provided by the German Federal Agency for Cartography and Geodesy (Bundesamt für Kartographie und Geodäsie; © GeoBasis-DE / BKG 2018) and are licensed under the[Data licence Germany – attribution – version 2.0](https://www.govdata.de/dl-de/by-2-0). The row-normalized adjacency matrices were constructed based on these shapefiles.
 
-The population and census data (retrieved on 2025-12-08) are licensed under the  
-[Data licence Germany – attribution – version 2.0](https://www.govdata.de/dl-de/by-2-0).
+The population and census data (retrieved on 2025-12-08) are licensed under the [Data licence Germany – attribution – version 2.0](https://www.govdata.de/dl-de/by-2-0).
 
-The infection data are subject to the terms of use of SurvStat@RKI  
-(https://survstat.rki.de/Content/Instruction/DataUsage.aspx).  
-The data included in this package are aggregated and preprocessed for methodological research purposes.  
+The infection data are subject to the terms of use of SurvStat@RKI (https://survstat.rki.de/Content/Instruction/DataUsage.aspx). The data included in this package are aggregated and preprocessed for methodological research purposes.  
 
 Please cite the infection data as follows:
 - Robert Koch-Institut: SurvStat@RKI 2.0, https://survstat.rki.de, retrieved on 2025-02-03.
@@ -64,27 +54,22 @@ Please cite the infection data as follows:
 
 This dataset contains weekly counts of reported chickenpox infections in the 20 regions of Hungary from January 2005 to December 2015.
 
-The infection data were obtained from the UCI Machine Learning Repository  
-(https://archive.ics.uci.edu/dataset/580/hungarian+chickenpox+cases) and complemented with population data from the Hungarian Central Statistical Office  
-(https://www.ksh.hu/stadat_files/nep/en/nep0034.html). Since population data are only available on an annual basis, they were linearly interpolated to obtain weekly values.
+The infection data were obtained from the UCI Machine Learning Repository (https://archive.ics.uci.edu/dataset/580/hungarian+chickenpox+cases) and complemented with population data from the Hungarian Central Statistical Office (https://www.ksh.hu/stadat_files/nep/en/nep0034.html). Since population data are only available on an annual basis, they were linearly interpolated to obtain weekly values.
 
 The data preprocessing scripts are available in the `data-raw/chickenpox/` directory of this repository.
 
-The data are licensed under the Creative Commons Attribution 4.0 International  
-[(CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/legalcode).
+The data are licensed under the Creative Commons Attribution 4.0 International [(CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/legalcode).
 
 
 ### `SST`: Sea Surface Temperature Anomalies in the Pacific
 
-This dataset is a transformed subset of the `SST_df` dataset included in the (archived) R package `STRbook`, which accompanies the books listed below.  
-The package remains available on GitHub at https://github.com/andrewzm/STRbook.
+This dataset is a transformed subset of the `SST_df` dataset included in the (archived) R package `STRbook`, which accompanies the books listed below. The package remains available on GitHub at https://github.com/andrewzm/STRbook.
 
 The data included in this package have been subsetted and reformatted for use in spatio-temporal modeling examples. The original `STRbook` package is distributed under the GNU General Public License (GPL).
 
 For further details on the original dataset and its scientific background, see:
 - Wikle, C. K., Zammit-Mangion, A., and Cressie, N. (2019). *Spatio-Temporal Statistics with R*. Chapman & Hall/CRC, Boca Raton, FL.
 - Cressie, N., and Wikle, C. K. (2011). *Statistics for Spatio-Temporal Data*. John Wiley & Sons.
-
 
 
 ## Example
