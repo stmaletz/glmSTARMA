@@ -1,0 +1,31 @@
+Package: glmSTARMA
+Type: Package
+Title: (Double) Generalized Linear Models for Spatio-Temporal Data
+Version: 1.0.0
+Date: 2025-12-31
+Author: Steffen Maletz [aut, cre],
+  Konstantinos Fokianos [aut],
+  Roland Fried [aut],
+  Valerie Weismann [ctb]
+Maintainer: Steffen Maletz <maletz@statistik.tu-dortmund.de>
+Authors@R: c(person("Steffen", "Maletz", email = "maletz@statistik.tu-dortmund.de", role = c("aut", "cre")),
+             person("Konstantinos", "Fokianos", role = "aut"),
+             person("Roland", "Fried", role = "aut"),
+             person("Valerie", "Weismann", role = "ctb"))
+Description: Tools for fitting spatio-temporal models within a (double) generalized linear modelling
+    framework. The package includes functions for estimation, simulation and inference.
+URL: https://github.com/stmaletz/glmSTARMA
+BugReports: https://github.com/stmaletz/glmSTARMA/issues
+Imports: Rcpp (>= 1.0.10), copula, nloptr (>= 1.2.0)
+LinkingTo: Rcpp, RcppArmadillo, roptim, nloptr (>= 1.2.0)
+Suggests: Matrix, testthat, spdep
+Depends: R (>= 3.5.0)
+SystemRequirements: C++17
+License: GPL (>= 3) + file LICENSE
+ByteCompile: true
+NeedsCompilation: yes
+LazyData: true
+LazyDataCompression: xz
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

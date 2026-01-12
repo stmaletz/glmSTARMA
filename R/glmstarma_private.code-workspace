@@ -1,0 +1,66 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../glmSTARMA"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"vector": "cpp",
+			"__split_buffer": "cpp",
+			"deque": "cpp",
+			"list": "cpp",
+			"string": "cpp",
+			"new": "cpp",
+			"__hash_table": "cpp",
+			"array": "cpp",
+			"bitset": "cpp",
+			"initializer_list": "cpp",
+			"queue": "cpp",
+			"stack": "cpp",
+			"string_view": "cpp",
+			"unordered_map": "cpp",
+			"variant": "cpp",
+			"memory": "cpp",
+			"future": "cpp",
+			"istream": "cpp",
+			"locale": "cpp",
+			"tuple": "cpp",
+			"__bit_reference": "cpp",
+			"__locale": "cpp",
+			"__node_handle": "cpp",
+			"__verbose_abort": "cpp",
+			"cctype": "cpp",
+			"charconv": "cpp",
+			"clocale": "cpp",
+			"cmath": "cpp",
+			"complex": "cpp",
+			"cstdarg": "cpp",
+			"cstdint": "cpp",
+			"cstdio": "cpp",
+			"cstdlib": "cpp",
+			"cstring": "cpp",
+			"ctime": "cpp",
+			"cwchar": "cpp",
+			"cwctype": "cpp",
+			"execution": "cpp",
+			"forward_list": "cpp",
+			"ios": "cpp",
+			"iosfwd": "cpp",
+			"iostream": "cpp",
+			"limits": "cpp",
+			"mutex": "cpp",
+			"optional": "cpp",
+			"print": "cpp",
+			"ratio": "cpp",
+			"sstream": "cpp",
+			"stdexcept": "cpp",
+			"streambuf": "cpp",
+			"typeinfo": "cpp",
+			"algorithm": "cpp"
+		}
+	}
+}

@@ -1,0 +1,82 @@
+#' @title Sea Surface Temperature Anomalies in the Pacific
+#'
+#' @description Multivariate time series containing monthly sea surface temperature anomalies in the Pacific
+#'
+#' @usage
+#' data("sst")
+#'
+#' @format
+#' \describe{
+#'   \item{SST}{
+#'     A matrix with monthly sea surface temperature anomalies (rows = spatial locations, columns = time points).
+#'   }
+#'   \item{W_directed}{
+#'     A list of (sparse) matrices containing spatial weight matrices. See details
+#'     \enumerate{
+#'      \item Identity matrix.  
+#'      \item \code{north}: weight matrix for northward direction
+#'      \item \code{east}: weight matrix for eastward direction
+#'      \item \code{south}: weight matrix for southward direction
+#'      \item \code{west}: weight matrix for westward direction
+#'   }}
+#'  \item{locations}{
+#'    data.frame containing the latitude and longitude of each spatial location.}
+#' }
+#'
+#' @details
+#' This dataset contains monthly sea surface temperature anomalies (in degree Celsius) at 25 spatial locations in the Pacific Ocean over a time period of 33 years (396 months) from January 1970 to December 2002.
+#'
+#' The neighborhood matrices in the list \code{W_directed} for orders 2, 3, 4, and 5 correspond to neighbors with the location directly north, east, south, and west. 
+#' Coefficients estimated using these matrices then reflect directed dependencies.
+#' Not all neighbors always exist at boundary locations of the observed area.
+#' In these cases, the corresponding rows of the weight matrices contain only zeros.
+#' These matrices are stored as objects of class 'dgCMatrix' from the 'Matrix' R package.
+#'
+#' @source
+#' The data is a transformed subset of the \code{SST_df}-Dataset from the (archived) \code{STRbook} R package. It is still available on GitHub (\url{https://github.com/andrewzm/STRbook})
+#' @references
+#' - Wikle, C.K., Zammit-Mangion, A., and Cressie, N. (2019). *Spatio-Temporal Statistics with R*. Chapman & Hall/CRC, Boca Raton, FL.
+#' - Cressie, N, and Wikle, C.K. (2011). *Statistics for Spatio-Temporal Data*. John Wiley & Sons, Incorporated.
+#' @examples
+#' \dontrun{
+#' data("sst")
+#' # Requires 'Matrix' package
+#'
+#' times <- seq(from = as.Date("1970-01-01"), to = as.Date("2002-12-01"), by = "m")
+#' times <- format(times, "%b %Y")
+#' covariates <- list(trend = SpatialConstant(seq(times) / length(times)),
+#'                    longitude = TimeConstant(locations$lon / 360),
+#'                    season_cos = SpatialConstant(cos(2 * pi / 12 * seq(times))),
+#'                    season_sin = SpatialConstant(sin(2 * pi / 12 * seq(times))),
+#'                    abs_lat_inc = TimeConstant(pmin(abs(locations$lat), 6) / 90),
+#'                    abs_lat_dec = TimeConstant(pmax(abs(locations$lat) - 6, 0) / 90))
+#'
+#' fit <- glmstarma(SST, model = list(past_obs = 4, past_mean = 4), 
+#'                  wlist = W_directed, wlist_past_mean = W_directed,
+#'                  covariates = covariates, family = vnormal())
+#'
+#' fit2 <- dglmstarma(SST, mean_model = list(past_obs = 4, past_mean = 4), 
+#'                    dispersion_model = list(past_obs = 4),
+#'                    wlist = W_directed, mean_covariates = covariates, 
+#'                    dispersion_covariates = covariates, mean_family = vnormal())
+#' }
+#' @docType data
+#' @name SST
+#' @keywords datasets
+"SST"
+
+#' Internal auxiliary data for SST
+#'
+#' @name locations
+#' @seealso \code{\link{SST}}
+#' @docType data
+#' @keywords internal
+"locations"
+
+#' Internal auxiliary data for rota
+#'
+#' @name W_directed
+#' @seealso \code{\link{SST}}
+#' @docType data
+#' @keywords internal
+"W_directed"

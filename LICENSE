@@ -1,0 +1,33 @@
+1. SOFTWARE CODE
+The software code contained in this package is licensed under the 
+GNU General Public License version 3 (GPL-3) or any later version.
+
+2. DATASETS
+The datasets included in this package are derived from various sources 
+and are subject to the following license terms:
+
+-----------------------------------------------------------------------
+DATASET: rota
+- Infection data: The use of data from the SurvStat@RKI 2.0 application is permitted,
+  with proper attribution to the Robert Koch Institute (RKI):
+  "Source: Robert Koch Institute (RKI), SurvStat@RKI 2.0, https://survstat.rki.de, accessed on 2025-02-03."
+- Population/Census data: Federal Statistical Office of Germany (Destatis). 
+  Licensed under Data Licence Germany – Attribution – Version 2.0 
+  (DL-DE -> BY-2.0).
+  Source: https://www.govdata.de/dl-de/by-2-0
+
+DATASET: chickenpox
+- Source: UCI Machine Learning Repository / Hungarian Central Statistical Office.
+  Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+DATASET: SST
+- Source: Derived from the 'STRbook' R package (Wikle et al., 2019).
+  Used with attribution to the original authors and their work.
+-----------------------------------------------------------------------
+
+3. ATTRIBUTION & MODIFICATIONS
+In accordance with the licenses above:
+- Any modifications to the original data (preprocessing, filtering, 
+  aggregation) have been performed by the package author.
+- For detailed source URLs and retrieval dates, please refer to the 
+  R documentation for each dataset (e.g., help(rota), help(chickenpox), help(SST)).
