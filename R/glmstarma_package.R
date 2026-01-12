@@ -1,7 +1,7 @@
 #' @docType package
 #' @name glmSTARMA-package
 #' @details
-#' The implented models are based on spatio-temporal autoregressive moving average (STARMA) models. They incorporate spatial and temporal dependencies by spatial lagging, via spatial weight matrices, and temporal lagging via past observations and past values of the linear predictor.
+#' The implemented models are based on spatio-temporal autoregressive moving average (STARMA) models. They incorporate spatial and temporal dependencies by spatial lagging, via spatial weight matrices, and temporal lagging via past observations and past values of the linear predictor.
 #'
 #' The main functions for fitting such models are \code{\link{glmstarma}} and \code{\link{dglmstarma}}.
 #' The main difference between the two functions is that \code{glmstarma} fits a model for the (conditional) mean of the spatio-temporal process and \code{dglmstarma} fits two models, one for the (conditional) mean and another one for the (conditional) dispersion.
