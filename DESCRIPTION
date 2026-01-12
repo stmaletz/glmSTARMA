@@ -19,7 +19,7 @@ BugReports: https://github.com/stmaletz/glmSTARMA/issues
 Imports: Rcpp (>= 1.0.10), copula, nloptr (>= 1.2.0)
 LinkingTo: Rcpp, RcppArmadillo, roptim, nloptr (>= 1.2.0)
 Suggests: Matrix, testthat, spdep
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.5.0)
 SystemRequirements: C++17
 License: GPL (>= 3) + file LICENSE
 ByteCompile: true

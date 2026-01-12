@@ -1,0 +1,10 @@
+^\\.git$
+^\\.Rproj\\.user$
+^\\.Rhistory$
+^.*\.code-workspace$
+^\.vscode$
+^README\\.Rmd$
+^README.md$
+^docs$
+^data-raw$
+^\\.github$
