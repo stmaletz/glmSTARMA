@@ -31,12 +31,16 @@
 #' If multiple parameters are tested simultaneously, or a linear combination of them, a different adjustment is necessary.
 #' @seealso [glmstarma], [logLik], [AIC], [BIC], [QIC], [logLik.glmstarma], [AIC.glmstarma], [BIC.glmstarma]
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
 #'                  covariates = list(population = population_hungary))
 #' summary(fit)
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @exportS3Method base::summary
 summary.glmstarma <- function(object, ...) {
   cl <- object$call

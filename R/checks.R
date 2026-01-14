@@ -100,9 +100,6 @@ covariate_check <- function(covariates, nobs, dim, family) {
 
 
 
-
-
-
 # Function to check structure of the model orders and time lags
 # Input:
 # - orders: numeric vector/matrix or logical vector/matrix specifying model orders

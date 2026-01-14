@@ -3,7 +3,7 @@
 #' @description Multivariate count time series consisting of weekly chickenpox infections in the districts of Hungary.
 #'
 #' @usage
-#' data("chickenpox")
+#' load_data("chickenpox")
 #'
 #' @format
 #' \describe{
@@ -35,7 +35,10 @@
 #'   * \url{https://www.ksh.hu/stadat_files/nep/en/nep0034.html}
 #'
 #' @examples
-#' data(chickenpox)
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' covariates <- list(population = population_hungary, 
 #'                  season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),
@@ -54,20 +57,4 @@
 #' @keywords datasets
 "chickenpox"
 
-
-#' Internal auxiliary data for chickenpox
-#'
-#' @name population_hungary
-#' @seealso \code{\link{chickenpox}}
-#' @docType data
-#' @keywords internal
-"population_hungary"
-
-#' Internal auxiliary data for chickenpox
-#'
-#' @name W_hungary
-#' @seealso \code{\link{chickenpox}}
-#' @docType data
-#' @keywords internal
-"W_hungary"
 

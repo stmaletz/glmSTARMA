@@ -85,11 +85,15 @@ glmstarma_sim.control <- function(return_burn_in = FALSE, init_link = "parameter
 #'
 #' @seealso \code{\link{glmstarma}}, \code{\link[nloptr]{nloptr}}, \code{\link{optim}}
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"), 
 #'           control = list(parameter_init = "random", init_link = "mean"))
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @export
 glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", dispersion_est_type = "deviance", use_sparsity = TRUE, sparsity_threshold = 2 / 3, 
                                 method = "nloptr", constrained = TRUE, constraint_tol = 1e-8, constrain_method = "sum_of_absolutes", gradtol = sqrt(.Machine$double.eps), changetol = sqrt(.Machine$double.eps),

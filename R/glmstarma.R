@@ -85,13 +85,16 @@
 #' - Pfeifer, P. E., & Deutsch, S. J. (1980). A Three-Stage Iterative Procedure for Space-Time Modeling Phillip. Technometrics, 22(1), 35–47. \doi{10.2307/1268381}
 #' @seealso \code{\link{stfamily}}, \code{\link{glmstarma.control}}, \code{\link{dglmstarma}}, \code{\link{TimeConstant}}, \code{\link{SpatialConstant}}
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(intercept = "homogeneous", past_obs = rep(1, 7))
 #' glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"), 
 #'           covariates = list(population = population_hungary), 
 #'           control = list(parameter_init = "zero"))
-#'
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @export
 glmstarma <- function(ts, model = list(), wlist, family = NULL, covariates = NULL, wlist_past_mean = NULL, wlist_covariates = NULL, control = list()){
     stopifnot("family must be specified" = !is.null(family), 

@@ -56,5 +56,5 @@ population_hungary <- t(population_hungary) / 100000
 colnames(population_hungary) <- colnames(chickenpox)
 
 ## Save data in /data directory
-save(chickenpox, W_hungary, population_hungary, file = "../../data/chickenpox.rda", compress = "xz")
+save(chickenpox, W_hungary, population_hungary, file = "../chickenpox.rda", compress = "xz")
 

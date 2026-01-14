@@ -28,7 +28,10 @@
 #' @return A numeric value for the (possibly adjusted) AIC, BIC, QIC or (quasi-)log-likelihood.
 #' @seealso \code{\link{AIC}}, \code{\link{BIC}}, \code{\link{logLik}}, \code{\link{QIC}} 
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -48,6 +51,7 @@
 #' BIC(fit2)
 #' logLik(fit2)
 #' QIC(fit2)
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 NULL
 
 

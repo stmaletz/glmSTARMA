@@ -16,7 +16,10 @@
 #' @return A matrix of fitted values.
 #' @seealso \code{\link{fitted}}, \code{\link{glmstarma}}, \code{\link{dglmstarma}}
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -31,6 +34,7 @@
 #'                    mean_covariates = list(population = population_hungary))
 #' fitted.values(fit2)
 #' fitted.values(fit2, return_value = "dispersion")
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @exportS3Method stats::fitted
 fitted.glmstarma <- function(object, drop_init = TRUE){
     if(drop_init && object$max_time_lag > 0){

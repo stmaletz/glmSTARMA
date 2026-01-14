@@ -3,7 +3,7 @@
 #' @description Multivariate time series containing monthly sea surface temperature anomalies in the Pacific
 #'
 #' @usage
-#' data("sst")
+#' load_data("sst")
 #'
 #' @format
 #' \describe{
@@ -39,7 +39,10 @@
 #' - Cressie, N, and Wikle, C.K. (2011). *Statistics for Spatio-Temporal Data*. John Wiley & Sons, Incorporated.
 #' @examples
 #' \dontrun{
-#' data("sst")
+#' dat <- load_data("sst")
+#' SST <- dat$SST
+#' W_directed <- dat$W_directed
+#' locations <- dat$locations
 #' # Requires 'Matrix' package
 #'
 #' times <- seq(from = as.Date("1970-01-01"), to = as.Date("2002-12-01"), by = "m")
@@ -59,24 +62,9 @@
 #'                    dispersion_model = list(past_obs = 4),
 #'                    wlist = W_directed, mean_covariates = covariates, 
 #'                    dispersion_covariates = covariates, mean_family = vnormal())
+#' delete_glmSTARMA_data("sst")  # Clean up cached data
 #' }
 #' @docType data
 #' @name SST
 #' @keywords datasets
 "SST"
-
-#' Internal auxiliary data for SST
-#'
-#' @name locations
-#' @seealso \code{\link{SST}}
-#' @docType data
-#' @keywords internal
-"locations"
-
-#' Internal auxiliary data for rota
-#'
-#' @name W_directed
-#' @seealso \code{\link{SST}}
-#' @docType data
-#' @keywords internal
-"W_directed"

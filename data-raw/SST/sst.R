@@ -82,5 +82,5 @@ W_directed <- list(
 # W_directed <- list(diag(1230), north = W_n, east = W_e, south = W_s, west = W_w)
 
 SST <- ts
-save(SST, locations, W_directed, file = "../../data/sst.rda", compress = "xz")
+save(SST, locations, W_directed, file = "../sst.rda", compress = "xz")
 

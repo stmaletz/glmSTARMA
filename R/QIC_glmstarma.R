@@ -45,7 +45,10 @@
 #' \emph{Biometrics}, 57(1), 120–125. \doi{10.1111/j.0006-341X.2001.00120.x}
 #'
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -59,6 +62,7 @@
 #'                    wlist = W_hungary, 
 #'                    mean_covariates = list(population = population_hungary))
 #' QIC(fit2)
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @export
 QIC <- function(object, ...) UseMethod("QIC")
 

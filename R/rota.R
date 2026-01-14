@@ -3,7 +3,7 @@
 #' @description Multivariate count time series with rota virus infections in the counties of Germany.
 #'
 #' @usage
-#' data("rota")
+#' load_data("rota")
 #'
 #' @format
 #' \describe{
@@ -51,7 +51,11 @@
 #' retrieved on 2025-12-08.
 #' @examples
 #' \dontrun{
-#' data("rota")
+#' dat <- load_data("rota")
+#' rota <- dat$rota
+#' gdr_feature <- dat$gdr_feature
+#' population_germany <- dat$population_germany
+#' W_germany <- dat$W_germany
 #'
 #' covariates <- list(population = population_germany,
 #'                   gdr = TimeConstant(gdr_feature),
@@ -69,32 +73,10 @@
 #'                    dispersion_covariates = covariates,
 #'                    mean_family = vquasipoisson("log"), 
 #'                     dispersion_link = "log", W_germany)
+#' delete_glmSTARMA_data("rota")  # Clean up cached data
 #' }  
 #' @docType data
 #' @name rota
 #' @keywords datasets
 "rota"
 
-
-#' Internal auxiliary data for rota
-#'
-#' @name population_germany
-#' @seealso \code{\link{rota}}
-#' @docType data
-#' @keywords internal
-"population_germany"
-
-#' Internal auxiliary data for rota
-#'
-#' @name gdr_feature
-#' @seealso \code{\link{rota}}
-#' @docType data
-#' @keywords internal
-"gdr_feature"
-#' Internal auxiliary data for rota
-#'
-#' @name W_germany
-#' @seealso \code{\link{rota}}
-#' @docType data
-#' @keywords internal
-"W_germany"

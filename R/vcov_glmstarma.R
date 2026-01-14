@@ -21,7 +21,10 @@
 #' In case of \code{dglmstarma} objects, separated variance-covariance matrices are computed for the mean and dispersion models because of the alternating estimation procedure.
 #' @seealso \code{\link{vcov}}, \code{\link{glmstarma}}, \code{\link{dglmstarma}}
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #'
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -37,6 +40,7 @@
 #' vcov(fit2)
 #' vcov(fit2, return_value = "dispersion")
 #' vcov(fit2, return_value = "both")
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @rdname sandwich_variance
 #' @aliases sandwich_variance
 #' @exportS3Method stats::vcov

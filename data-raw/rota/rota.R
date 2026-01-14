@@ -219,4 +219,4 @@ population_germany
 W_germany <- list(diag(411), W1, W2)
 
 
-save(rota, gdr_feature, population_germany, W_germany, file = "../../data/rota.rda", compress = "xz")
+save(rota, gdr_feature, population_germany, W_germany, file = "../rota.rda", compress = "xz")
