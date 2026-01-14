@@ -54,7 +54,7 @@ test_that("vcov function works", {
     x <- vcov(fit2, "mean")
     expect_true(is.matrix(x))
     expect_true(is.numeric(x))
-    expect_equal(dim(x), c(19, 19))
+    expect_equal(dim(x), c(16, 16))
     expect_true(all(eigen(x)$values > 0))
     y <- vcov(fit2, "dispersion")
     expect_true(is.matrix(y))

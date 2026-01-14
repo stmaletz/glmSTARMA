@@ -1,8 +1,8 @@
 
 test_that("Data can be loaded and unloaded", {
-    dat <- load_data("SST")
+    dat <- load_data("sst")
     expect_true(is.list(dat))
-    expect_named(dat, c("SST", "W_directed", "locations"))
+    expect_named(dat, c("sst", "W_directed", "locations"))
     
     dat2 <- load_data("rota")
     expect_true(is.list(dat2))
@@ -13,11 +13,11 @@ test_that("Data can be loaded and unloaded", {
     expect_named(dat3, c("chickenpox", "population_hungary", "W_hungary"))
 
     # invalid name
-    expect_error(load_data("invalid_dataset"), "name must be in 'rota', 'chickenpox', or 'SST'")
+    expect_error(load_data("invalid_dataset"), "name must be in 'rota', 'chickenpox', or 'sst'")
 
     # clean up
-    expect_true(delete_glmSTARMA_data(c("SST", "rota", "chickenpox")))
+    expect_true(delete_glmSTARMA_data(c("sst", "rota", "chickenpox")))
     # false if data already deleted
-    expect_message(x <- delete_glmSTARMA_data("SST"), "There is no dataset to delete.")
+    expect_message(x <- delete_glmSTARMA_data("sst"), "There is no dataset to delete.")
     expect_false(x)
 })

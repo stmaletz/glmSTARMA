@@ -3,7 +3,7 @@
 #' @description Multivariate time series containing monthly sea surface temperature anomalies in the Pacific
 #'
 #' @usage
-#' load_data("SST", refresh = TRUE)
+#' load_data("sst", refresh = TRUE)
 #'
 #' @format
 #' \describe{
@@ -41,7 +41,7 @@
 #' - Cressie, N, and Wikle, C.K. (2011). *Statistics for Spatio-Temporal Data*. John Wiley & Sons, Incorporated.
 #' @examples
 #' \dontrun{
-#' dat <- load_data("SST")
+#' dat <- load_data("sst")
 #' SST <- dat$SST
 #' W_directed <- dat$W_directed
 #' locations <- dat$locations
@@ -67,6 +67,6 @@
 #' delete_glmSTARMA_data("sst")  # Clean up cached data
 #' }
 #' @docType data
-#' @name SST
+#' @name sst
 #' @keywords datasets
 NULL
