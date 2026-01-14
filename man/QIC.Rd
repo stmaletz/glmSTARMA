@@ -48,7 +48,10 @@ This calculation of the (quasi-)log-likelihood introduces bias when comparing mo
 If \code{adjust = TRUE}, the (quasi-)log-likelihood is rescaled to \code{n} observations by multiplying with \eqn{n / n_{\mathrm{eff}}}, before calculating the QIC.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -62,6 +65,7 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
                    wlist = W_hungary, 
                    mean_covariates = list(population = population_hungary))
 QIC(fit2)
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \references{
 Pan, W. (2001). Akaike's Information Criterion in Generalized Estimating Equations.

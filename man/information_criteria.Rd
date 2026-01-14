@@ -50,7 +50,10 @@ This calculation of the (quasi-)log-likelihood introduces bias when comparing mo
 If \code{adjust = TRUE}, the (quasi-)log-likelihood is rescaled to \code{n} observations by multiplying with \eqn{n / n_{\mathrm{eff}}}, before calculating the AIC, BIC, QIC or (quasi)-log-likelihood.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -70,6 +73,7 @@ AIC(fit2)
 BIC(fit2)
 logLik(fit2)
 QIC(fit2)
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \seealso{
 \code{\link{AIC}}, \code{\link{BIC}}, \code{\link{logLik}}, \code{\link{QIC}}

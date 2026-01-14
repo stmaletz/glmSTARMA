@@ -37,12 +37,16 @@ If the model requires non-negative parameters, the p-values are adjusted accordi
 If multiple parameters are tested simultaneously, or a linear combination of them, a different adjustment is necessary.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
                  covariates = list(population = population_hungary))
 summary(fit)
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \seealso{
 \link{glmstarma}, \link{logLik}, \link{AIC}, \link{BIC}, \link{QIC}, \link{logLik.glmstarma}, \link{AIC.glmstarma}, \link{BIC.glmstarma}

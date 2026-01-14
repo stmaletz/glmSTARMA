@@ -26,7 +26,7 @@ data.frame containing the latitude and longitude of each spatial location.}
 The data is a transformed subset of the \code{SST_df}-Dataset from the (archived) \code{STRbook} R package. It is still available on GitHub (\url{https://github.com/andrewzm/STRbook})
 }
 \usage{
-data("sst")
+load_data("SST", refresh = TRUE)
 }
 \description{
 Multivariate time series containing monthly sea surface temperature anomalies in the Pacific
@@ -39,10 +39,15 @@ Coefficients estimated using these matrices then reflect directed dependencies.
 Not all neighbors always exist at boundary locations of the observed area.
 In these cases, the corresponding rows of the weight matrices contain only zeros.
 These matrices are stored as objects of class 'dgCMatrix' from the 'Matrix' R package.
+
+The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
 }
 \examples{
 \dontrun{
-data("sst")
+dat <- load_data("SST")
+SST <- dat$SST
+W_directed <- dat$W_directed
+locations <- dat$locations
 # Requires 'Matrix' package
 
 times <- seq(from = as.Date("1970-01-01"), to = as.Date("2002-12-01"), by = "m")
@@ -62,6 +67,7 @@ fit2 <- dglmstarma(SST, mean_model = list(past_obs = 4, past_mean = 4),
                    dispersion_model = list(past_obs = 4),
                    wlist = W_directed, mean_covariates = covariates, 
                    dispersion_covariates = covariates, mean_family = vnormal())
+delete_glmSTARMA_data("sst")  # Clean up cached data
 }
 }
 \references{

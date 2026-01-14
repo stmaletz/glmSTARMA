@@ -114,13 +114,16 @@ The unknown parameters \eqn{\delta}, \eqn{\alpha_{i, \ell}}, \eqn{\beta_{j, \ell
 Parameter estimation is by default performed under stability constraints to ensure stability of the model. These constraints can be modified or deactivated via the \code{control} argument. See \code{\link{glmstarma.control}} for details.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(intercept = "homogeneous", past_obs = rep(1, 7))
 glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"), 
           covariates = list(population = population_hungary), 
           control = list(parameter_init = "zero"))
-
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \references{
 \itemize{

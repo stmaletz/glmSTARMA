@@ -40,7 +40,7 @@ Data licence Germany – attribution – version 2.0,
 retrieved on 2025-12-08.
 }
 \usage{
-data("rota")
+load_data("rota")
 }
 \description{
 Multivariate count time series with rota virus infections in the counties of Germany.
@@ -54,10 +54,16 @@ The data on population size contains the data for the divisions valid at the tim
 For Berlin, annual population estimates are only available for Berlin as a whole. We use data from the 2022 census to divide the population proportionally among the 12 districts.
 
 The row-normalized adjacency matrix of first order indicates which districts share a common border. The weight matrix of order 2 indicates which districts can be reached in two steps (i.e., via a common neighbor).
+
+The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
 }
 \examples{
 \dontrun{
-data("rota")
+dat <- load_data("rota")
+rota <- dat$rota
+gdr_feature <- dat$gdr_feature
+population_germany <- dat$population_germany
+W_germany <- dat$W_germany
 
 covariates <- list(population = population_germany,
                   gdr = TimeConstant(gdr_feature),
@@ -75,6 +81,7 @@ fit2 <- dglmstarma(rota, mean_model, dispersion_model, mean_covariates = covaria
                    dispersion_covariates = covariates,
                    mean_family = vquasipoisson("log"), 
                     dispersion_link = "log", W_germany)
+delete_glmSTARMA_data("rota")  # Clean up cached data
 }  
 }
 \keyword{datasets}

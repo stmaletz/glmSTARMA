@@ -44,7 +44,10 @@ If \code{ignore_dispersion} is set to \code{FALSE}, pearson and deviance residua
 }
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -58,4 +61,5 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
                    wlist = W_hungary, 
                    mean_covariates = list(population = population_hungary))
 residuals(fit2)
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }

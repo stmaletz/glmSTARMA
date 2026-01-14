@@ -21,7 +21,10 @@ A numeric vector, or a list, of model coefficients.
 Extracts model coefficients from objects of class \code{glmstarma} and \code{dglmstarma}.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -37,4 +40,5 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
                    mean_covariates = list(population = population_hungary))
 coef(fit2)
 coef(fit2, asList = TRUE)
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }

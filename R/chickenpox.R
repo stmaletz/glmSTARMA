@@ -26,6 +26,7 @@
 #'
 #' The population data is only availabyle on a yearly basis and has been linearly interpolated by us to obtain weekly estimates.
 #'
+#' The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
 #'
 #' @source
 #' The data originate from the UCI Machine Learning Repository and the 
@@ -55,6 +56,6 @@
 #' @docType data
 #' @name chickenpox
 #' @keywords datasets
-"chickenpox"
+NULL
 
 

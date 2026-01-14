@@ -29,7 +29,7 @@ Creative Commons Attribution 4.0 International (CC BY 4.0) license:
 }
 }
 \usage{
-data("chickenpox")
+load_data("chickenpox")
 }
 \description{
 Multivariate count time series consisting of weekly chickenpox infections in the districts of Hungary.
@@ -40,9 +40,14 @@ This dataset contains chickenpox counts in the 20 districts (NUTS 3) of Hungary 
 The row-normalized adjacency matrix indicates which districts share a common border.
 
 The population data is only availabyle on a yearly basis and has been linearly interpolated by us to obtain weekly estimates.
+
+The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
 }
 \examples{
-data(chickenpox)
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 covariates <- list(population = population_hungary, 
                  season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),

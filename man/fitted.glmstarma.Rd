@@ -23,7 +23,10 @@ A matrix of fitted values.
 Compute fitted values for \code{glmstarma} and \code{dglmstarma} models.
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 
 model_autoregressive <- list(past_obs = rep(1, 7))
 fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
@@ -38,6 +41,7 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
                    mean_covariates = list(population = population_hungary))
 fitted.values(fit2)
 fitted.values(fit2, return_value = "dispersion")
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \seealso{
 \code{\link{fitted}}, \code{\link{glmstarma}}, \code{\link{dglmstarma}}

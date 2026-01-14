@@ -34,6 +34,9 @@
 #'
 #' The row-normalized adjacency matrix of first order indicates which districts share a common border. The weight matrix of order 2 indicates which districts can be reached in two steps (i.e., via a common neighbor).
 #'
+#' The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
+#'
+#'
 #' @source
 #' The data originate from the Robert Koch Institute (RKI) and the Federal Statistical Office of Germany (Destatis).
 #'
@@ -78,5 +81,5 @@
 #' @docType data
 #' @name rota
 #' @keywords datasets
-"rota"
+NULL
 
