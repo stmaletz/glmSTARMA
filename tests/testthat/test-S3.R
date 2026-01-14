@@ -9,7 +9,8 @@ test_that("coef function works", {
     fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
                     covariates = list(population = population_hungary))
     x <- coef(fit)
-    expect_vector(x, ptype = numeric(), size = 16)
+    expect_true(is.numeric(x))
+    expect_equal(length(x), 16)
     x <- coef(fit, asList = TRUE)
     expect_true(is.list(x))
     expect_named(x, c("intercept", "past_obs", "past_mean", "covariates"))
@@ -21,7 +22,8 @@ test_that("coef function works", {
                    wlist = W_hungary, 
                    mean_covariates = list(population = population_hungary))
     x <- coef(fit2)
-    expect_vector(x, ptype = numeric(), size = 19)
+    expect_true(is.numeric(x))
+    expect_equal(length(x), 19)
     x <- coef(fit2, asList = TRUE)
     expect_true(is.list(x))
     expect_named(x, c("mean", "dispersion"))

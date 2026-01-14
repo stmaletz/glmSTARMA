@@ -95,7 +95,11 @@ The model can be fitted as follows:
 
 ```r
 library(glmSTARMA)
-load_data("rota")
+dat <- load_data("rota")
+rota <- dat$rota
+gdr_feature <- dat$gdr_feature
+population_germany <- dat$population_germany
+W_germany <- dat$W_germany
 
 covariates <- list(
   population   = population_germany,
