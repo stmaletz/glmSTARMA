@@ -7,7 +7,7 @@
 load_data(name = NULL, refresh = FALSE)
 }
 \arguments{
-\item{name}{Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"SST"}.}
+\item{name}{Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}.}
 
 \item{refresh}{Logical; re-download the dataset if it already exists locally.}
 }
@@ -30,5 +30,5 @@ delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
 }
 }
 \seealso{
-\code{\link{delete_glmSTARMA_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{SST}}
+\code{\link{delete_glmSTARMA_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}}
 }

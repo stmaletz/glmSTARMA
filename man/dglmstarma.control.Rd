@@ -176,12 +176,16 @@ Start values for the optimization can be provided as a named list via \code{para
 }
 }
 \examples{
-data("chickenpox")
+dat <- load_data("chickenpox")
+chickenpox <- dat$chickenpox
+population_hungary <- dat$population_hungary
+W_hungary <- dat$W_hungary
 mean_model <- list(past_obs = 1)
 dispersion_model <- list(past_obs = 1)
 dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquasipoisson("log"), 
           dispersion_link = "log", W_hungary,
           control = list(parameter_init = "random", print_progress = FALSE))
+delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 \seealso{
 \code{\link{dglmstarma}}, \code{\link[nloptr]{nloptr}}, \code{\link{optim}}

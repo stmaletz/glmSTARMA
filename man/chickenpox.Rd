@@ -28,9 +28,6 @@ Creative Commons Attribution 4.0 International (CC BY 4.0) license:
 \item \url{https://www.ksh.hu/stadat_files/nep/en/nep0034.html}
 }
 }
-\usage{
-load_data("chickenpox")
-}
 \description{
 Multivariate count time series consisting of weekly chickenpox infections in the districts of Hungary.
 }
@@ -41,7 +38,8 @@ The row-normalized adjacency matrix indicates which districts share a common bor
 
 The population data is only availabyle on a yearly basis and has been linearly interpolated by us to obtain weekly estimates.
 
-The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
+The dataset is not included directly in the package.
+Use \code{load_data("chickenpox")} to download it.
 }
 \examples{
 dat <- load_data("chickenpox")

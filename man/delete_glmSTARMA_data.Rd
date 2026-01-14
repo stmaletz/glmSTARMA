@@ -7,7 +7,7 @@
 delete_glmSTARMA_data(name = NULL)
 }
 \arguments{
-\item{name}{Name(s) of the dataset(s) to delete. One or more of \code{"rota"}, \code{"chickenpox"}, or \code{"SST"}. If \code{NULL} (default), no action is taken.}
+\item{name}{Name(s) of the dataset(s) to delete. One or more of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}. If \code{NULL} (default), no action is taken.}
 }
 \value{
 Invisibly returns \code{TRUE} if all specified datasets were deleted, \code{FALSE} otherwise.
@@ -29,5 +29,5 @@ delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
 }
 }
 \seealso{
-\code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{SST}}
+\code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}}
 }

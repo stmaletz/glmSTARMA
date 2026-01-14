@@ -39,9 +39,6 @@ Data licence Germany – attribution – version 2.0,
 \url{https://ergebnisse.zensus2022.de/datenbank/online/statistic/1000A/table/1000A-0000},
 retrieved on 2025-12-08.
 }
-\usage{
-load_data("rota")
-}
 \description{
 Multivariate count time series with rota virus infections in the counties of Germany.
 }
@@ -55,7 +52,8 @@ For Berlin, annual population estimates are only available for Berlin as a whole
 
 The row-normalized adjacency matrix of first order indicates which districts share a common border. The weight matrix of order 2 indicates which districts can be reached in two steps (i.e., via a common neighbor).
 
-The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
+The dataset is not included directly in the package.
+Use \code{load_data("rota")} to download it.
 }
 \examples{
 \dontrun{

@@ -179,13 +179,17 @@ summary.glmstarma <- function(object, ...) {
 #' The alternative hypothesis can be specified via the \code{alternative} argument. This can be useful to test for overdispersion or underdispersion in the data.
 #' @seealso [dglmstarma], [summary.glmstarma]
 #' @examples
-#' data("chickenpox")
+#' dat <- load_data("chickenpox")
+#' chickenpox <- dat$chickenpox
+#' population_hungary <- dat$population_hungary
+#' W_hungary <- dat$W_hungary
 #' mean_model <- list(past_obs = rep(1, 7))
 #' dispersion_model <- list(past_obs = 1)
 #' fit <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquasipoisson("log"), 
 #'                    dispersion_link = "log", wlist = W_hungary, 
 #'                    mean_covariates = list(population = population_hungary))
 #' summary(fit)
+#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 #' @exportS3Method base::summary
 summary.dglmstarma <- function(object, phi = 1, alternative = c("two.sided", "less", "greater"), ...) {
   cl <- object$call

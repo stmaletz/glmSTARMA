@@ -10,7 +10,7 @@
 #'
 #' @description Download and return datasets from the glmSTARMA GitHub repository 
 #'
-#' @param name Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"SST"}.
+#' @param name Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}.
 #' @param refresh Logical; re-download the dataset if it already exists locally.
 #'
 #' @return A named list of objects
@@ -18,7 +18,7 @@
 #' This function downloads example datasets from the glmSTARMA GitHub repository and caches them in a user-specific data directory.
 #' If the dataset has already been downloaded, it is loaded from the local cache unless \code{refresh = TRUE} is specified.
 #'
-#' @seealso \code{\link{delete_glmSTARMA_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{SST}} 
+#' @seealso \code{\link{delete_glmSTARMA_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}} 
 #' @examples
 #' \dontrun{
 #' # Load the 'chickenpox' dataset
@@ -31,7 +31,7 @@ load_data <- function(name = NULL, refresh = FALSE) {
   stopifnot("Only one dataset can be loaded at a time" = length(name) == 1,
             "Parameter 'refresh' must be of type logical" = is.logical(refresh),
             "Parameter 'refresh' must be of length 1" = length(refresh) == 1,
-            "name must be in 'rota', 'chickenpox', or 'SST')" = name %in% c("rota", "chickenpox", "SST"))
+            "name must be in 'rota', 'chickenpox', or 'sst')" = name %in% c("rota", "chickenpox", "sst"))
 
   # GitHub raw URL
   base_url <- "https://raw.githubusercontent.com/stmaletz/glmSTARMA/main/data-raw"
@@ -78,13 +78,13 @@ load_data <- function(name = NULL, refresh = FALSE) {
 
 #' @title Delete cached example datasets
 #' @description Delete one or more cached example datasets downloaded via \code{load_data()}.
-#' @param name Name(s) of the dataset(s) to delete. One or more of \code{"rota"}, \code{"chickenpox"}, or \code{"SST"}. If \code{NULL} (default), no action is taken.
+#' @param name Name(s) of the dataset(s) to delete. One or more of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}. If \code{NULL} (default), no action is taken.
 #' @return Invisibly returns \code{TRUE} if all specified datasets were deleted, \code{FALSE} otherwise.
 #' @details
 #' This function deletes datasets that were previously downloaded and cached using \code{load_data()}
 #' from the user-specific data directory.
 #' If no datasets are found in the cache, a message is printed and no action is taken.
-#' @seealso \code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{SST}} 
+#' @seealso \code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}} 
 #' @examples
 #' \dontrun{
 #' # Load the 'chickenpox' dataset
@@ -107,7 +107,7 @@ delete_glmSTARMA_data <- function(name = NULL) {
     }
 
     if(!is.null(name)){
-        stopifnot("You can only delete the datasets downloaded with functions of the glmSTARMA package" = all(name %in% c("rota", "chickenpox", "SST")))
+        stopifnot("You can only delete the datasets downloaded with functions of the glmSTARMA package" = all(name %in% c("rota", "chickenpox", "sst")))
         rtrn_val <- TRUE
         for(nam in name){
             target <- file.path(data_dir, paste0(nam, ".rda"))

@@ -2,9 +2,6 @@
 #'
 #' @description Multivariate time series containing monthly sea surface temperature anomalies in the Pacific
 #'
-#' @usage
-#' load_data("sst", refresh = TRUE)
-#'
 #' @format
 #' \describe{
 #'   \item{SST}{
@@ -32,8 +29,8 @@
 #' In these cases, the corresponding rows of the weight matrices contain only zeros.
 #' These matrices are stored as objects of class 'dgCMatrix' from the 'Matrix' R package.
 #'
-#' The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
-#'
+#' The dataset is not included directly in the package. 
+#' Use \code{load_data("sst")} to download it.
 #' @source
 #' The data is a transformed subset of the \code{SST_df}-Dataset from the (archived) \code{STRbook} R package. It is still available on GitHub (\url{https://github.com/andrewzm/STRbook})
 #' @references

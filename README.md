@@ -32,7 +32,10 @@ The core model-fitting functions are `glmstarma()` and `dglmstarma()`:
 The mean model generalizes spatio-temporal Poisson autoregressive models and supports a range of distributions from the exponential dispersion family. The dispersion model can be interpreted as a spatio-temporal extension of GARCH or log-GARCH–type models.
 For simulation studies, synthetic data can be generated using `glmstarma.sim()` and `dglmstarma.sim()`.
 
-This package also includes preprocessed datasets. The raw data and the scripts used for preprocessing can be found in the subdirectories of the `data-raw` directory of this repository.
+## Datasets
+The `glmSTARMA` packages provides a function to load example datasets from this repository: `load_data()`. This function downloads and caches the datasets locally for future use. To remove cached datasets, use `delete_glmSTARMA_data()`.
+
+The datasets are stored in the `data-raw` directory of this repository, which is not included in the package itself. It contains preprocessed data as well as the raw data and scripts used for preprocessing. For License information see the descriptions below as well as the `LICENSE` file.
 The following datasets are included:
 
 ### `rota`: Rotavirus Infections in Germany
@@ -92,7 +95,7 @@ The model can be fitted as follows:
 
 ```r
 library(glmSTARMA)
-data("rota")
+load_data("rota")
 
 covariates <- list(
   population   = population_germany,

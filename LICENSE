@@ -1,5 +1,5 @@
 1. SOFTWARE CODE
-The software code contained in this package is licensed under the
+The software code of the glmSTARMA package  is licensed under the
 GNU General Public License version 3 (GPL-3) or any later version.
 
 2. DATASETS
@@ -34,7 +34,7 @@ DATASET: SST
 
 - Source: Derived from the 'SST_df' dataset included in the R package
   'STRbook' (Wikle et al., 2019).
-- License: GNU General Public License (GPL), compatible with GPL-3.
+- License: GNU General Public License (GPL>2.1)
 - The dataset has been subsetted and reformatted for use in this package.
 
 -----------------------------------------------------------------------

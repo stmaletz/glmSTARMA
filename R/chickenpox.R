@@ -2,9 +2,6 @@
 #'
 #' @description Multivariate count time series consisting of weekly chickenpox infections in the districts of Hungary.
 #'
-#' @usage
-#' load_data("chickenpox")
-#'
 #' @format
 #' \describe{
 #'   \item{chickenpox}{
@@ -26,8 +23,8 @@
 #'
 #' The population data is only availabyle on a yearly basis and has been linearly interpolated by us to obtain weekly estimates.
 #'
-#' The dataset is not included directly in the package. See the examples how to load it using the \code{load_data} function.
-#'
+#' The dataset is not included directly in the package.
+#' Use \code{load_data("chickenpox")} to download it.
 #' @source
 #' The data originate from the UCI Machine Learning Repository and the 
 #' Hungarian Central Statistical Office and are licensed under the 
