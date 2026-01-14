@@ -117,7 +117,8 @@ delete_glmSTARMA_data <- function(name = NULL) {
                 rtrn_val <- FALSE
             }
             unlink(target)
-            message("Deleted: ", nam, )
+            msg <- paste0("Deleted: ", nam)
+            message(msg)
         }
         return(invisible(rtrn_val))
     }
