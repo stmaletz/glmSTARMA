@@ -48,7 +48,7 @@ The directory `data-raw/rota/` additionally contains shapefiles for the German c
 
 The population and census data (retrieved on 2025-12-08) are licensed under the [Data licence Germany – attribution – version 2.0](https://www.govdata.de/dl-de/by-2-0).
 
-The infection data are subject to the terms of use of SurvStat@RKI (https://survstat.rki.de/Content/Instruction/DataUsage.aspx). The data included in this package are aggregated and preprocessed for methodological research purposes.  
+The infection data are subject to the terms of use of SurvStat@RKI (https://survstat.rki.de/Content/Instruction/DataUsage.aspx). The data included in this repository are aggregated and preprocessed for methodological research purposes.  
 
 Please cite the infection data as follows:
 - Robert Koch-Institut: SurvStat@RKI 2.0, https://survstat.rki.de, retrieved on 2025-02-03.
@@ -68,7 +68,7 @@ The data are licensed under the Creative Commons Attribution 4.0 International [
 
 This dataset is a transformed subset of the `SST_df` dataset included in the (archived) R package `STRbook`, which accompanies the books listed below. The package remains available on GitHub at https://github.com/andrewzm/STRbook.
 
-The data included in this package have been subsetted and reformatted for use in spatio-temporal modeling examples. The original `STRbook` package is distributed under the GNU General Public License (GPL).
+The data included in this repository have been subsetted and reformatted for use in spatio-temporal modeling examples. The original `STRbook` package is distributed under the GNU General Public License (GPL).
 
 For further details on the original dataset and its scientific background, see:
 - Wikle, C. K., Zammit-Mangion, A., and Cressie, N. (2019). *Spatio-Temporal Statistics with R*. Chapman & Hall/CRC, Boca Raton, FL.

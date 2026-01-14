@@ -12,8 +12,7 @@ Authors@R: c(person("Steffen", "Maletz", email = "maletz@statistik.tu-dortmund.d
              person("Konstantinos", "Fokianos", role = "aut"),
              person("Roland", "Fried", role = "aut"),
              person("Valerie", "Weismann", role = "ctb"))
-Description: Tools for fitting spatio-temporal models within a (double) generalized linear modelling
-    framework. The package includes functions for estimation, simulation and inference.
+Description: Tools for fitting spatio-temporal models within a (double) generalized linear modelling framework. The package includes functions for estimation, simulation and inference.
 URL: https://github.com/stmaletz/glmSTARMA
 BugReports: https://github.com/stmaletz/glmSTARMA/issues
 Imports: Rcpp (>= 1.0.10), copula, nloptr (>= 1.2.0)
