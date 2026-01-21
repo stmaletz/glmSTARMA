@@ -85,7 +85,8 @@ glmstarma_sim.control <- function(return_burn_in = FALSE, init_link = "parameter
 #'
 #' @seealso \code{\link{glmstarma}}, \code{\link[nloptr]{nloptr}}, \code{\link{optim}}
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -93,7 +94,7 @@ glmstarma_sim.control <- function(return_burn_in = FALSE, init_link = "parameter
 #' model_autoregressive <- list(past_obs = rep(1, 7))
 #' glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"), 
 #'           control = list(parameter_init = "random", init_link = "mean"))
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @export
 glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", dispersion_est_type = "deviance", use_sparsity = TRUE, sparsity_threshold = 2 / 3, 
                                 method = "nloptr", constrained = TRUE, constraint_tol = 1e-8, constrain_method = "sum_of_absolutes", gradtol = sqrt(.Machine$double.eps), changetol = sqrt(.Machine$double.eps),
@@ -203,7 +204,8 @@ glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", 
 #' * \code{"random"}: All parameters initialized to random values in the stationary region of the model.
 #' @seealso \code{\link{dglmstarma}}, \code{\link[nloptr]{nloptr}}, \code{\link{optim}}
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -212,7 +214,7 @@ glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", 
 #' dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquasipoisson("log"), 
 #'           dispersion_link = "log", W_hungary,
 #'           control = list(parameter_init = "random", print_progress = FALSE))
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @export
 dglmstarma.control <- function(parameter_init = "zero", parameter_init_dispersion = "zero",
                                 use_sparsity = TRUE, sparsity_threshold = 2 / 3,

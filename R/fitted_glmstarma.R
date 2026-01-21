@@ -16,7 +16,8 @@
 #' @return A matrix of fitted values.
 #' @seealso \code{\link{fitted}}, \code{\link{glmstarma}}, \code{\link{dglmstarma}}
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -34,7 +35,7 @@
 #'                    mean_covariates = list(population = population_hungary))
 #' fitted.values(fit2)
 #' fitted.values(fit2, return_value = "dispersion")
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @exportS3Method stats::fitted
 fitted.glmstarma <- function(object, drop_init = TRUE){
     if(drop_init && object$max_time_lag > 0){
@@ -47,11 +48,11 @@ fitted.glmstarma <- function(object, drop_init = TRUE){
 #' @exportS3Method stats::fitted
 fitted.dglmstarma <- function(object, return_value = c("mean", "dispersion"), drop_init = TRUE){
     return_value <- match.arg(return_value)
-    # Zugriff auf das passende fitted-Values-Objekt
+    # Access the appropriate fitted values object
     fitted_vals <- object[[return_value]]$fitted.values
     max_lag <- object[[return_value]]$max_time_lag
 
-    # Optional: Initialwerte entfernen
+    # Optional: remove initial time points
     if (drop_init && max_lag > 0) {
         return(fitted_vals[, -seq(object$max_time_lag), drop = FALSE])
     }

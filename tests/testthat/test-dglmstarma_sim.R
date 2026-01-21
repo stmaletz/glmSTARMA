@@ -1,5 +1,6 @@
 # dglmstarma_sim:
 
+testthat::skip_on_cran()
 test_that("ntime is handled correctly", {
     set.seed(42)
     n_obs <- 200L
@@ -81,6 +82,7 @@ test_that("ntime is handled correctly", {
                    dispersion_covariates = covariates_dispersion))
 })
 
+testthat::skip_on_cran()
 test_that("n_start is handled correctly", {
     set.seed(42)
     n_obs <- 200L
@@ -159,6 +161,7 @@ test_that("n_start is handled correctly", {
                                n_start = 5L))
 })
 
+testthat::skip_on_cran()
 test_that("control gets checked", {
     set.seed(42)
     n_obs <- 200L
@@ -191,8 +194,7 @@ test_that("control gets checked", {
                     control = "not_a_list"))
 })
 
-
-
+testthat::skip_on_cran()
 test_that("wlist arguments are validated", {
     set.seed(42)
     n_obs <- 200L
@@ -294,7 +296,7 @@ test_that("wlist arguments are validated", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("model is handled correctly", {
     set.seed(42)
     n_obs <- 200L
@@ -445,7 +447,7 @@ test_that("model is handled correctly", {
 })
 
 
-
+testthat::skip_on_cran()
 test_that("covariates dimensions are validated", {
     set.seed(42)
     n_obs <- 200L
@@ -576,7 +578,7 @@ test_that("covariates dimensions are validated", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("family argument is validated", {
     set.seed(42)
     n_obs <- 200L
@@ -626,7 +628,7 @@ test_that("family argument is validated", {
 })
 
 
-
+testthat::skip_on_cran()
 test_that("parameter matches model orders", {
     set.seed(42)
     n_obs <- 200L
@@ -790,7 +792,7 @@ test_that("parameter matches model orders", {
 })
 
 
-
+testthat::skip_on_cran()
 test_that("errors and warnings are thrown if invalid parameters are provided", {
     set.seed(42)
     n_obs <- 200L
@@ -896,24 +898,7 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+testthat::skip_on_cran()
 test_that("generated values match distribution", {
     set.seed(42)
     n_obs <- 200L

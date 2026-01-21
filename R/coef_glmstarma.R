@@ -13,7 +13,8 @@
 #' @param asList Logical; if \code{TRUE}, returns coefficients as a list, or otherwise as a numeric vector. Default is \code{FALSE}.
 #' @return A numeric vector, or a list, of model coefficients.
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -32,7 +33,7 @@
 #'                    mean_covariates = list(population = population_hungary))
 #' coef(fit2)
 #' coef(fit2, asList = TRUE)
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @exportS3Method stats::coef
 coef.glmstarma <- function(object, asList = FALSE){
     if(asList){

@@ -1,5 +1,6 @@
 # Test covariate functions TimeConstant, SpatialConstant
 
+testthat::skip_on_cran()
 test_that("TimeConstant covariate works correctly", {
   expect_error(TimeConstant(1))
   expect_error(TimeConstant(c("a", "b")))
@@ -12,6 +13,7 @@ test_that("TimeConstant covariate works correctly", {
   expect_s3_class(result, "time_constant")  
 })
 
+testthat::skip_on_cran()
 test_that("SpatialConstant covariate works correctly", {
   expect_error(SpatialConstant(1))
   expect_error(SpatialConstant(c("a", "b")))

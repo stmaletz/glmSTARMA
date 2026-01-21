@@ -28,7 +28,8 @@
 #' @return A numeric value for the (possibly adjusted) AIC, BIC, QIC or (quasi-)log-likelihood.
 #' @seealso \code{\link{AIC}}, \code{\link{BIC}}, \code{\link{logLik}}, \code{\link{QIC}} 
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -51,7 +52,7 @@
 #' BIC(fit2)
 #' logLik(fit2)
 #' QIC(fit2)
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 NULL
 
 

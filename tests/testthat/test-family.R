@@ -1,6 +1,7 @@
 # Test family functions
 
 # test that vbinomial and vquasibinomial size is valid
+testthat::skip_on_cran()
 test_that("size parameter is valid (vbinomial)", {
     expect_error(vbinomial(size = -1))
     expect_error(vbinomial(size = 0))
@@ -13,6 +14,7 @@ test_that("size parameter is valid (vbinomial)", {
     expect_s3_class(vbinomial(size = 5), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("size parameter is valid (vbinomial)", {
     expect_error(vbinomial(size = -1))
     expect_error(vbinomial(size = 0))
@@ -26,6 +28,7 @@ test_that("size parameter is valid (vbinomial)", {
 })
 
 # test that link is valid for the family
+testthat::skip_on_cran()
 test_that("link parameter is valid (vpoisson)", {
   expect_error(vpoisson(link = "invalid_link"))
   expect_error(vpoisson(link = c("log", "identity")))
@@ -36,6 +39,7 @@ test_that("link parameter is valid (vpoisson)", {
   expect_s3_class(vpoisson(link = "softplus"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vquasipoisson)", {
   expect_error(vquasipoisson(link = "invalid_link"))
   expect_error(vquasipoisson(link = c("log", "identity")))
@@ -46,6 +50,7 @@ test_that("link parameter is valid (vquasipoisson)", {
   expect_s3_class(vquasipoisson(link = "softplus"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vbinomial)", {
   expect_error(vbinomial(link = "invalid_link"))
   expect_error(vbinomial(link = c("softclipping", "identity")))
@@ -56,6 +61,7 @@ test_that("link parameter is valid (vbinomial)", {
   expect_s3_class(vbinomial(link = "probit"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vquasibinomial)", {
   expect_error(vquasibinomial(link = "invalid_link"))
   expect_error(vquasibinomial(link = c("softclipping", "identity")))
@@ -66,6 +72,7 @@ test_that("link parameter is valid (vquasibinomial)", {
   expect_s3_class(vquasibinomial(link = "probit"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vgamma)", {
   expect_error(vgamma(link = "invalid_link"))
   expect_error(vgamma(link = c("inverse", "log")))
@@ -75,6 +82,7 @@ test_that("link parameter is valid (vgamma)", {
   expect_s3_class(vgamma(link = "identity"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vinverse.gaussian)", {
   expect_error(vinverse.gaussian(link = "invalid_link"))
   expect_error(vinverse.gaussian(link = c("1/mu^2", "inverse")))
@@ -85,6 +93,7 @@ test_that("link parameter is valid (vinverse.gaussian)", {
   expect_s3_class(vinverse.gaussian(link = "log"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("link parameter is valid (vnormal)", {
   expect_error(vnormal(link = "invalid_link"))
   expect_error(vnormal(link = c("identity", "log")))
@@ -96,6 +105,7 @@ test_that("link parameter is valid (vnormal)", {
 
 
 # test that dispersion is NULL or a (vector or matrix) of positive number
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vquasipoisson)", {
   expect_error(vquasipoisson(dispersion = -1))
   expect_error(vquasipoisson(dispersion = 0))
@@ -110,6 +120,7 @@ test_that("dispersion parameter is valid (vquasipoisson)", {
   expect_s3_class(vquasipoisson(), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vnegative.binomial)", {
   expect_error(vnegative.binomial(dispersion = -1))
   expect_error(vnegative.binomial(dispersion = 0))
@@ -125,6 +136,7 @@ test_that("dispersion parameter is valid (vnegative.binomial)", {
 })
 
 # warning if dispersion > size
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vquasibinomial)", {
   expect_error(vquasibinomial(dispersion = -1))
   expect_error(vquasibinomial(dispersion = 0))
@@ -151,6 +163,7 @@ test_that("dispersion parameter is valid (vquasibinomial)", {
   expect_error(vquasibinomial(dispersion = matrix(c(1,0.5,0.5,1), nrow=2), size = c(3,4,5)))  
 })
 
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vgamma)", {
   expect_error(vgamma(dispersion = -1))
   expect_error(vgamma(dispersion = 0))
@@ -165,7 +178,7 @@ test_that("dispersion parameter is valid (vgamma)", {
   expect_s3_class(vgamma(), "stfamily")
 })
 
-
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vinverse.gaussian)", {
   expect_error(vinverse.gaussian(dispersion = -1))
   expect_error(vinverse.gaussian(dispersion = 0))
@@ -180,6 +193,7 @@ test_that("dispersion parameter is valid (vinverse.gaussian)", {
   expect_s3_class(vinverse.gaussian(), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vnormal)", {
   expect_error(vnormal(dispersion = -1))
   expect_error(vnormal(dispersion = 0))
@@ -195,6 +209,7 @@ test_that("dispersion parameter is valid (vnormal)", {
 })
 
 # test that const is valid for the family
+testthat::skip_on_cran()
 test_that("const parameter is valid (quasi)-poisson", {
   expect_error(vpoisson(const = -1, link = "log"))
   expect_error(vquasipoisson(const = -1, link = "log"))
@@ -237,6 +252,7 @@ test_that("const parameter is valid (quasi)-poisson", {
   expect_s3_class(vquasipoisson(const = 0, link = "sqrt"), "stfamily")
 })
 
+testthat::skip_on_cran()
 test_that("const parameter is valid (quasi)-binomial", {
   expect_error(vbinomial(const = -1, link = "softclipping"))
   expect_error(vbinomial(const = -1, link = "softclipping"))
@@ -269,6 +285,7 @@ test_that("const parameter is valid (quasi)-binomial", {
 })
 
 # test that copula object can be created
+testthat::skip_on_cran()
 test_that("copula specification is valid", {
   expect_error(vpoisson(copula = "invalid_copula"))
   expect_error(vquasipoisson(copula = "invalid_copula"))
@@ -377,6 +394,7 @@ test_that("copula specification is valid", {
 
 
 # test that all sampling methods are valid
+testthat::skip_on_cran()
 test_that("sampling method is valid (vpoisson)", {
   expect_error(vpoisson(sampling_method = "invalid_method"))
   # valid case

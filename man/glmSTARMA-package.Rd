@@ -6,7 +6,7 @@
 \alias{glmSTARMA-package}
 \title{glmSTARMA: (Double) Generalized Linear Models for Spatio-Temporal Data}
 \description{
-Tools for fitting spatio-temporal models within a (double) generalized linear modelling framework. The package includes functions for estimation, simulation and inference.
+Fit spatio-temporal models within a (double) generalized linear modelling framework. The package includes functions for estimation, simulation and inference.
 }
 \details{
 The implemented models are based on spatio-temporal autoregressive moving average (STARMA) models. They incorporate spatial and temporal dependencies by spatial lagging, via spatial weight matrices, and temporal lagging via past observations and past values of the linear predictor.
@@ -43,12 +43,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Steffen Maletz \email{maletz@statistik.tu-dortmund.de}
+\strong{Maintainer}: Steffen Maletz \email{maletz@statistik.tu-dortmund.de} (\href{https://orcid.org/0009-0004-4851-0947}{ORCID})
 
 Authors:
 \itemize{
-  \item Konstantinos Fokianos
-  \item Roland Fried
+  \item Konstantinos Fokianos \email{fokianos@ucy.ac.cy} (\href{https://orcid.org/0000-0002-0051-711X}{ORCID})
+  \item Roland Fried \email{fried@statistik.tu-dortmund.de} (\href{https://orcid.org/0000-0002-9830-9713}{ORCID})
 }
 
 Other contributors:

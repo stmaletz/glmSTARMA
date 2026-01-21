@@ -1,6 +1,6 @@
-
+testthat::skip_on_cran()
 test_that("coef function works", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -29,11 +29,11 @@ test_that("coef function works", {
     expect_named(x, c("mean", "dispersion"))
     expect_named(x$mean, c("intercept", "past_obs", "past_mean", "covariates"))
     expect_named(x$dispersion, c("intercept", "past_obs", "past_mean", "covariates"))
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
-})  
-
+})
+ 
+testthat::skip_on_cran()
 test_that("vcov function works", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -69,7 +69,6 @@ test_that("vcov function works", {
     expect_named(z, c("mean", "dispersion"))
     expect_equal(z$mean, x)
     expect_equal(z$dispersion, y)
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
 ## rest will be added later

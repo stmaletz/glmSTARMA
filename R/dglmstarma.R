@@ -93,7 +93,8 @@
 #' - Smyth, G.K. (1989), Generalized Linear Models with Varying Dispersion. Journal of the Royal Statistical Society: Series B (Methodological), 51: 47-60. \doi{10.1111/j.2517-6161.1989.tb01747.x}
 #' @seealso \code{\link{stfamily}}, \code{\link{glmstarma.control}}, \code{\link{dglmstarma}}, \code{\link{TimeConstant}}, \code{\link{SpatialConstant}}
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -102,7 +103,7 @@
 #' dglmstarma(chickenpox, model_autoregressive, dispersion_model = list(past_obs = 1),
 #'            mean_covariates = list(population = population_hungary),
 #'            wlist = W_hungary, mean_family = vquasipoisson("log"))
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @export
 dglmstarma <- function(ts, mean_model = list(), dispersion_model = list(), mean_family = NULL, dispersion_link = c("log", "identity", "inverse"),
                         wlist = NULL, mean_covariates = list(), dispersion_covariates = list(), pseudo_observations = c("deviance", "pearson"),

@@ -21,12 +21,7 @@ from the user-specific data directory.
 If no datasets are found in the cache, a message is printed and no action is taken.
 }
 \examples{
-\dontrun{
-# Load the 'chickenpox' dataset
-chickenpox_data <- load_data("chickenpox")
-str(chickenpox_data)
-delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
-}
+delete_glmSTARMA_data("chickenpox")  # Only gives a message if dataset is not cached
 }
 \seealso{
 \code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}}

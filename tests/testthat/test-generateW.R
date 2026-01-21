@@ -1,4 +1,5 @@
 # dimension of matrices is correct
+testthat::skip_on_cran()
 test_that("dimension of W matrices is correct", {
   methods <- c("rectangle", "line", "circle", "full", "independent")
   dim <- 30
@@ -14,6 +15,7 @@ test_that("dimension of W matrices is correct", {
 
 
 # length of all list is correct
+testthat::skip_on_cran()
 test_that("length of Wlist is correct", {
   methods <- c("rectangle", "line", "circle")
   dim <- 50
@@ -30,6 +32,7 @@ test_that("length of Wlist is correct", {
 
 
 # test functions: rectangle, line, circle -> row sums = 1
+testthat::skip_on_cran()
 test_that("matrices are row-normalized", {
   methods <- c("rectangle", "line", "circle")
   dim <- 100
@@ -45,6 +48,7 @@ test_that("matrices are row-normalized", {
 })
 
 # test entries of W matrices
+testthat::skip_on_cran()
 test_that("entries of W matrices are correct", {
   # independent
   dim <- 10
@@ -63,6 +67,7 @@ test_that("entries of W matrices are correct", {
   }
 })
 
+testthat::skip_on_cran()
 test_that("maxOrder is valid",{
   dim <- 20
   expect_warning(generateW(method = "rectangle", dim = dim, maxOrder = -2, width = 4))
@@ -73,6 +78,7 @@ test_that("maxOrder is valid",{
   expect_warning(generateW(method = "circle", dim = dim, maxOrder = 11))
 })
 
+testthat::skip_on_cran()
 test_that("width is valid for rectangle method",{
   dim <- 30
   maxOrder <- 4
@@ -80,6 +86,8 @@ test_that("width is valid for rectangle method",{
   expect_error(generateW(method = "rectangle", dim = dim, maxOrder = maxOrder, width = -3))
   expect_error(generateW(method = "rectangle", dim = dim, maxOrder = maxOrder, width = 7))
 })
+
+testthat::skip_on_cran()
 test_that("method argument is valid",{
   dim <- 25
   maxOrder <- 3

@@ -33,7 +33,8 @@
 #'   * \url{https://www.ksh.hu/stadat_files/nep/en/nep0034.html}
 #'
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -50,6 +51,7 @@
 #' dispersion_model <- list(past_obs = 1)
 #' dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquasipoisson("log"), 
 #'            dispersion_link = "log", wlist = W_hungary, mean_covariates = covariates)
+#' }
 #' @docType data
 #' @name chickenpox
 #' @keywords datasets

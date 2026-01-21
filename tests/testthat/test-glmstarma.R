@@ -1,9 +1,8 @@
 # glmstarma:
 
 testthat::skip_on_cran()
-
 test_that("ts is validated", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -80,12 +79,11 @@ test_that("ts is validated", {
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vnormal("identity"))
     expect_s3_class(result, "glmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("model is handled correctly", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -170,12 +168,11 @@ test_that("model is handled correctly", {
     result <- glmstarma(chickenpox, model_orders, wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"))
     expect_s3_class(result, "glmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("covariates dimensions are validated", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -236,13 +233,11 @@ test_that("covariates dimensions are validated", {
     result <- glmstarma(chickenpox, model_orders, wlist = W_hungary, 
                         covariates = covariates2, family = vpoisson("log"))
     expect_s3_class(result, "glmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
-
+testthat::skip_on_cran()
 test_that("wlist arguments are validated", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -289,5 +284,4 @@ test_that("wlist arguments are validated", {
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_mixed, 
                         covariates = covariates, family = vpoisson("log"))
     expect_s3_class(result, "glmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })

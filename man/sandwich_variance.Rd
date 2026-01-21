@@ -31,7 +31,8 @@ The sandwich variance estimation is defined as \eqn{V = G^{-1} H G^{-1}}, where 
 In case of \code{dglmstarma} objects, separated variance-covariance matrices are computed for the mean and dispersion models because of the alternating estimation procedure.
 }
 \examples{
-dat <- load_data("chickenpox")
+\donttest{
+dat <- load_data("chickenpox", directory = tempdir())
 chickenpox <- dat$chickenpox
 population_hungary <- dat$population_hungary
 W_hungary <- dat$W_hungary
@@ -50,7 +51,7 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
 vcov(fit2)
 vcov(fit2, return_value = "dispersion")
 vcov(fit2, return_value = "both")
-delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+}
 }
 \seealso{
 \code{\link{vcov}}, \code{\link{glmstarma}}, \code{\link{dglmstarma}}

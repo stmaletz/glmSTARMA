@@ -50,8 +50,9 @@
 #' \url{https://ergebnisse.zensus2022.de/datenbank/online/statistic/1000A/table/1000A-0000}, 
 #' retrieved on 2025-12-08.
 #' @examples
-#' \dontrun{
-#' dat <- load_data("rota")
+#' \donttest{
+#' # Note: Complete examples take around 2,5 minutes to run #
+#' dat <- load_data("rota", directory = tempdir())
 #' rota <- dat$rota
 #' gdr_feature <- dat$gdr_feature
 #' population_germany <- dat$population_germany
@@ -73,7 +74,6 @@
 #'                    dispersion_covariates = covariates,
 #'                    mean_family = vquasipoisson("log"), 
 #'                     dispersion_link = "log", W_germany)
-#' delete_glmSTARMA_data("rota")  # Clean up cached data
 #' }  
 #' @docType data
 #' @name rota

@@ -41,31 +41,33 @@ The dataset is not included directly in the package.
 Use \code{load_data("sst")} to download it.
 }
 \examples{
-\dontrun{
-dat <- load_data("sst")
-SST <- dat$SST
-W_directed <- dat$W_directed
-locations <- dat$locations
-# Requires 'Matrix' package
+\donttest{
+# Note: Complete examples take around 4 minutes to run #
+# Requires the 'Matrix' package
+if(requireNamespace("Matrix")){
+ dat <- load_data("sst", directory = tempdir())
+ SST <- dat$SST
+ W_directed <- dat$W_directed
+ locations <- dat$locations
 
-times <- seq(from = as.Date("1970-01-01"), to = as.Date("2002-12-01"), by = "m")
-times <- format(times, "\%b \%Y")
-covariates <- list(trend = SpatialConstant(seq(times) / length(times)),
-                   longitude = TimeConstant(locations$lon / 360),
-                   season_cos = SpatialConstant(cos(2 * pi / 12 * seq(times))),
-                   season_sin = SpatialConstant(sin(2 * pi / 12 * seq(times))),
-                   abs_lat_inc = TimeConstant(pmin(abs(locations$lat), 6) / 90),
-                   abs_lat_dec = TimeConstant(pmax(abs(locations$lat) - 6, 0) / 90))
+ times <- seq(from = as.Date("1970-01-01"), to = as.Date("2002-12-01"), by = "m")
+ times <- format(times, "\%b \%Y")
+ covariates <- list(trend = SpatialConstant(seq(times) / length(times)),
+                    longitude = TimeConstant(locations$lon / 360),
+                    season_cos = SpatialConstant(cos(2 * pi / 12 * seq(times))),
+                    season_sin = SpatialConstant(sin(2 * pi / 12 * seq(times))),
+                    abs_lat_inc = TimeConstant(pmin(abs(locations$lat), 6) / 90),
+                    abs_lat_dec = TimeConstant(pmax(abs(locations$lat) - 6, 0) / 90))
 
-fit <- glmstarma(SST, model = list(past_obs = 4, past_mean = 4), 
-                 wlist = W_directed, wlist_past_mean = W_directed,
-                 covariates = covariates, family = vnormal())
+ fit <- glmstarma(SST, model = list(past_obs = 4, past_mean = 4), 
+                  wlist = W_directed, wlist_past_mean = W_directed,
+                  covariates = covariates, family = vnormal())
 
-fit2 <- dglmstarma(SST, mean_model = list(past_obs = 4, past_mean = 4), 
+ fit2 <- dglmstarma(SST, mean_model = list(past_obs = 4, past_mean = 4), 
                    dispersion_model = list(past_obs = 4),
                    wlist = W_directed, mean_covariates = covariates, 
                    dispersion_covariates = covariates, mean_family = vnormal())
-delete_glmSTARMA_data("sst")  # Clean up cached data
+}
 }
 }
 \references{

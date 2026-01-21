@@ -45,7 +45,8 @@ If the dispersion model is constant, i.e. it is only an intercept model, a test 
 The alternative hypothesis can be specified via the \code{alternative} argument. This can be useful to test for overdispersion or underdispersion in the data.
 }
 \examples{
-dat <- load_data("chickenpox")
+\donttest{
+dat <- load_data("chickenpox", directory = tempdir())
 chickenpox <- dat$chickenpox
 population_hungary <- dat$population_hungary
 W_hungary <- dat$W_hungary
@@ -55,7 +56,7 @@ fit <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquasi
                    dispersion_link = "log", wlist = W_hungary, 
                    mean_covariates = list(population = population_hungary))
 summary(fit)
-delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+}
 }
 \seealso{
 \link{dglmstarma}, \link{summary.glmstarma}

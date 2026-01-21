@@ -139,7 +139,8 @@ Within each step, a quasi-maximum likelihood approach is used, where for the mea
 In case of a negative binomial family, the pseudo-observations are always calculated based on Pearson residuals using the Poisson variance function. The dispersion model is defined on these pseudo-observations, which have expectation \eqn{1 + \phi_{i, t} \mu_{i,t}}.
 }
 \examples{
-dat <- load_data("chickenpox")
+\donttest{
+dat <- load_data("chickenpox", directory = tempdir())
 chickenpox <- dat$chickenpox
 population_hungary <- dat$population_hungary
 W_hungary <- dat$W_hungary
@@ -148,7 +149,7 @@ model_autoregressive <- list(past_obs = rep(1, 7))
 dglmstarma(chickenpox, model_autoregressive, dispersion_model = list(past_obs = 1),
            mean_covariates = list(population = population_hungary),
            wlist = W_hungary, mean_family = vquasipoisson("log"))
-delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+}
 }
 \references{
 \itemize{

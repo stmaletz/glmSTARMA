@@ -56,8 +56,9 @@ The dataset is not included directly in the package.
 Use \code{load_data("rota")} to download it.
 }
 \examples{
-\dontrun{
-dat <- load_data("rota")
+\donttest{
+# Note: Complete examples take around 2,5 minutes to run #
+dat <- load_data("rota", directory = tempdir())
 rota <- dat$rota
 gdr_feature <- dat$gdr_feature
 population_germany <- dat$population_germany
@@ -79,7 +80,6 @@ fit2 <- dglmstarma(rota, mean_model, dispersion_model, mean_covariates = covaria
                    dispersion_covariates = covariates,
                    mean_family = vquasipoisson("log"), 
                     dispersion_link = "log", W_germany)
-delete_glmSTARMA_data("rota")  # Clean up cached data
 }  
 }
 \keyword{datasets}

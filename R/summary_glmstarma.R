@@ -31,7 +31,8 @@
 #' If multiple parameters are tested simultaneously, or a linear combination of them, a different adjustment is necessary.
 #' @seealso [glmstarma], [logLik], [AIC], [BIC], [QIC], [logLik.glmstarma], [AIC.glmstarma], [BIC.glmstarma]
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -40,7 +41,7 @@
 #' fit <- glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
 #'                  covariates = list(population = population_hungary))
 #' summary(fit)
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @exportS3Method base::summary
 summary.glmstarma <- function(object, ...) {
   cl <- object$call
@@ -179,7 +180,8 @@ summary.glmstarma <- function(object, ...) {
 #' The alternative hypothesis can be specified via the \code{alternative} argument. This can be useful to test for overdispersion or underdispersion in the data.
 #' @seealso [dglmstarma], [summary.glmstarma]
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -189,7 +191,7 @@ summary.glmstarma <- function(object, ...) {
 #'                    dispersion_link = "log", wlist = W_hungary, 
 #'                    mean_covariates = list(population = population_hungary))
 #' summary(fit)
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @exportS3Method base::summary
 summary.dglmstarma <- function(object, phi = 1, alternative = c("two.sided", "less", "greater"), ...) {
   cl <- object$call

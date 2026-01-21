@@ -1,8 +1,7 @@
 # test fitting of dglmstarma models
 testthat::skip_on_cran()
-
 test_that("ts is validated", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -99,12 +98,11 @@ test_that("ts is validated", {
                         mean_covariates = covariates, dispersion_covariates = covariates,
                         wlist = W_hungary, mean_family = vnormal("identity"))
     expect_s3_class(result, "dglmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("model is handled correctly", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -208,12 +206,11 @@ test_that("model is handled correctly", {
                         mean_covariates = covariates, dispersion_covariates = covariates,
                         wlist = W_hungary, mean_family = vquasipoisson("log"))
     expect_s3_class(result, "dglmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("covariates dimensions are validated (mean model)", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -274,12 +271,11 @@ test_that("covariates dimensions are validated (mean model)", {
     result <- dglmstarma(chickenpox, model_orders, dispersion_model = model_orders, wlist = W_hungary, 
                         mean_covariates = covariates2, mean_family = vquasipoisson("log"))
     expect_s3_class(result, "dglmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("covariates dimensions are validated (dispersion model)", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -341,12 +337,11 @@ test_that("covariates dimensions are validated (dispersion model)", {
                          wlist = W_hungary, dispersion_covariates = covariates2, 
                          mean_family = vquasipoisson("log"))
     expect_s3_class(result, "dglmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
-
+testthat::skip_on_cran()
 test_that("wlist arguments are validated", {
-    dat <- load_data("chickenpox")
+    dat <- load_data("chickenpox", directory = tempdir())
     chickenpox <- dat$chickenpox
     population_hungary <- dat$population_hungary
     W_hungary <- dat$W_hungary
@@ -422,7 +417,6 @@ test_that("wlist arguments are validated", {
                             wlist = W_mixed, mean_covariates = covariates,
                             dispersion_covariates = covariates, mean_family = vquasipoisson("log"))
     expect_s3_class(result, "dglmstarma")
-    delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 })
 
 

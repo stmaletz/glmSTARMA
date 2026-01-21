@@ -4,12 +4,18 @@
 \alias{load_data}
 \title{Load example datasets}
 \usage{
-load_data(name = NULL, refresh = FALSE)
+load_data(
+  name = NULL,
+  refresh = FALSE,
+  directory = tools::R_user_dir("glmSTARMA", which = "data")
+)
 }
 \arguments{
 \item{name}{Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}.}
 
 \item{refresh}{Logical; re-download the dataset if it already exists locally.}
+
+\item{directory}{Directory where the dataset should be cached. Defaults to a user-specific data directory of the \code{glmSTARMA} package.}
 }
 \value{
 A named list of objects
@@ -18,15 +24,15 @@ A named list of objects
 Download and return datasets from the glmSTARMA GitHub repository
 }
 \details{
-This function downloads example datasets from the glmSTARMA GitHub repository and caches them in a user-specific data directory.
-If the dataset has already been downloaded, it is loaded from the local cache unless \code{refresh = TRUE} is specified.
+This function downloads example datasets from the glmSTARMA GitHub repository and caches them in a directory specified by the user.
+The default directory is a user-specific data directory of the \code{glmSTARMA} package.
+If the dataset has already been downloaded to the specified directory, it is loaded from the local cache unless \code{refresh = TRUE} is specified.
 }
 \examples{
-\dontrun{
+\donttest{
 # Load the 'chickenpox' dataset
-chickenpox_data <- load_data("chickenpox")
+chickenpox_data <- load_data("chickenpox", directory = tempdir())
 str(chickenpox_data)
-delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
 }
 }
 \seealso{

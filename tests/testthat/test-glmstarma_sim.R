@@ -1,4 +1,6 @@
 # glmstarma_sim:
+
+testthat::skip_on_cran()
 test_that("ntime is handled correctly", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -36,6 +38,7 @@ test_that("ntime is handled correctly", {
     expect_error(glmstarma.sim(10.5, parameter, model_orders, W, covariates, family = fam))
 })
 
+testthat::skip_on_cran()
 test_that("n_start is handled correctly", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -73,6 +76,7 @@ test_that("n_start is handled correctly", {
                                n_start = 5L))
 })
 
+testthat::skip_on_cran()
 test_that("control gets checked", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -87,7 +91,7 @@ test_that("control gets checked", {
                                control = "not_a_list"))
 })
 
-
+testthat::skip_on_cran()
 test_that("wlist arguments are validated", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -134,7 +138,7 @@ test_that("wlist arguments are validated", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("model is handled correctly", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -216,7 +220,7 @@ test_that("model is handled correctly", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("covariates dimensions are validated", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -266,7 +270,7 @@ test_that("covariates dimensions are validated", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("family argument is validated", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -287,7 +291,7 @@ test_that("family argument is validated", {
     expect_true(is.list(result))
 })
 
-
+testthat::skip_on_cran()
 test_that("parameter matches model orders", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -378,6 +382,7 @@ test_that("parameter matches model orders", {
     expect_warning(glmstarma.sim(200, parameter, model_orders3, W, covariates, family = fam))
 })
 
+testthat::skip_on_cran()
 test_that("errors and warnings are thrown if invalid parameters are provided", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)
@@ -413,7 +418,7 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
     expect_warning(glmstarma.sim(200, parameter, model_orders, W, covariates, family = fam))
 })
 
-
+testthat::skip_on_cran()
 test_that("generated values match distribution", {
     set.seed(42)
     W <- generateW("rectangle", 100, 2, 10)

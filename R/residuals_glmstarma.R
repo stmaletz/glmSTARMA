@@ -21,7 +21,8 @@
 #' * \code{"deviance"}: Deviance residuals, defined as \deqn{r_i = 2 \cdot (\ell(y_i; y_i) - \ell(y_i; \mu_i)),} i.e. the log-likelihood difference of a saturated model and the fitted model.
 #' If \code{ignore_dispersion} is set to \code{FALSE}, pearson and deviance residuals are scaled by the dispersion parameter(s).
 #' @examples
-#' dat <- load_data("chickenpox")
+#' \donttest{
+#' dat <- load_data("chickenpox", directory = tempdir())
 #' chickenpox <- dat$chickenpox
 #' population_hungary <- dat$population_hungary
 #' W_hungary <- dat$W_hungary
@@ -38,7 +39,7 @@
 #'                    wlist = W_hungary, 
 #'                    mean_covariates = list(population = population_hungary))
 #' residuals(fit2)
-#' delete_glmSTARMA_data("chickenpox")  # Clean up cached data
+#' }
 #' @exportS3Method stats::residuals
 residuals.glmstarma <- function(object, type = c("response", "pearson", "deviance"), drop_init = TRUE, ignore_dispersion = TRUE){
     type <- match.arg(type)

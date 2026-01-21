@@ -12,22 +12,23 @@
 #'
 #' @param name Name of the dataset to load. One of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}.
 #' @param refresh Logical; re-download the dataset if it already exists locally.
+#' @param directory Directory where the dataset should be cached. Defaults to a user-specific data directory of the \code{glmSTARMA} package.
 #'
 #' @return A named list of objects
 #' @details
-#' This function downloads example datasets from the glmSTARMA GitHub repository and caches them in a user-specific data directory.
-#' If the dataset has already been downloaded, it is loaded from the local cache unless \code{refresh = TRUE} is specified.
+#' This function downloads example datasets from the glmSTARMA GitHub repository and caches them in a directory specified by the user.
+#' The default directory is a user-specific data directory of the \code{glmSTARMA} package.
+#' If the dataset has already been downloaded to the specified directory, it is loaded from the local cache unless \code{refresh = TRUE} is specified.
 #'
 #' @seealso \code{\link{delete_glmSTARMA_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}} 
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Load the 'chickenpox' dataset
-#' chickenpox_data <- load_data("chickenpox")
+#' chickenpox_data <- load_data("chickenpox", directory = tempdir())
 #' str(chickenpox_data)
-#' delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
 #' }
 #' @export
-load_data <- function(name = NULL, refresh = FALSE) {
+load_data <- function(name = NULL, refresh = FALSE, directory = tools::R_user_dir("glmSTARMA", which = "data")) {
   stopifnot("Only one dataset can be loaded at a time" = length(name) == 1,
             "Parameter 'refresh' must be of type logical" = is.logical(refresh),
             "Parameter 'refresh' must be of length 1" = length(refresh) == 1,
@@ -39,11 +40,10 @@ load_data <- function(name = NULL, refresh = FALSE) {
   url <- paste0(base_url, "/", file_name)
 
   # user data directory
-  data_dir <- tools::R_user_dir("glmSTARMA", which = "data")
-  if (!dir.exists(data_dir)) {
-    dir.create(data_dir, recursive = TRUE)
+  if (!dir.exists(directory)) {
+    dir.create(directory, recursive = TRUE)
   }
-  data_file <- file.path(data_dir, file_name)
+  data_file <- file.path(directory, file_name)
 
   # Download only if file is missing or refresh is requested
   if (!file.exists(data_file) || isTRUE(refresh)) {
@@ -66,11 +66,6 @@ load_data <- function(name = NULL, refresh = FALSE) {
   env <- new.env(parent = emptyenv())
   objs <- load(data_file, envir = env)
 
-  # Return value
-  if (length(objs) == 1) {
-    return(env[[objs]])
-  }
-
   mget(objs, envir = env)
 }
 
@@ -86,12 +81,7 @@ load_data <- function(name = NULL, refresh = FALSE) {
 #' If no datasets are found in the cache, a message is printed and no action is taken.
 #' @seealso \code{\link{load_data}}, \code{\link{rota}}, \code{\link{chickenpox}}, \code{\link{sst}} 
 #' @examples
-#' \dontrun{
-#' # Load the 'chickenpox' dataset
-#' chickenpox_data <- load_data("chickenpox")
-#' str(chickenpox_data)
-#' delete_glmSTARMA_data("chickenpox")  # Delete the cached dataset
-#' }
+#' delete_glmSTARMA_data("chickenpox")  # Only gives a message if dataset is not cached
 #' @export
 delete_glmSTARMA_data <- function(name = NULL) {
     data_dir <- tools::R_user_dir("glmSTARMA", which = "data")
