@@ -49,7 +49,7 @@ If \code{adjust = TRUE}, the (quasi-)log-likelihood is rescaled to \code{n} obse
 }
 \examples{
 \donttest{
-dat <- load_data("chickenpox")
+dat <- load_data("chickenpox", directory = tempdir())
 chickenpox <- dat$chickenpox
 population_hungary <- dat$population_hungary
 W_hungary <- dat$W_hungary
@@ -66,7 +66,6 @@ fit2 <- dglmstarma(chickenpox, mean_model, dispersion_model, mean_family = vquas
                    wlist = W_hungary, 
                    mean_covariates = list(population = population_hungary))
 QIC(fit2)
-delete_glmSTARMA_data("chickenpox")  # Clean up cached data
 }
 }
 \references{
