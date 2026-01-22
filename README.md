@@ -5,6 +5,7 @@
 [![R-CMD-check](https://github.com/stmaletz/glmSTARMA/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/stmaletz/glmSTARMA/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/stmaletz/glmSTARMA/graph/badge.svg)](https://app.codecov.io/gh/stmaletz/glmSTARMA)
 [![CRAN status](https://www.r-pkg.org/badges/version/glmSTARMA)](https://CRAN.R-project.org/package=glmSTARMA)
+[![downloads](https://cranlogs.r-pkg.org/badges/glmSTARMA)](https://cranlogs.r-pkg.org/)
 <!-- badges: end -->
 
 ## Installation
