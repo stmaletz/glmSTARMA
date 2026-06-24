@@ -20,6 +20,11 @@ test_that("Data can be loaded and unloaded", {
     # false if data already deleted
     expect_message(x <- delete_glmSTARMA_data("sst"), "There is no dataset to delete.")
     expect_false(x)
+
+    # new path can be created
+    new_path <- file.path(tempdir(), "new_data_path")
+    dat3 <- load_data("chickenpox", directory = tempdir())
+
 })
 
 testthat::skip_on_cran()
