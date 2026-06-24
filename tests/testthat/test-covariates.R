@@ -11,6 +11,7 @@ test_that("TimeConstant covariate works correctly", {
   expect_true(!is.null(attr(result, "const")))
   expect_equal(attr(result, "const"), "time")
   expect_s3_class(result, "time_constant")  
+  print(result)
 })
 
 testthat::skip_on_cran()
@@ -24,6 +25,7 @@ test_that("SpatialConstant covariate works correctly", {
   expect_true(!is.null(attr(result, "const")))
   expect_equal(attr(result, "const"), "space")
   expect_s3_class(result, "spatial_constant")  
+  print(result)
 })
 
 

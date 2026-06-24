@@ -65,6 +65,7 @@ class FittingObject{
     };
     virtual FittingObject * clone() = 0;
     virtual ~FittingObject() = default;
+    virtual arma::vec fit(arma::vec start_value, const unsigned int &n_obs) = 0;
     virtual arma::vec fit(arma::vec start_value) = 0;
     Rcpp::List get_algorithm_info() const 
     {

@@ -124,8 +124,11 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
     arma::mat cov_params_dispersion(dispersion_orders.covariate_orders.n_rows, dispersion_orders.covariate_orders.n_cols);
     FittingObject * dispersion_fitting = nullptr;
     arma::mat dispersion_vals_mat;
-    arma::mat init_dispersion = ts.head_cols(mean_orders.max_time_lag);
-    init_dispersion = arma::repmat(arma::mean(init_dispersion, 1), 1, init_dispersion.n_cols);
+    // Set mean of each time series as initial prediction for calculating pseudo-obsevations
+    arma::mat init_dispersion = arma::repmat(arma::mean(ts, 1), 1, mean_orders.max_time_lag + dispersion_orders.max_time_lag);
+    //ts.head_cols(mean_orders.max_time_lag);
+    // init_dispersion.fill(arma::mean(arma::vectorise(init_dispersion)));
+    // init_dispersion = arma::repmat(arma::mean(init_dispersion, 1), 1, init_dispersion.n_cols);
 
     // Variables for tracking the fitting process
     unsigned int fit_counter = 0;
@@ -205,16 +208,16 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
             // Calculate pseudo observations for dispersion model
             pseudo = link_values;
             pseudo = mean_fam->inverse_link(pseudo);
-            if(!drop_max_mean_lag)
-            {
-                pseudo.head_cols(mean_orders.max_time_lag) = init_dispersion;
-            }
+            // if(!drop_max_mean_lag)
+            // {
+                pseudo.head_cols(mean_orders.max_time_lag + dispersion_orders.max_time_lag) = init_dispersion;
+            // }
             pseudo = (pseudo_obs == "deviance") ? mean_fam->deviance_residual(ts, pseudo) : mean_fam->pearson_residual(ts, pseudo);
             if(drop_max_mean_lag) {
                 pseudo = pseudo.tail_cols(mean_orders.n_obs_effective);
             }
             pseudo.clamp(lower_dispersion, upper_dispersion); // Clamping to avoid numerical issues
-
+            
             // Estimate dispersion Model
             if(const_dispersion_model && use_fast_if_const_dispersion)
             {
@@ -224,6 +227,7 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
                 log_likelihoods_dispersion(fit_counter) = arma::accu(arma::log(dispersion_vals_mat) + pseudo.tail_cols(mean_orders.n_obs_effective) / dispersion_vals_mat);
             } else {
                 dispersion_init = Model::init_link(init_method_dispersion, dispersion_orders, pseudo, dispersion_fam);
+
                 if(previous_param_as_start && fit_counter > 0)
                 {
                     start_param_dispersion = dispersion_params;
@@ -236,12 +240,14 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
                 {
                     W_ma_dispersion->set_parameter_matrices(ma_params_dispersion);
                 }
-                
                 dispersion_design = Design(pseudo, &dispersion_covariates_list, dispersion_init, &dispersion_orders, dispersion_fam, W_ar_dispersion, W_ma_dispersion, W_covariates_dispersion);
                 delete dispersion_fitting; // Free memory if it was already created
                 dispersion_fitting = FittingObject::create(pseudo, &dispersion_design, &dispersion_orders, &dispersion_covariates_list, W_ma_dispersion, dispersion_fam, control_dispersion);
                 
-                proposed_params_dispersion = dispersion_fitting->fit(start_param_dispersion);
+                // proposed_params_dispersion = dispersion_fitting->fit(start_param_dispersion);
+                proposed_params_dispersion = dispersion_fitting->fit(start_param_dispersion, dispersion_orders.n_obs_effective);
+                
+                
                 convergence_issues = convergence_issues || !dispersion_fitting->is_converged();
                 dispersion_convergence_indices(fit_counter) = dispersion_fitting->is_converged() ? 1 : 0;
                 fncounts_dispersion(fit_counter) = dispersion_fitting->get_fncount();
@@ -310,12 +316,17 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
                     W_ma_dispersion->set_parameter_matrices(ma_params_dispersion);  
                 }
                 dispersion_design.update_design(dispersion_params, &dispersion_orders, dispersion_fam, W_ma_dispersion);
-                dispersion_vals_mat = dispersion_design.link_vals;
+                dispersion_vals_mat = arma::mat(ts.n_rows, ts.n_cols, arma::fill::zeros);
+                
+                dispersion_vals_mat.tail_cols(dispersion_design.link_vals.n_cols) = dispersion_design.link_vals;
                 dispersion_vals_mat = dispersion_fam->inverse_link(dispersion_vals_mat);
+                if(drop_max_mean_lag){
+                    dispersion_vals_mat.head_cols(mean_orders.max_time_lag + dispersion_orders.max_time_lag) = init_dispersion;
+                }
                 log_likelihoods_dispersion(fit_counter) = arma::accu(arma::log(dispersion_vals_mat.tail_cols(dispersion_orders.n_obs_effective)) + pseudo.tail_cols(dispersion_orders.n_obs_effective) / dispersion_vals_mat.tail_cols(dispersion_orders.n_obs_effective));
             }
             
-            dispersion_vals_mat = dispersion_vals_mat.tail_cols(mean_orders.n_obs_effective);
+            // dispersion_vals_mat = dispersion_vals_mat.tail_cols(mean_orders.n_obs_effective);
             if(mean_fam->family_in_R == "negative_binomial")
             {
                 dispersion_vals_mat -= 1.0;
@@ -347,8 +358,6 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
             params_history_dispersion.col(fit_counter) = dispersion_params;
         }
 
-
-
         // Check stopping criteria
         not_finished = !((mean_converged && dispersion_converged) || fit_counter >= max_fits || change_likelihood < convergence_threshold);
         if(!not_finished)
@@ -370,7 +379,8 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
             {
                 W_ma_mean->set_parameter_matrices(ma_params_mean);
             }
-            proposed_params_mean = mean_fitting->fit(mean_params);
+            // proposed_params_mean = mean_fitting->fit(mean_params);
+            proposed_params_mean = mean_fitting->fit(mean_params, n_obs_effective);
             // mean_params = mean_fitting->fit(mean_params); 
 
             convergence_issues = convergence_issues || !mean_fitting->is_converged();
@@ -525,7 +535,7 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
     arma::vec score_mean(mean_params.n_elem);
     arma::mat information_mean(mean_params.n_elem, mean_params.n_elem);
     arma::vec ts_vec_mean = arma::vectorise(ts.tail_cols(mean_orders.n_obs_effective));
-    double log_likelihood_mean = Model::log_likelihood(mean_params, score_mean, information_mean, ts_vec_mean, &mean_design, &mean_orders, W_ma_mean, mean_fam, true, true);
+    double log_likelihood_mean = Model::log_likelihood(mean_params, score_mean, information_mean, ts_vec_mean, &mean_design, &mean_orders, W_ma_mean, mean_fam, true, true, mean_orders.n_obs_effective);
     log_likelihood_mean /= mean_orders.n_obs_effective;
     log_likelihood_mean *= ts.n_cols;
     arma::mat variance_estimation_mean = Model::variance_estimation(mean_params, ts_vec_mean, &mean_design, mean_fam, information_mean, W_ma_mean, &mean_orders);
@@ -575,7 +585,7 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
         arma::vec score_dispersion(dispersion_params.n_elem);
         arma::mat information_dispersion(dispersion_params.n_elem, dispersion_params.n_elem);
         arma::vec ts_vec_dispersion = arma::vectorise(pseudo.tail_cols(dispersion_orders.n_obs_effective));
-        double log_likelihood_dispersion = Model::log_likelihood(dispersion_params, score_dispersion, information_dispersion, ts_vec_dispersion, &dispersion_design, &dispersion_orders, W_ma_dispersion, dispersion_fam, true, true);
+        double log_likelihood_dispersion = Model::log_likelihood(dispersion_params, score_dispersion, information_dispersion, ts_vec_dispersion, &dispersion_design, &dispersion_orders, W_ma_dispersion, dispersion_fam, true, true, dispersion_orders.n_obs_effective);
         log_likelihood_dispersion /= dispersion_orders.n_obs_effective;
         log_likelihood_dispersion *= ts.n_cols;
         arma::mat variance_estimation_dispersion = Model::variance_estimation(dispersion_params, ts_vec_dispersion, &dispersion_design, dispersion_fam, information_dispersion, W_ma_dispersion, &dispersion_orders);

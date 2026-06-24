@@ -2,7 +2,7 @@
 # File: control.R
 # Purpose: Functions for setting control parameters for fitting and simulation
 # Author: Steffen Maletz
-# Last modified: 2026-01-12
+# Last modified: 2026-06-23
 # -----------------------------------------------------------------------------
 
 
@@ -13,6 +13,7 @@
 #' @param init_link Character or matrix. Method to initialize first link values in the burn-in period. See details.
 #' @param use_sparsity Logical; whether to use sparse matrices for the neighborhood matrices.
 #' @param sparsity_threshold Numeric in \eqn{[0, 1]}. Threshold for proportion of non-zero elements for considering neighborhood matrices as sparse (default: \code{2/3}).
+#' @param dispersion_constant Numeric constant that is added to the pseudo observations in the dispersion model with a log-link to avoid numerical issues.
 #'
 #' @details
 #' This function validates control arguments for \code{glmstarma.sim}.
@@ -23,12 +24,13 @@
 #'
 #' @seealso \code{\link{glmstarma.sim}}, \code{\link{glmstarma.control}}
 #' @export
-glmstarma_sim.control <- function(return_burn_in = FALSE, init_link = "parameter", use_sparsity = TRUE, sparsity_threshold = 2 / 3){
+glmstarma_sim.control <- function(return_burn_in = FALSE, init_link = "parameter", use_sparsity = TRUE, sparsity_threshold = 2 / 3, dispersion_constant = 1){
+    stopifnot("'dispersion_constant' must be numeric and non-negative" = is.numeric(dispersion_constant) && dispersion_constant >= 0)
     stopifnot("init_link must be 'parameter' or a matrix with first link-values" = (init_link == "parameter") || is.matrix(init_link))
     stopifnot("'return_burn_in' must be logical" = is.logical(return_burn_in))
     stopifnot("'use_sparsity' must be logical" = is.logical(use_sparsity))
     stopifnot("'sparsity_threshold' must be a numeric between 0 and 1" = is.numeric(sparsity_threshold) && sparsity_threshold >= 0 && sparsity_threshold <= 1)
-    return(list(return_burn_in = return_burn_in, init_link = init_link, use_sparsity = use_sparsity, sparsity_threshold = sparsity_threshold))
+    return(list(return_burn_in = return_burn_in, init_link = init_link, use_sparsity = use_sparsity, sparsity_threshold = sparsity_threshold, dispersion_constant = dispersion_constant))
 }
 
 
@@ -126,6 +128,7 @@ glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", 
 #' @rdname dglmstarma.control
 #' @title Control Parameters for \code{dglmstarma} Fitting
 #' @description List of control parameters to be passed as an an argument to \code{dglmstarma}.
+#' @param dispersion_constant Numeric constant, that is used transform the pseudo observations in the dispersion model with a log-link to avoid numerical issues. See details.
 #' @param parameter_init Character or list. Start values for parameter estimation. See details.
 #' @param parameter_init_dispersion Character or list. Start values for dispersion parameter estimation. See details.
 #' @param use_sparsity Logical; whether to use sparse matrices for the neighborhood matrices.
@@ -181,6 +184,8 @@ glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", 
 #' @return A named list of control parameters
 #' @details This function is called internally in \code{dglmstarma} to validate control parameters in the \code{control} argument.
 #'
+#' In case of a log-link for the dispersion model, the pseudo observations are transformed by \code{log(pseudo_obs + dispersion_constant)} to avoid numerical issues when fitting the dispersion model.
+#'
 #' The arguments \code{constraint_tol}, \code{gradtol}, \code{changetol}, \code{trace}, \code{fnscale}, \code{maxit}, \code{abstol}, \code{reltol}, \code{lmm}, \code{factr}, and \code{pgtol} are passed to the optimization routines and control the convergence behavior and output.
 #' Some of these arguments are not used by all optimization methods. 
 #'
@@ -216,7 +221,7 @@ glmstarma.control <- function(parameter_init = "zero", init_link = "first_obs", 
 #'           control = list(parameter_init = "random", print_progress = FALSE))
 #' }
 #' @export
-dglmstarma.control <- function(parameter_init = "zero", parameter_init_dispersion = "zero",
+dglmstarma.control <- function(dispersion_constant = 1, parameter_init = "zero", parameter_init_dispersion = "zero",
                                 use_sparsity = TRUE, sparsity_threshold = 2 / 3,
                                 init_link = "first_obs", init_dispersion = "first_obs",
                                 use_backtracking = TRUE, alpha_shrink = 0.5, alpha_start = 1.0, min_alpha = 0.05,
@@ -226,6 +231,7 @@ dglmstarma.control <- function(parameter_init = "zero", parameter_init_dispersio
                                 constrain_method_mean = "sum_of_absolutes", constrain_method_dispersion = "sum_of_absolutes", gradtol = sqrt(.Machine$double.eps), changetol = sqrt(.Machine$double.eps),
                                 trace = 0L, fnscale = 1.0, maxit = 10000L, abstol = -Inf, reltol = sqrt(.Machine$double.eps), lmm = 5, factr = 1e7, pgtol = 0.0)
 {
+    stopifnot("'dispersion_constant' must be numeric and non-negative" = is.numeric(dispersion_constant) && dispersion_constant >= 0)
     if(is.character(parameter_init)){
         parameter_init <- match.arg(parameter_init, c("zero", "random")) # Evtl. noch andere Methoden ergaenzen
     } else {
@@ -266,7 +272,7 @@ dglmstarma.control <- function(parameter_init = "zero", parameter_init_dispersio
               "'alpha_start' must be less than or equal to 1" = alpha_start <= 1,
               "'min_alpha' must be less than or equal to 'alpha_start'" = min_alpha <= alpha_start)
 
-    return(list(parameter_init = parameter_init, parameter_init_dispersion = parameter_init_dispersion, use_sparsity = use_sparsity, sparsity_threshold = sparsity_threshold, use_backtracking = use_backtracking, alpha_shrink = alpha_shrink, alpha_start = alpha_start, min_alpha = min_alpha,
+    return(list(dispersion_constant = dispersion_constant, parameter_init = parameter_init, parameter_init_dispersion = parameter_init_dispersion, use_sparsity = use_sparsity, sparsity_threshold = sparsity_threshold, use_backtracking = use_backtracking, alpha_shrink = alpha_shrink, alpha_start = alpha_start, min_alpha = min_alpha,
                                 init_link = init_link, init_dispersion = init_dispersion, print_progress = print_progress, print_warnings = print_warnings, convergence_threshold = convergence_threshold, max_fits = max_fits, use_fast_if_const_dispersion = use_fast_if_const_dispersion,
                                 lower_dispersion = lower_dispersion, upper_dispersion = upper_dispersion, drop_max_mean_lag = drop_max_mean_lag, previous_param_as_start = previous_param_as_start, method = method, constrained_mean = constrained_mean, constrained_dispersion = constrained_dispersion, constraint_tol = constraint_tol,
                                 constrain_method_mean = constrain_method_mean, constrain_method_dispersion = constrain_method_dispersion, gradtol = gradtol, changetol = changetol, trace = trace, fnscale = fnscale, maxit = maxit, abstol = abstol,

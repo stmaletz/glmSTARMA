@@ -918,7 +918,7 @@ test_that("generated values match distribution", {
                         past_mean = matrix(c(0.2, 0.1), nrow = 2), 
                         past_obs = matrix(c(0.2, 0.1, 0.05), nrow = 3), 
                         covariates = matrix(c(0.9, 0.2), ncol = 2))
-    params_dispersion <- list(intercept = 0.5, 
+    params_dispersion <- list(intercept = 0.2, 
                               past_obs = matrix(c(0.5, 0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
     

@@ -8,7 +8,8 @@ glmstarma_sim.control(
   return_burn_in = FALSE,
   init_link = "parameter",
   use_sparsity = TRUE,
-  sparsity_threshold = 2/3
+  sparsity_threshold = 2/3,
+  dispersion_constant = 1
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ glmstarma_sim.control(
 \item{use_sparsity}{Logical; whether to use sparse matrices for the neighborhood matrices.}
 
 \item{sparsity_threshold}{Numeric in \eqn{[0, 1]}. Threshold for proportion of non-zero elements for considering neighborhood matrices as sparse (default: \code{2/3}).}
+
+\item{dispersion_constant}{Numeric constant that is added to the pseudo observations in the dispersion model with a log-link to avoid numerical issues.}
 }
 \value{
 A named list of control parameters

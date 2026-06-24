@@ -2,7 +2,7 @@
 # File: fitted_glmstarma.R
 # Purpose: Implement S3 method 'fitted' for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2025-12-05
+# Last modified: 2026-06-24
 # -----------------------------------------------------------------------------
 
 #' @rdname fitted.glmstarma
@@ -52,9 +52,9 @@ fitted.dglmstarma <- function(object, return_value = c("mean", "dispersion"), dr
     fitted_vals <- object[[return_value]]$fitted.values
     max_lag <- object[[return_value]]$max_time_lag
 
-    # Optional: remove initial time points
+    # Remove initial time points
     if (drop_init && max_lag > 0) {
-        return(fitted_vals[, -seq(object$max_time_lag), drop = FALSE])
+        return(fitted_vals[, -seq(max_lag), drop = FALSE])
     }
     return(fitted_vals)
 }

@@ -1,5 +1,8 @@
 testthat::skip_on_cran()
 test_that("Data can be loaded and unloaded", {
+    # clean up if any data is already cached
+    delete_glmSTARMA_data(c("sst", "rota", "chickenpox"))
+
     dat <- load_data("sst", directory = tempdir())
     expect_true(is.list(dat))
     expect_named(dat, c("SST", "W_directed", "locations"), ignore.order = TRUE)
@@ -13,10 +16,21 @@ test_that("Data can be loaded and unloaded", {
     expect_named(dat3, c("chickenpox", "population_hungary", "W_hungary"), ignore.order = TRUE)
     # invalid name
     expect_error(load_data("invalid_dataset"), "name must be in 'rota', 'chickenpox', or 'sst'")
-
-    # clean up
-    # expect_true(delete_glmSTARMA_data(c("sst", "rota", "chickenpox")))
+    
     # false if data already deleted
     expect_message(x <- delete_glmSTARMA_data("sst"), "There is no dataset to delete.")
     expect_false(x)
 })
+
+testthat::skip_on_cran()
+test_that("data can be deleted", {
+    expect_message(x <- delete_glmSTARMA_data("sst"), "There is no dataset to delete.")
+    expect_false(x)
+
+    load_data("chickenpox")
+    expect_message(x <- delete_glmSTARMA_data("rota"), "is not in the cache.")
+    expect_false(x)
+    expect_message(x <- delete_glmSTARMA_data("chickenpox"), "Deleted: chickenpox")
+    expect_true(x) 
+})
+

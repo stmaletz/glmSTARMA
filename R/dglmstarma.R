@@ -2,7 +2,7 @@
 # File: dglmstarma.R
 # Purpose: Implement fitting of dglmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-01-10
+# Last modified: 2026-05-21
 # -----------------------------------------------------------------------------
 
 
@@ -110,8 +110,11 @@ dglmstarma <- function(ts, mean_model = list(), dispersion_model = list(), mean_
                         wlist_past_mean = NULL, wlist_covariates = NULL, wlist_pseudo_obs = NULL, 
                         wlist_past_dispersion = NULL, wlist_covariates_dispersion = NULL, control = list()) 
 {
+    stopifnot("control must be a list" = is.list(control))
+    control <- do.call("dglmstarma.control", control)
+    
     dispersion_link <- match.arg(dispersion_link, c("log", "identity", "inverse"))
-    dispersion_family <- vgamma(dispersion_link, dispersion = 2)
+    dispersion_family <- vgamma(dispersion_link, dispersion = 2, const = control$dispersion_constant)
     stopifnot("mean_family must be specified" = !is.null(mean_family), 
               "mean_family must be of class stfamily" = inherits(mean_family, "stfamily"),
               "The vpoisson family is not supported for dglmstarma models. Please use vquasipoisson instead." = mean_family$distribution != "poisson",
@@ -128,8 +131,7 @@ dglmstarma <- function(ts, mean_model = list(), dispersion_model = list(), mean_
               "wlist_covariates must be a list of matrices" = is.null(wlist_covariates) | is.list(wlist_covariates),
               "wlist_pseudo_obs must be a list of matrices" = is.null(wlist_pseudo_obs) | is.list(wlist_pseudo_obs),
               "wlist_past_dispersion must be a list of matrices" = is.null(wlist_past_dispersion) | is.list(wlist_past_dispersion),
-              "wlist_covariates_dispersion must be a list of matrices" = is.null(wlist_covariates_dispersion) | is.list(wlist_covariates_dispersion),
-              "control must be a list" = is.list(control))
+              "wlist_covariates_dispersion must be a list of matrices" = is.null(wlist_covariates_dispersion) | is.list(wlist_covariates_dispersion))
 
     ## Check all wlist-Arguments
     dim <- c(wlist_check(wlist),
@@ -196,7 +198,7 @@ dglmstarma <- function(ts, mean_model = list(), dispersion_model = list(), mean_
         }
     }
     stopifnot("The maximum time lag is greater than the number of observations" = ncol(ts) > max(mean_model$past_obs_time_lags, mean_model$past_mean_time_lags, 0, na.rm = TRUE) + max(dispersion_model$past_obs_time_lags, dispersion_model$past_mean_time_lags, 0, na.rm = TRUE))
-    control <- do.call("dglmstarma.control", control) 
+    # control <- do.call("dglmstarma.control", control) 
     pseudo_observations <- match.arg(pseudo_observations, c("deviance", "pearson"))
     if(mean_family$distribution == "negative_binomial" && pseudo_observations == "deviance"){
         pseudo_observations <- "pearson"

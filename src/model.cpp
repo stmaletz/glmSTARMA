@@ -173,49 +173,51 @@ arma::vec Model::init_param(const Rcpp::RObject &method, const Orders &orders, c
     * Information matrix (if calc_information = true)
 */
 
-double Model::log_likelihood(const arma::vec &x, arma::vec &score, arma::mat &information, const arma::vec &ts_vec, Design * design, const Orders * orders, Neighborhood * W_ma, const Family * family, bool calc_score, bool calc_information)
+double Model::log_likelihood(const arma::vec &x, arma::vec &score, arma::mat &information, const arma::vec &ts_vec, Design * design, const Orders * orders, Neighborhood * W_ma, const Family * family, bool calc_score, bool calc_information, const unsigned int &n_obs)
 {
     arma::vec intercept(orders->n_param_intercept);
     arma::mat ar_params(orders->autoregressive_orders.n_rows, orders->autoregressive_orders.n_cols);
     arma::mat ma_params(orders->moving_average_orders.n_rows, orders->moving_average_orders.n_cols);
     arma::mat cov_params(orders->covariate_orders.n_rows, orders->covariate_orders.n_cols); 
     Parameter::create_param_matrices(x, *orders, intercept, ar_params, ma_params, cov_params);
+    const unsigned int n_obs_calc = n_obs * design->link_vals.n_rows;
     if(orders->n_param_ma > 0)
     {
         W_ma->set_parameter_matrices(ma_params);
     }
-    arma::vec link_values = design->update_design(x, orders, family, W_ma);
+    arma::vec link_values = design->update_design(x, orders, family, W_ma).tail(n_obs_calc);
     arma::vec fitted_values = family->inverse_link( link_values ) ; //
-    arma::vec dispersion_(link_values.n_elem);
+    arma::vec dispersion_(n_obs_calc);
     if(family->const_dispersion)
     {
         dispersion_.fill(family->dispersion);
     } else {
         if(family->dispersion_matrix.n_cols > 1)
         {
-            dispersion_ = arma::vectorise(family->dispersion_matrix);
+            dispersion_ = arma::vectorise(family->dispersion_matrix.tail_cols(n_obs));
         } else {
-            dispersion_ = arma::repmat(family->dispersion_matrix.col(0), link_values.n_elem / family->dispersion_matrix.n_elem, 1);
+            dispersion_ = arma::repmat(family->dispersion_matrix.col(0), n_obs, 1);
         }
     }
 
-    double log_like = arma::accu( family->log_likelihood( ts_vec, fitted_values, dispersion_ ) );
+    double log_like = arma::accu( family->log_likelihood( ts_vec.tail(n_obs_calc), fitted_values.tail(n_obs_calc), dispersion_.tail(n_obs_calc) ) );
 
     if(calc_score || calc_information)
     {
         design->update_derivative(orders, W_ma, family);
-        arma::vec residuals = ts_vec - fitted_values;
+        arma::vec residuals = ts_vec.tail(n_obs_calc) - fitted_values;
         arma::vec middle = family->derivative_inverse_link( link_values ) / family->variance_fun( link_values, dispersion_ );
         residuals = middle % residuals;
+        residuals = residuals.tail(n_obs_calc);
     
         if(calc_score)
         {
-            score = (residuals.t() * design->derivative_link).t();
+            score = (residuals.t() * design->derivative_link.tail_rows(n_obs_calc)).t();
         }
         if(calc_information)
         {
             middle = middle % family->derivative_inverse_link( link_values );
-            information = design->derivative_link.t() * (design->derivative_link.each_col() % middle);
+            information = design->derivative_link.tail_rows(n_obs_calc).t() * (design->derivative_link.tail_rows(n_obs_calc).each_col() % middle);
         }
     }    
     return log_like;
@@ -241,9 +243,9 @@ arma::mat Model::variance_estimation(const arma::vec &x, const arma::vec &ts_vec
     } else {
         if(family->dispersion_matrix.n_cols > 1)
         {
-            dispersion_ = arma::vectorise(family->dispersion_matrix);
+            dispersion_ = arma::vectorise(family->dispersion_matrix.tail_cols(orders->n_obs_effective));
         } else {
-            dispersion_ = arma::repmat(family->dispersion_matrix.col(0), link_values.n_elem / family->dispersion_matrix.n_elem, 1);
+            dispersion_ = arma::repmat(family->dispersion_matrix.col(0), orders->n_obs_effective, 1);
         }
     }
     residuals = family->derivative_inverse_link( link_values ) % residuals;

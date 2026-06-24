@@ -57,6 +57,7 @@ vquasibinomial(
 vgamma(
   link = c("inverse", "log", "identity"),
   dispersion = NULL,
+  const = 1,
   copula = NULL,
   copula_param = NULL
 )

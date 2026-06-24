@@ -415,5 +415,68 @@ test_that("sampling method is valid (vquasipoisson)", {
   expect_s3_class(out, "stfamily")
 })
 
+# test that all variance functions work
+testthat::skip_on_cran()
+test_that("variance functions method work", {
+  x <- vpoisson()
+  expect_equal(x$variance(2, 1), 2)
+
+  x <- vquasipoisson(dispersion = 2)
+  expect_equal(x$variance(2, 2), 4)
+
+  x <- vnegative.binomial(dispersion = 2)
+  expect_equal(x$variance(2, 2), 10)
+
+  x <- vbinomial(size = 4)
+  expect_equal(x$variance(2, 2), 1)
+  x <- vquasibinomial(size = 4, dispersion = 2)
+  expect_equal(x$variance(2, 2), 2)
+  
+  x <- vgamma(dispersion = 2)
+  expect_equal(x$variance(2, 2), 8)
+
+  x <- vinverse.gaussian(dispersion = 2)
+  expect_equal(x$variance(2, 2), 16)
+
+  x <- vnormal(dispersion = 2)
+  expect_equal(x$variance(2, 2), 2)
+  expect_equal(x$variance(2, 2, TRUE), 1)
+  expect_equal(x$variance(matrix(2, 1, 1), 2, TRUE)[1, 1], 1)
+
+})
+
+# test that all dev.resids functions work
+testthat::skip_on_cran()
+test_that("dev.resids functions method work", {
+  x <- vpoisson()
+  print(x)
+  expect_equal(x$dev.resids(2, 1, 1), 2 * (2 * log(2) - 1))
+
+  x <- vquasipoisson(dispersion = 2)
+  expect_equal(x$dev.resids(2, 1, 2), (2 * log(2) - 1))
+  expect_equal(x$dev.resids(2, 1, 2, TRUE), 2 * (2 * log(2) - 1))
+
+  x <- vnegative.binomial(dispersion = 2)
+  expect_equal(x$dev.resids(1, 2, 2), 2 * (log(0.5) - 3 * log(0.75)))
+
+  x <- vbinomial(size = 4)
+  expect_equal(x$dev.resids(0, 2, 2), 8 * log(2))
+
+  x <- vquasibinomial(size = 4, dispersion = 2)
+  expect_equal(x$dev.resids(0, 2, 2), 4 * log(2))
+  expect_equal(x$dev.resids(0, 2, 2, TRUE), 8 * log(2))
+
+  x <- vgamma(dispersion = 2)
+  expect_equal(x$dev.resids(2, 1, 2), -1 * (log(2) - 1))
+  expect_equal(x$dev.resids(2, 1, 2, TRUE), -2 * (log(2) - 1))
+
+  x <- vinverse.gaussian(dispersion = 2)
+  expect_equal(x$dev.resids(2, 1, 2), 0.25)
+  expect_equal(x$dev.resids(2, 1, 2, TRUE), 0.5)
+
+  x <- vnormal(dispersion = 2)
+  expect_equal(x$dev.resids(2, 1, 2), 0.5)
+  expect_equal(x$dev.resids(2, 1, 2, TRUE), 1)
+})
 
 

@@ -3,7 +3,7 @@
     File: family_gamma.cpp
     Purpose: Implementation of Gamma family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-05-21
 -----------------------------------------------------------------------------
 */
 
@@ -123,6 +123,7 @@ const arma::mat Gamma::variance_fun(const arma::mat &link_values, const arma::ma
 
 class LogGamma : public Gamma {
   protected:
+    const double added_constant;
     virtual const double inverse_link(const double x) const;
     virtual const double link(const double x) const;
     virtual const double derivative_inverse_link(const double x) const;
@@ -130,8 +131,8 @@ class LogGamma : public Gamma {
     virtual const double link_trafo(const double x) const;
     virtual const double derivative_link_trafo(const double x) const;
   public:
-    LogGamma(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Gamma(dispersion, true, false, copula_obj, "log"){};
-    LogGamma(const Rcpp::RObject &dispersion) : Gamma(dispersion, true, false, "log"){};
+    LogGamma(const Rcpp::RObject &dispersion, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Gamma(dispersion, true, false, copula_obj, "log"), added_constant(constant){};
+    LogGamma(const Rcpp::RObject &dispersion, double constant) : Gamma(dispersion, true, false, "log"), added_constant(constant){};
     ~LogGamma() = default;
     virtual const bool valid_link(const arma::mat &x) const;
     virtual Family* clone() const
@@ -143,17 +144,17 @@ class LogGamma : public Gamma {
         disp_vec = Rcpp::NumericVector::create(this->dispersion);
         if(use_dependence)
         { 
-          return new LogGamma(disp_vec, this->copula_object);
+          return new LogGamma(disp_vec, this->added_constant, this->copula_object);
         } else {
-          return new LogGamma(disp_vec);
+          return new LogGamma(disp_vec, this->added_constant);
         }
       } else {
         disp_mat = Rcpp::wrap(this->dispersion_matrix);
         if(use_dependence)
         { 
-          return new LogGamma(disp_mat, this->copula_object);
+          return new LogGamma(disp_mat, this->added_constant, this->copula_object);
         } else {
-          return new LogGamma(disp_mat);
+          return new LogGamma(disp_mat, this->added_constant);
         }
       }
     };
@@ -162,7 +163,7 @@ class LogGamma : public Gamma {
 
 const double LogGamma::inverse_link(const double x) const
 {
-  return exp(x);
+  return std::exp(x);
 }
 
 const double LogGamma::link(const double x) const
@@ -172,13 +173,13 @@ const double LogGamma::link(const double x) const
 
 const double LogGamma::derivative_inverse_link(const double x) const
 {
-  return exp(x);
+  return std::exp(x);
 }
 
 
 const double LogGamma::observation_trafo(const double x) const
 {
-  return log(x);
+  return std::log(x + added_constant);
 }
 
 const double LogGamma::link_trafo(const double x) const
@@ -378,7 +379,13 @@ Gamma* Gamma::create(const Rcpp::List &family, Rcpp::S4& copula_obj)
   Rcpp::RObject dispersion = family["dispersion"];
   if(link == "log")
   {
-    return new LogGamma(dispersion, copula_obj);
+    double constant = 1.0;
+    if(family.containsElementNamed("const"))
+    {
+      Rcpp::NumericVector temp_const = family["const"];
+      constant = temp_const[0];
+    }
+    return new LogGamma(dispersion, constant, copula_obj);
   } 
   else if(link == "identity") 
   {
@@ -400,7 +407,13 @@ Gamma* Gamma::create(const Rcpp::List &family)
   Rcpp::RObject dispersion = family["dispersion"];
   if(link == "log")
   {
-    return new LogGamma(dispersion);
+    double constant = 1.0;
+    if(family.containsElementNamed("const"))
+    {
+      Rcpp::NumericVector temp_const = family["const"];
+      constant = temp_const[0];
+    }
+    return new LogGamma(dispersion, constant);
   } 
   else if(link == "identity") 
   {

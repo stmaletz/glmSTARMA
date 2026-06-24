@@ -78,6 +78,7 @@ test_that("ts is validated", {
     # normal distr. case:
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vnormal("identity"))
+    print(result)
     expect_s3_class(result, "glmstarma")
 })
 

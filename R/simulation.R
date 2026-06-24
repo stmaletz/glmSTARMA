@@ -2,7 +2,7 @@
 # File: simulation.R
 # Purpose: Implement simulation functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2025-11-13
+# Last modified: 2025-05-21
 # -----------------------------------------------------------------------------
 
 #' @rdname glmstarma.sim
@@ -208,6 +208,10 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
                            wlist = NULL, mean_covariates = list(), dispersion_covariates = list(), pseudo_observations = c("deviance", "pearson"),
                            wlist_past_mean = NULL, wlist_covariates = NULL, wlist_pseudo_obs = NULL, 
                            wlist_past_dispersion = NULL, wlist_covariates_dispersion = NULL, n_start = 100L, control = list()){
+  stopifnot("control must be a list" = is.list(control))
+  control <- do.call("glmstarma_sim.control", control)
+  
+  
   stopifnot("ntime must be a numeric value" = is.numeric(ntime),
             "ntime must be a finite numeric value" = is.finite(ntime),
             "ntime must be a positive integer value" = (ntime > 0 & ntime == floor(ntime)),
@@ -223,7 +227,6 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
             "n_start must be a finite numeric value" = is.finite(n_start),
             "n_start must be a positive integer value" = (n_start > 0 & n_start == floor(n_start)),
             "parameters must be submitted in a list" = is.list(parameters_mean) & is.list(parameters_dispersion),
-            "control must be a list" = is.list(control),
             "wlist must not be an empty list" = length(wlist) > 0)
 
         
@@ -241,7 +244,7 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
     }
 
     dispersion_link <- match.arg(dispersion_link)
-    dispersion_family <- vgamma(dispersion_link, dispersion = 2)
+    dispersion_family <- vgamma(dispersion_link, dispersion = 2, const = control$dispersion_constant)
 
     pseudo_observations <- match.arg(pseudo_observations)
     if(mean_family$distribution == "negative_binomial" && pseudo_observations == "deviance"){
@@ -323,7 +326,7 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
         }
     }
     
-    control <- do.call("glmstarma_sim.control", control)
+    #control <- do.call("glmstarma_sim.control", control)
     control$parameter_init <- parameters_mean
 
     if(!is.null(mean_family$copula)){
