@@ -39,3 +39,74 @@ test_that("data can be deleted", {
     expect_true(x) 
 })
 
+
+testthat::skip_on_cran()
+test_that("existing file is loaded without download", {
+  tmp_dir <- tempdir()
+
+  x <- data.frame(a = 1:3)
+  save(x, file = file.path(tmp_dir, "rota.rda"))
+
+  res <- load_data("rota", directory = tmp_dir)
+
+  expect_equal(res$x, x)
+})
+
+
+testthat::skip_on_cran()
+test_that("refresh downloads new file", {
+
+  tmp_dir <- tempdir()
+
+  with_mocked_bindings(
+    {
+      res <- load_data(
+        "rota",
+        directory = tmp_dir,
+        refresh = TRUE
+      )
+
+      expect_equal(res$x, data.frame(a = 1:3))
+    },
+    "download.file" = function(url, destfile, ...) {
+      x <- data.frame(a = 1:3)
+      save(x, file = destfile)
+      0
+    },
+    .package = "utils"
+  )
+})
+
+
+testthat::skip_on_cran()
+test_that("load_data throws error when download fails and no cache exists", {
+  tmp_dir <- withr::local_tempdir()
+
+  local_mocked_bindings(
+    download.file = function(url, destfile, ...) stop("Simulated network error"),
+    .package = "utils"
+  )
+
+  expect_error(
+    load_data("rota", directory = tmp_dir),
+    "Data could not be downloaded"
+  )
+})
+
+
+testthat::skip_on_cran()
+test_that("delete_glmSTARMA_data messages when directory has no .rda files", {
+  tmp_dir <- withr::local_tempdir()
+
+  local_mocked_bindings(
+    R_user_dir = function(...) tmp_dir,
+    .package = "tools"
+  )
+
+  expect_message(
+    result <- delete_glmSTARMA_data("rota"),
+    "There is no dataset to delete"
+  )
+  expect_false(result)
+})
+
