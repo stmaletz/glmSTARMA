@@ -297,7 +297,7 @@ test_that("family argument is validated", {
     result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "clayton", copula_param = 2))
     expect_true(is.list(result))
 
-    result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "normal", copula_param = 1.5))
+    result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "normal", copula_param = 0.5))
     expect_true(is.list(result))
 })
 
