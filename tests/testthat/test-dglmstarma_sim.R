@@ -277,6 +277,16 @@ test_that("wlist arguments are validated", {
                    wlist = W_invalid2, pseudo_observations = "deviance", 
                    mean_covariates = covariates_mean, 
                    dispersion_covariates = covariates_dispersion))
+    # matrices in different wlist arguments have different dimensions
+    W_past_obs <- W
+    W_past_mean <- generateW("rectangle", 50, 2, 10)
+    expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W_past_obs, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion,
+                   wlist_past_mean = W_past_mean))
+
     # correct case: sparse matrices
     W_sparse <- lapply(W, function(mat) as(mat, "dgCMatrix"))
     result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
@@ -587,8 +597,7 @@ test_that("family argument is validated", {
                               past_obs = 2, past_mean = 1, 
                               covariates = c(0, 0))
     model_orders_dispersion <- list(intercept = "homogeneous", 
-                                    past_obs = 1, 
-                                    covariates = c(0, 0))
+                                    past_obs = 1)
     covariates_mean <- list(season = SpatialConstant(sin(2 * pi / 12 * seq(n_obs))),
                             location = TimeConstant(rnorm(100, sd = 0.81)))
 
@@ -602,7 +611,31 @@ test_that("family argument is validated", {
     params_dispersion <- list(intercept = 0.5, 
                               past_obs = matrix(c(0.5, 0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
+    # different copulas                          
     family <- vnormal(copula = "frank", copula_param = 2)
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
+    family <- vnormal(copula = "normal", copula_param = 2)
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W_mixed, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
+    family <- vnormal()
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W_mixed, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
     # family not specified
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = NULL, 

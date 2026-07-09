@@ -127,6 +127,10 @@ test_that("wlist arguments are validated", {
     W_invalid2 <- W
     W_invalid2[[1]] <- diag(50)
     expect_error(glmstarma.sim(200, parameter, model_orders, W_invalid2, covariates, family = fam))
+    # matrices in different wlist arguments have different dimensions
+    W_past_obs <- W
+    W_past_mean <- generateW("rectangle", 50, 2, 10)
+    expect_error(glmstarma.sim(200, parameter, model_orders, W_past_obs, covariates, wlist_past_mean = W_past_mean, family = fam))
     # correct case: sparse matrices
     W_sparse <- lapply(W, function(mat) as(mat, "dgCMatrix"))
     result <- glmstarma.sim(200, parameter, model_orders, W_sparse, covariates, family = fam)
@@ -288,6 +292,12 @@ test_that("family argument is validated", {
     expect_error(glmstarma.sim(200, parameter, model_orders, W, covariates, family =  list()))
     # correct family
     result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log"))
+    expect_true(is.list(result))
+
+    result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "clayton", copula_param = 2))
+    expect_true(is.list(result))
+
+    result <- glmstarma.sim(200, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "normal", copula_param = 1.5))
     expect_true(is.list(result))
 })
 
