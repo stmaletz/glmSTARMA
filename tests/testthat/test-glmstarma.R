@@ -286,3 +286,36 @@ test_that("wlist arguments are validated", {
                         covariates = covariates, family = vpoisson("log"))
     expect_s3_class(result, "glmstarma")
 })
+
+
+
+testthat::skip_on_cran()
+test_that("covariates are checked", {
+    dat <- load_data("chickenpox", directory = tempdir())
+    chickenpox <- dat$chickenpox
+    population_hungary <- dat$population_hungary
+    W_hungary <- dat$W_hungary
+    # valid covariates
+    covariates <- list(population = population_hungary, 
+                       season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),
+                       season_sin = SpatialConstant(sin(2 * pi / 52 * 1:522)))
+    # negative covariate values for linear model (does not allow these)
+    expect_error(glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates, family = vpoisson("identity")))
+    covariates_matrix <- covariates
+    covariates_matrix$population <- covariates_matrix$population[5, 10] <- -10
+    expect_error(glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates_matrix[1], family = vpoisson("identity")))
+    
+    # categorical covariates
+    covariates_categorical <- list(category = matrix(sample(letters, 522 * 20, replace = TRUE), ncol = 522, nrow = 20))
+    expect_error(glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates_categorical, family = vpoisson("log")))
+
+    # covariates not a matrix of SpaceConstant or TimeConstant objects
+    covariates_invalid <- list(population = population_hungary,
+                               season_cos = cos(2 * pi / 52 * 1:522),
+                               season_sin = sin(2 * pi / 52 * 1:522))
+    expect_error(glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates_invalid, family = vpoisson("log")))             
+})

@@ -2,7 +2,7 @@
 # File: dglmstarma.R
 # Purpose: Implement fitting of dglmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-05-21
+# Last modified: 2026-07-09
 # -----------------------------------------------------------------------------
 
 
@@ -120,8 +120,6 @@ dglmstarma <- function(ts, mean_model = list(), dispersion_model = list(), mean_
               "The vpoisson family is not supported for dglmstarma models. Please use vquasipoisson instead." = mean_family$distribution != "poisson",
               "The vbinomial family is not supported for dglmstarma models. Please use vquasibinomial instead." = mean_family$distribution != "binomial",
               "ts must be a numeric matrix" = is.matrix(ts) && (is.numeric(ts)),
-              "ts must not contain NA values" = !any(is.na(ts)),
-              "ts must not contain infinite values" = !any(is.infinite(ts)),
               "mean_family does not match the data" = data_family_check(ts, mean_family),
               "mean_covariates must be submitted in a list" = covariate_check(mean_covariates, ncol(ts), nrow(ts), mean_family),
               "dispersion_covariates must be submitted in a list" = covariate_check(dispersion_covariates, ncol(ts), nrow(ts), dispersion_family),

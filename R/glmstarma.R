@@ -2,7 +2,7 @@
 # File: glmstarma.R
 # Purpose: Implement fitting of glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2025-11-16
+# Last modified: 2026-07-09
 # -----------------------------------------------------------------------------
 
 
@@ -101,8 +101,6 @@ glmstarma <- function(ts, model = list(), wlist, family = NULL, covariates = NUL
     stopifnot("family must be specified" = !is.null(family), 
               "family must be of class stfamily" = inherits(family, "stfamily"),
               "ts must be a numeric matrix" = is.matrix(ts) && (is.numeric(ts)),
-              "ts must not contain NA values" = !any(is.na(ts)),
-              "ts must not contain infinite values" = !any(is.infinite(ts)),
               "family does not match the data" = data_family_check(ts, family),
               "covariates must be submitted in a list" = covariate_check(covariates, ncol(ts), nrow(ts), family),
               "wlist must be a list of numeric matrices" = is.list(wlist),
