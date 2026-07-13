@@ -285,7 +285,9 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
                         {
                             test_link -= 1.0;
                             test_link /= mean_fam->inverse_link(link_values.tail_cols(n_obs_effective));
+                            // test_link /= mean_fam->inverse_link(link_values);
                             test_link.clamp(0.0, arma::datum::inf);
+                            // test_link = test_link.tail_cols(n_obs_effective);
                         }
                         double test_ll = arma::accu(mean_fam->log_likelihood(ts.tail_cols(n_obs_effective), mean_fam->inverse_link(link_values.tail_cols(n_obs_effective)), test_link));
                         if(test_ll > old_ll || fit_counter == 0) {
@@ -330,7 +332,8 @@ Rcpp::List dglmstarma_cpp(const arma::mat &ts, const Rcpp::List &mean_model, con
             if(mean_fam->family_in_R == "negative_binomial")
             {
                 dispersion_vals_mat -= 1.0;
-                dispersion_vals_mat /= mean_fam->inverse_link(link_values.tail_cols(mean_orders.n_obs_effective));
+                // dispersion_vals_mat /= mean_fam->inverse_link(link_values.tail_cols(mean_orders.n_obs_effective));
+                dispersion_vals_mat /= mean_fam->inverse_link(link_values);
                 dispersion_vals_mat.clamp(0.0, arma::datum::inf);
             }
             total_log_likelihoods(fit_counter) = arma::accu( mean_fam->log_likelihood(ts.tail_cols(n_obs_effective), mean_fam->inverse_link(link_values.tail_cols(n_obs_effective)), dispersion_vals_mat.tail_cols(n_obs_effective)));

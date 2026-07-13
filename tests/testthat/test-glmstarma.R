@@ -13,6 +13,10 @@ test_that("ts is validated", {
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"))
     expect_s3_class(result, "glmstarma")
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates, family = vnegative.binomial("log"))
+    expect_s3_class(result, "glmstarma")
+
     # invalid case: non-matrix input
     chickenpox_vec <- as.vector(chickenpox)
     expect_error(glmstarma(chickenpox_vec, list(past_obs = 1), wlist = W_hungary, 
