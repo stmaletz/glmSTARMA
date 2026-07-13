@@ -2,7 +2,7 @@
 # File: control.R
 # Purpose: Functions for setting control parameters for fitting and simulation
 # Author: Steffen Maletz
-# Last modified: 2026-06-23
+# Last modified: 2026-07-13
 # -----------------------------------------------------------------------------
 
 
@@ -237,10 +237,10 @@ dglmstarma.control <- function(dispersion_constant = 1, parameter_init = "zero",
     } else {
         stopifnot("If not automatically chosen, parameters must be submitted as list" = is.list(parameter_init))
     }
-    if(is.character(parameter_init)){
-        parameter_init <- match.arg(parameter_init, c("zero", "random")) # Evtl. noch andere Methoden ergaenzen
+    if(is.character(parameter_init_dispersion)){
+        parameter_init_dispersion <- match.arg(parameter_init_dispersion, c("zero", "random")) # Evtl. noch andere Methoden ergaenzen
     } else {
-        stopifnot("If not automatically chosen, parameters must be submitted as list" = is.list(parameter_init))
+        stopifnot("If not automatically chosen, parameters must be submitted as list" = is.list(parameter_init_dispersion))
     }
     constrain_method_mean <- match.arg(constrain_method_mean, c("sum_of_absolutes", "absolute_sum", "soft"))
     constrain_method_dispersion <- match.arg(constrain_method_dispersion, c("sum_of_absolutes", "absolute_sum"))
