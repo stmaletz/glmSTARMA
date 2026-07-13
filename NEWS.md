@@ -16,7 +16,9 @@
 - Fixed bug in the `variance()` function of the `vnormal()` family function, which now returns the correct dimensions when the `ignore_dispersion` argument is set to `TRUE` and `mu` is not a matrix.
 - Fixed bug bug in `fitted.dglmstarma()` which prevented to remove initial time points when `drop_init = TRUE`.
 - `print.summary.glmstarma()` and `print.summary.dglmstarma()` can now handle empty models
-- Fixed bug in `predict.glmstarma()` that prevented predictions for models with homogeneous intercept
+- Fixed bug in `predict.glmstarma()` that prevented predictions for models with homogeneous intercept.
+- Fixed bug in `glmstarma_predict` that always caused warnings, when time-varying covariates are included in the model
+- Fixed bug in `predict.dglmstarma()` that ignored specified copulas for prediction type `"sample"`
 
 
 # glmsSTARMA 1.0.1

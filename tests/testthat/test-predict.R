@@ -28,7 +28,7 @@ test_that("predict works for glmstarma objects", {
     # different copulas
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         family = vpoisson("log", copula = "frank", copula_param = 2))
-    predictions <- predict(result)
+    predictions <- predict(result, type = "sample")
     expect_is(predictions, "matrix")
 
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
@@ -50,7 +50,44 @@ test_that("predict works for glmstarma objects", {
     expect_true(all(predictions >= 0))
     expect_true(all(predictions == round(predictions)))
 
-    # TODO: With covariates, new observations, new covariate values
+    # with copula
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        family = vpoisson("log", copula = "frank", copula_param = 2))
+    expect_is(predictions, "matrix")
+    expect_true(all(predictions >= 0))
+    expect_true(all(predictions == round(predictions)))
+
+    # With covariates, new observations, new covariate values
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates,
+                        family = vpoisson("log"))
+    expect_warning(predictions <- predict(result, n.ahead = 10, type = "response"))
+
+    predictions <- predict(result, n.ahead = 10, type = "response", newxreg = list(population = population_hungary[, 1:10], 
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))))
+
+
+    # too few new covariate values
+    expect_warning(predictions <- predict(result, n.ahead = 10, type = "response", newxreg = list(population = population_hungary[, 1:5], 
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:525)))))                                            
+
+    set.seed(123)
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                        covariates = covariates,
+                        family = vquasipoisson("log", dispersion = matrix(runif(length(chickenpox), min = 1, max = 10), nrow = nrow(chickenpox), ncol = ncol(chickenpox))))
+    expect_error(predict(result, n.ahead = 10, type = "sample", newxreg = list(population = population_hungary[1:10, ], 
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532)))))
+
+
+    # new observations provided                                            
+    set.seed(123)
+    predictions <- predict(result, n.ahead = 10, type = "response", newobs = matrix(rpois(200, 10), nrow = 20, ncol = 10), 
+                       newxreg = list(population = population_hungary[, 1:10], 
+                                      season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                      season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))))
 
 })
 
@@ -139,7 +176,49 @@ test_that("predict works for dglmstarma objects", {
     expect_true(all(predictions$mean >= 0))
     expect_true(all(predictions$mean == round(predictions$mean)))
 
-    # TODO: With covariates, new observations, new covariate values
+    result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
+                        mean_family = vquasipoisson("log", copula = "frank", copula_param = 2))
+    predictions <- predict(result, n.ahead = 10, type = "sample")
+    expect_is(predictions, "list")
+    expect_true(all(predictions$mean >= 0))
+    expect_true(all(predictions$mean == round(predictions$mean)))                    
+
+    # With covariates, new observations, new covariate values
+
+    result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
+                        mean_covariates = covariates, dispersion_covariates = covariates,
+                        mean_family = vquasipoisson("log"))
+
+    # warning because new covariates are not provided
+    predictions <- predict(result, n.ahead = 10, type = "response")
+    # with new covariate values 
+    predictions <- predict(result, n.ahead = 10, type = "response", 
+                            newxreg_mean = list(population = population_hungary[, 1:10], 
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))),
+                            newxreg_dispersion = list(population = population_hungary[, 1:10],
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))))
+    expect_is(predictions, "list")
+    expect_equal(length(predictions), 2)
+    expect_named(predictions, c("mean", "dispersion"), ignore.order = TRUE)
+
+    # with new observations
+    set.seed(123)
+    predictions <- predict(result, n.ahead = 10, type = "response", newobs = matrix(rpois(200, 10), nrow = 20, ncol = 10),
+                            newxreg_mean = list(population = population_hungary[, 1:10], 
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))),
+                            newxreg_dispersion = list(population = population_hungary[, 1:10],
+                                                season_cos = SpatialConstant(cos(2 * pi / 52 * 523:532)),
+                                                season_sin = SpatialConstant(sin(2 * pi / 52 * 523:532))))
+    expect_is(predictions, "list")
+    expect_equal(length(predictions), 2)
+    expect_named(predictions, c("mean", "dispersion"), ignore.order = TRUE)
+
+
+
+
 
 })
 

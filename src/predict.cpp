@@ -3,7 +3,7 @@
     File: predict.cpp
     Purpose: Implementation of predict functions for glmstarma and dglmstarma models
     Author: Steffen Maletz
-    Last modified: 2026-07-09
+    Last modified: 2026-07-13
 -----------------------------------------------------------------------------
 */
 
@@ -44,7 +44,7 @@ arma::mat glmstarma_predict(const unsigned int &n_ahead, const std::string &pred
 
     const unsigned int n_obs = ts.n_cols + n_ahead;
     const unsigned int dim = ts.n_rows;
-    CovariateList covariates(covariate_list, n_obs, dim, 0, 0);
+    CovariateList covariates(covariate_list, ts.n_cols, dim, 0, 0);
     Orders orders(model, dim, n_obs);
 
     if(orders.n_param_cov > 0 && covariates.has_time_variant_covariates() && new_covariates.isNull())

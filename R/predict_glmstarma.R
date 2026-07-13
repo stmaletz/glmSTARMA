@@ -27,11 +27,11 @@ predict.dglmstarma <- function(object, n.ahead = 1, type = c("response", "link",
                                 newobs = NULL, newxreg_mean = NULL, newxreg_dispersion = NULL) {
     type <- match.arg(type)
     type_dispersion <- match.arg(type_dispersion)
-    if(!is.null(object$family$copula)){
-        if(object$family$copula %in% c("normal", "t")){
-            copula_obj <- copula::ellipCopula(object$family$copula, param = object$family$copula_param, dim = object$target_dim)
+    if(!is.null(object$mean$family$copula)){
+        if(object$mean$family$copula %in% c("normal", "t")){
+            copula_obj <- copula::ellipCopula(object$mean$family$copula, param = object$mean$family$copula_param, dim = object$target_dim)
         } else {
-            copula_obj <- copula::archmCopula(object$family$copula, param = object$family$copula_param, dim = object$target_dim)
+            copula_obj <- copula::archmCopula(object$mean$family$copula, param = object$mean$family$copula_param, dim = object$target_dim)
         }
     } else {
         copula_obj <- NULL
