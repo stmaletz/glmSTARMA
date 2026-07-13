@@ -480,3 +480,175 @@ test_that("dev.resids functions method work", {
 })
 
 
+
+
+# sampling tests within C++
+testthat::skip_on_cran()
+test_that("sampling works (vpoisson)", {
+  set.seed(42)
+  n_obs <- 200L
+  W <- generateW("rectangle", 100, 2, 10)
+  model_orders <- list(intercept = "homogeneous", past_obs = 2, past_mean = 1)
+  parameter <- list(intercept = 0.5, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                    past_mean = matrix(c(0.1, 0.05), nrow = 2),
+                    covariates = c(0.75, 0.5))
+  covariates <- list(season = SpatialConstant(sin(2* pi / 12 * seq(n_obs))),
+                   location = TimeConstant(rnorm(100, sd = 0.81)))
+  
+  # log-link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("log", sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("log", sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+  
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "frank", copula_param = 2, sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("log", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+  # identity-link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("identity", sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("identity", sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("identity", copula = "frank", copula_param = 2, sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("identity", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+ # root link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("sqrt", sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("sqrt", sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("sqrt", copula = "frank", copula_param = 2, sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("sqrt", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+  # softplus link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("softplus", const = 2, sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("softplus", const = 2, sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("softplus", const = 2, copula = "frank", copula_param = 2, sampling_method = "inversion"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vpoisson("softplus", const = 2, copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
+  expect_s3_class(sim, "list")
+})
+
+
+
+# sampling tests within C++
+testthat::skip_on_cran()
+test_that("sampling works (vquasipoisson)", {
+  set.seed(42)
+  n_obs <- 200L
+  W <- generateW("rectangle", 100, 2, 10)
+  model_orders <- list(intercept = "homogeneous", past_obs = 2, past_mean = 1)
+  parameter <- list(intercept = 0.5, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                    past_mean = matrix(c(0.1, 0.05), nrow = 2),
+                    covariates = c(0.75, 0.5))
+  covariates <- list(season = SpatialConstant(sin(2* pi / 12 * seq(n_obs))),
+                   location = TimeConstant(rnorm(100, sd = 0.81)))
+  
+  # log-link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("log", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+
+  # identity-link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("identity", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+ # root link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("sqrt", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+
+  # softplus link
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2, sampling_method = "build_up"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2, sampling_method = "chop_down"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2, sampling_method = "branching"))
+  expect_s3_class(sim, "list")
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, covariates, family = vquasipoisson("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
+  expect_s3_class(sim, "list")
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
