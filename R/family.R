@@ -2,7 +2,7 @@
 # File: family.R
 # Purpose: Implements family functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-06-23
+# Last modified: 2026-07-13
 # -----------------------------------------------------------------------------
 
 
@@ -49,7 +49,6 @@
 #'   \item \code{vgamma()} – Gamma distribution
 #'   \item \code{vinverse.gaussian()} – Inverse Gaussian distribution
 #'   \item \code{vnormal()} – Gaussian distribution
-#'   \item \code{vgarch()} – GARCH distribution
 #' }
 #'
 #' The following copulas are available:

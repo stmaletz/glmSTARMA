@@ -20,6 +20,7 @@
 - Fixed bug in `glmstarma_predict` that always caused warnings, when time-varying covariates are included in the model
 - Fixed bug in `predict.dglmstarma()` that ignored specified copulas for prediction type `"sample"`
 - Fixed bug in `dglmstarma.control()`, where `parameter_init_dispersion` was not checked
+- Removed the incorrect reference to a `vgarch` family from the `stfamily` help page
 
 
 # glmsSTARMA 1.0.1

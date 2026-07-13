@@ -190,7 +190,8 @@ test_that("predict works for dglmstarma objects", {
                         mean_family = vquasipoisson("log"))
 
     # warning because new covariates are not provided
-    predictions <- predict(result, n.ahead = 10, type = "response")
+    expect_warning(predictions <- predict(result, n.ahead = 10, type = "response"))
+    
     # with new covariate values 
     predictions <- predict(result, n.ahead = 10, type = "response", 
                             newxreg_mean = list(population = population_hungary[, 1:10], 
@@ -215,10 +216,6 @@ test_that("predict works for dglmstarma objects", {
     expect_is(predictions, "list")
     expect_equal(length(predictions), 2)
     expect_named(predictions, c("mean", "dispersion"), ignore.order = TRUE)
-
-
-
-
 
 })
 

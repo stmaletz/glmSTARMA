@@ -1,6 +1,4 @@
 
-
-
 testthat::skip_on_cran()
 test_that("different control parameters work for glmstarma", {
     dat <- load_data("chickenpox", directory = tempdir())
