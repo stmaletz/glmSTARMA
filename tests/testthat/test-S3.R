@@ -294,6 +294,14 @@ test_that("summary.glmstarma function works", {
     expect_s3_class(x, "summary.glmstarma")
     print(x)
 
+    set.seed(123)
+    fit <- glmstarma(chickenpox, list(past_obs = 1), W_hungary, family = vquasipoisson("log", dispersion = matrix(runif(length(chickenpox), min = 1, max = 10), nrow = nrow(chickenpox), ncol = ncol(chickenpox))),
+                    covariates = list(population = population_hungary))
+    x <- summary(fit)
+    expect_s3_class(x, "summary.glmstarma")
+    print(x)
+
+
     fit$coefficients <- NULL
     fit$coefficients_list <- NULL
     x <- summary(fit)
@@ -340,6 +348,15 @@ test_that("summary.dglmstarma function works", {
     expect_s3_class(x, "summary.dglmstarma")
     print(x)
 
+    fit2$mean$coefficients <- NULL
+    fit2$mean$coefficients_list <- NULL
+    fit2$dispersion$coefficients <- NULL
+    fit2$dispersion$coefficients_list <- NULL
+    x <- summary(fit2)
+    expect_s3_class(x, "summary.dglmstarma")
+    expect_equal(length(x), 1)
+
+
     fit2 <- dglmstarma(chickenpox, list(past_obs = 1, past_mean = 1), list(intercept = "inhomogeneous"), mean_family = vquasipoisson("identity"),
                    dispersion_link = "log",
                    wlist = W_hungary, 
@@ -348,6 +365,39 @@ test_that("summary.dglmstarma function works", {
     x <- summary(fit2)
     expect_s3_class(x, "summary.dglmstarma")
     print(x)
+
+    x <- summary(fit2, alternative = "less")
+    expect_s3_class(x, "summary.dglmstarma")
+    print(x)
+
+    x <- summary(fit2, alternative = "greater")
+    expect_s3_class(x, "summary.dglmstarma")
+    print(x)
+
+
+    fit2 <- dglmstarma(chickenpox, list(past_obs = 1, intercept = "inhomogeneous"), list(past_obs = 1), mean_family = vquasipoisson("identity"),
+                   dispersion_link = "log",
+                   wlist = W_hungary)
+    x <- summary(fit2)
+    expect_s3_class(x, "summary.dglmstarma")
+    print(x)
+
+    fit2 <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), mean_family = vquasipoisson("identity"),
+                   dispersion_link = "log",
+                   wlist = W_hungary, 
+                   dispersion_covariates = list(population = population_hungary))
+    x <- summary(fit2)
+    expect_s3_class(x, "summary.dglmstarma")
+    print(x)
+
+    fit2 <- dglmstarma(chickenpox, list(past_obs = rep(1, 3)), list(past_obs = 1, past_mean = 1), mean_family = vquasipoisson("log"),
+                   dispersion_link = "identity",
+                   wlist = W_hungary,
+                   mean_covariates = list(population = population_hungary))
+    x <- summary(fit2)
+    expect_s3_class(x, "summary.dglmstarma")
+    print(x)
+
 })
 
 
