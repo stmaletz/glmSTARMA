@@ -744,10 +744,13 @@ test_that("sampling works (vbinomial)", {
   expect_true(all(sim$observations < 10000))
 
   # identity-link
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("identity", size = 10))
+  parameter_identity <- list(intercept = 0.2, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                    past_mean = matrix(c(0.1, 0.05), nrow = 2))
+  
+  sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vbinomial("identity", size = 10))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("identity", size = 10, copula = "frank", copula_param = 2))
+  sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vbinomial("identity", size = 10, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
@@ -797,10 +800,12 @@ test_that("sampling works (vquasibinomial)", {
   expect_true(all(sim$observations < 10000))
 
   # identity-link
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("identity", size = 10, dispersion = 2))
+  parameter_identity <- list(intercept = 0.2, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                    past_mean = matrix(c(0.1, 0.05), nrow = 2))
+  sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vquasibinomial("identity", size = 10, dispersion = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("identity", size = 10, dispersion = 2, copula = "frank", copula_param = 2))
+  sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vquasibinomial("identity", size = 10, dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
@@ -904,10 +909,10 @@ test_that("sampling works (vnormal)", {
                     past_mean = matrix(c(0.1, 0.05), nrow = 2))
   
   # log-link
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("log", dispersion = 2, const = 2))
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("log", dispersion = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("log", dispersion = 2, const = 2, copula = "frank", copula_param = 2))
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("log", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
@@ -920,10 +925,13 @@ test_that("sampling works (vnormal)", {
   expect_true(all(sim$observations < 10000))
 
  # inverse link
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("inverse", dispersion = 2))
+  parameter_inverse <- list(intercept = 50, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                  past_mean = matrix(c(0.1, 0.05), nrow = 2))
+
+  sim <- glmstarma.sim(n_obs, parameter_inverse, model_orders, W, family = vnormal("inverse", dispersion = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
-  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("inverse", dispersion = 2, copula = "frank", copula_param = 2))
+  sim <- glmstarma.sim(n_obs, parameter_inverse, model_orders, W, family = vnormal("inverse", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 })
