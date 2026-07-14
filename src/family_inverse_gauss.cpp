@@ -148,7 +148,7 @@ const bool InverseGauss::valid_expectation(const arma::mat &x) const
 const arma::mat InverseGauss::variance_fun(const arma::mat &link_values, const arma::mat &dispersion_) const
 {
     arma::mat response = this->inverse_link(link_values);
-    return (response % response % response) * dispersion_;
+    return (response % response % response) % dispersion_;
 }
 
 /*

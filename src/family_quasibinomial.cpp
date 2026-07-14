@@ -3,7 +3,7 @@
     File: family_quasibinomial.cpp
     Purpose: Implementation of QuasiBinomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-14
 -----------------------------------------------------------------------------
 */
 
@@ -112,6 +112,8 @@ const double QuasiBinomial::log_likelihood(const double &observation, const doub
 {
     int n = n_upper(index_n_upper);
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
+
+    /*
     double log_comb = std::lgamma(n + 1) - std::lgamma(observation + 1) - std::lgamma(n - observation + 1);
     double dev = 0.0;
     if (observation > 0)
@@ -129,6 +131,11 @@ const double QuasiBinomial::log_likelihood(const double &observation, const doub
     dev +=  log_comb;
     dev += std::log(dispersion_);
     return -0.5 * dev;
+    */
+    double logL_sat = R::dbinom(observation, n, observation / n, true);
+    double logL_fit = R::dbinom(observation, n, expectation / n, true);
+    double logL_Q = logL_sat - (logL_sat - logL_fit) / dispersion_ - 0.5 * std::log(dispersion_);
+    return logL_Q;
 }
 
 
@@ -142,7 +149,7 @@ const double QuasiBinomial::deviance_residual(const double &observation, const d
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
     if(observation <= 0.0)
     {
-        return 2.0 * n * std::log((n - observation) / (n - expectation));
+        return 2.0 * n * std::log(n / (n - expectation));
     } else if(observation >= n)
     {
         return 2.0 * n * std::log(n / expectation);
@@ -295,15 +302,17 @@ const double SoftClippingQuasiBinomial::observation_trafo(const double x) const
 
 const double SoftClippingQuasiBinomial::link_trafo(const double x) const
 {
-    double value = inverse_link(x) / n_upper(index_n_upper);
-    index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+    unsigned int n = n_upper(index_n_upper);  
+    double value = inverse_link(x) / n;
+    // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
     return value;
 }
 
 const double SoftClippingQuasiBinomial::derivative_link_trafo(const double x) const
 {
-  double value = derivative_inverse_link(x) / n_upper(index_n_upper);
-  index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+  unsigned int n = n_upper(index_n_upper);
+  double value = derivative_inverse_link(x) / n;
+  // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
   return value;
 }
 

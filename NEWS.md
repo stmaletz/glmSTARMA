@@ -5,6 +5,7 @@
 - Added argument `dispersion_constant` to the `dglmstarma.control()` and `glmstarma_sim.control()` function. The value of this argument is passed to the `const` argument of the `vgamma()` family function when the log-link is used for the dispersion model in the `dglmstarma`-function.
 - Added `withr` to the `Suggests` field in the DESCRIPTION file. The package is now used in the `test-data.R` test.
 - Removed redundant checks for NA and infinite values in the `ts` argument of the `glmstarma()` and `dglmstarma()` functions.
+- The log-likelihood of the `QuasiBinomial` family is now more robust against numerical issues.
 
 
 
@@ -22,6 +23,10 @@
 - Fixed bug in `dglmstarma.control()`, where `parameter_init_dispersion` was not checked
 - Removed the incorrect reference to a `vgarch` family from the `stfamily` help page
 - Changed observation transformation in case of the `vpoisson("sqrt")`, `vquasipoisson("sqrt")` and `vnegative.binomial("sqrt")` to `sqrt(x)` as `sqrt(x + 3 / 8) * 2` was causing problems.
+- Fixed bug in `dev.resids`-function of `vbinomial` and `vquasibinomial` family functions,  which caused problems when observed values were on the boundary of the support.
+- Fixed bug in the `link_trafo` and `derivative_link_trafo` functions of the `SoftClippingBinomial` and `SoftClippingQuasiBinomial` family functions, which caused problems when different values for `n` for different locations are used..
+- Default dispersion parameter for the `vquasibinomial` is now correctly set to 1 instead of 0 (not allowed) if the user does not specify a value and it must be estimated.
+
 
 # glmsSTARMA 1.0.1
 

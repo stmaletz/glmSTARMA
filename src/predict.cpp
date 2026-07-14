@@ -304,6 +304,7 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
             predictions_dispersion.col(t - ts.n_cols) = temp_prediction_dispersion;
             predictions_mean.col(t - ts.n_cols) = temp_prediction_mean;
             ts_extended.col(t) = (pred_type_mean == "link") ? fam_mean->inverse_link(temp_prediction_mean) : temp_prediction_mean;
+            // Rcpp::Rcout << "t: " << t << ", temp_prediction_mean: " << temp_prediction_mean.t() << "\n";
             pseudo_observations_extended.col(t) = (pred_type_mean != "sample") ? temp_dispersion : ((pseudo_obs_type == "deviance") ? fam_mean->deviance_residual(ts_extended.col(t), temp_prediction_mean) : fam_mean->pearson_residual(ts_extended.col(t), temp_prediction_mean));
         }
     }

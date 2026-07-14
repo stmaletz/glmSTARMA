@@ -218,6 +218,7 @@ public:
     const arma::mat deviance_residual(const arma::mat &observations, const arma::mat &expectations) const
     {
       arma::mat result(observations.n_rows, observations.n_cols);
+      if(this->valid_expectation(expectations)){
         for(unsigned int i = 0; i < observations.n_rows; i++)
         {
             for(unsigned int j = 0; j < observations.n_cols; j++)
@@ -225,11 +226,15 @@ public:
                 result(i, j) = this->deviance_residual( (double) observations(i, j), (double) expectations(i, j)); 
             }
         }
-        return result;
+      } else {
+        Rcpp::stop("Invalid expectations for deviance residuals.");
+      }
+      return result;
     };
     const arma::mat pearson_residual(const arma::mat &observations, const arma::mat &expectations) const
     {
       arma::mat result(observations.n_rows, observations.n_cols);
+      if(this->valid_expectation(expectations)){
         for(unsigned int i = 0; i < observations.n_rows; i++)
         {
             for(unsigned int j = 0; j < observations.n_cols; j++)
@@ -237,7 +242,10 @@ public:
                 result(i, j) = this->pearson_residual( (double) observations(i, j), (double) expectations(i, j)); 
             }
         }
-        return result;
+      } else {
+        Rcpp::stop("Invalid expectations for Pearson residuals.");
+      }
+      return result;
     };
     virtual const arma::mat variance_fun(const arma::mat &link_values, const arma::mat &dispersion_) const = 0;
 

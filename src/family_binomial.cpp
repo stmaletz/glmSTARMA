@@ -3,7 +3,7 @@
     File: family_binomial.cpp
     Purpose: Implementation of Binomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-14
 -----------------------------------------------------------------------------
 */
 
@@ -88,7 +88,7 @@ const double Binomial::deviance_residual(const double &observation, const double
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
     if(observation <= 0.0)
     {
-        return 2.0 * n * std::log((n - observation) / (n - expectation));
+        return 2.0 * n * std::log(n / (n - expectation));
     } else if(observation >= n)
     {
         return 2.0 * n * std::log(n / expectation);
@@ -220,15 +220,17 @@ const double SoftClippingBinomial::observation_trafo(const double x) const
 
 const double SoftClippingBinomial::link_trafo(const double x) const
 {
-    double value = inverse_link(x) / n_upper(index_n_upper);
-    index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+    unsigned int n = n_upper(index_n_upper);
+    double value = inverse_link(x) / n;
+    // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
     return value;
 }
 
 const double SoftClippingBinomial::derivative_link_trafo(const double x) const
 {
-  double value = derivative_inverse_link(x) / n_upper(index_n_upper);
-  index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+  unsigned int n = n_upper(index_n_upper);
+  double value = derivative_inverse_link(x) / n;
+  // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
   return value;
 }
 

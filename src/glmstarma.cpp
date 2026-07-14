@@ -77,7 +77,7 @@ Rcpp::List glmstarma_cpp(const arma::mat &ts, const Rcpp::List &covariate_list,
     {
         W_ma->set_parameter_matrices(ma_params);
     }
-    
+
     // Prepare output:
     arma::vec fitted = model_design.update_design(estimation, &orders, fam, W_ma);
     double dispersion_est = 1.0;

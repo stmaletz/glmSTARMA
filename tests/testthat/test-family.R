@@ -484,7 +484,7 @@ test_that("dev.resids functions method work", {
 
 # sampling tests within C++
 testthat::skip_on_cran()
-test_that("sampling works (vpoisson)", {
+test_that("sampling and fitting works (vpoisson)", {
   set.seed(42)
   n_obs <- 200L
   W <- generateW("rectangle", 100, 2, 10)
@@ -506,6 +506,8 @@ test_that("sampling works (vpoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("log", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vpoisson("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
 
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("identity", sampling_method = "inversion"))
@@ -521,6 +523,8 @@ test_that("sampling works (vpoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("identity", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vpoisson("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
 
  # root link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("sqrt", sampling_method = "inversion"))
@@ -536,6 +540,8 @@ test_that("sampling works (vpoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("sqrt", copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vpoisson("sqrt"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
 
   # softplus link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("softplus", const = 2, sampling_method = "inversion"))
@@ -551,12 +557,14 @@ test_that("sampling works (vpoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vpoisson("softplus", const = 2, copula = "frank", copula_param = 2, sampling_method = "poisson_process"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vpoisson("softplus", const = 2), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 
 
 testthat::skip_on_cran()
-test_that("sampling works (vquasipoisson)", {
+test_that("sampling and fitting works (vquasipoisson)", {
   set.seed(42)
   n_obs <- 200L
   W <- generateW("rectangle", 100, 2, 10)
@@ -592,6 +600,10 @@ test_that("sampling works (vquasipoisson)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("log"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasipoisson("identity", dispersion = 2, sampling_method = "build_up"))
@@ -621,6 +633,10 @@ test_that("sampling works (vquasipoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasipoisson("identity", dispersion = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("identity"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
  # root link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasipoisson("sqrt", dispersion = 2, sampling_method = "build_up"))
@@ -650,6 +666,11 @@ test_that("sampling works (vquasipoisson)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("sqrt"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("sqrt"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
 
   # softplus link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasipoisson("softplus", dispersion = 2, const = 2, sampling_method = "build_up"))
@@ -677,6 +698,11 @@ test_that("sampling works (vquasipoisson)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasipoisson("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2, sampling_method = "negbin"))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("softplus", const = 2), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasipoisson("softplus", const = 2), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 
@@ -698,6 +724,12 @@ test_that("sampling works (vnegative.binomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("log"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
+
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("identity", dispersion = 2))
   expect_true(is.list(sim))
@@ -705,6 +737,11 @@ test_that("sampling works (vnegative.binomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("identity", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("identity"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
 
  # root link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("sqrt", dispersion = 2))
@@ -714,6 +751,11 @@ test_that("sampling works (vnegative.binomial)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("sqrt"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("sqrt"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
   # softplus link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("softplus", dispersion = 2, const = 2))
   expect_true(is.list(sim))
@@ -721,6 +763,10 @@ test_that("sampling works (vnegative.binomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("softplus", dispersion = 2, const = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("softplus", const = 2), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnegative.binomial("softplus", const = 2), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 
@@ -735,13 +781,17 @@ test_that("sampling works (vbinomial)", {
   parameter <- list(intercept = 0.5, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
                     past_mean = matrix(c(0.1, 0.05), nrow = 2))
   
-  # log-link
+  # softclipping-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("softclipping", size = 10, const = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("softclipping", size = 10, const = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("softclipping", const = 2, size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("softclipping", const = 2, size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
   # identity-link
   parameter_identity <- list(intercept = 0.2, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
@@ -753,6 +803,10 @@ test_that("sampling works (vbinomial)", {
   sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vbinomial("identity", size = 10, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("identity", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("identity", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
  # root link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("logit", size = 10))
@@ -761,6 +815,10 @@ test_that("sampling works (vbinomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("logit", size = 10, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("logit", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("logit", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
   # softplus link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("probit", size = 10))
@@ -769,6 +827,10 @@ test_that("sampling works (vbinomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vbinomial("probit", size = 10, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("probit", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vbinomial("probit", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 
@@ -776,7 +838,7 @@ test_that("sampling works (vbinomial)", {
 
 
 testthat::skip_on_cran()
-test_that("sampling works (vquasibinomial)", {
+test_that("sampling and fitting works (vquasibinomial)", {
   set.seed(42)
   n_obs <- 200L
   W <- generateW("rectangle", 100, 2, 10)
@@ -784,7 +846,7 @@ test_that("sampling works (vquasibinomial)", {
   parameter <- list(intercept = 0.5, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
                     past_mean = matrix(c(0.1, 0.05), nrow = 2))
   
-  # log-link
+  # softclipping-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("softclipping", size = 10, dispersion = 2, const = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
@@ -799,6 +861,11 @@ test_that("sampling works (vquasibinomial)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("softclipping", const = 2, size = 10), control = list(dispersion_est_type = "deviance", maxit = 100L))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("softclipping", const = 2, size = 10), control = list(dispersion_est_type = "pearson", maxit = 100L))
+  expect_s3_class(fit, "glmstarma")
+
   # identity-link
   parameter_identity <- list(intercept = 0.2, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
                     past_mean = matrix(c(0.1, 0.05), nrow = 2))
@@ -808,6 +875,11 @@ test_that("sampling works (vquasibinomial)", {
   sim <- glmstarma.sim(n_obs, parameter_identity, model_orders, W, family = vquasibinomial("identity", size = 10, dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("identity", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("identity", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
 
  # root link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("logit", size = 10, dispersion = 2))
@@ -817,6 +889,11 @@ test_that("sampling works (vquasibinomial)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("logit", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("logit", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
   # softplus link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("probit", size = 10, dispersion = 2))
   expect_true(is.list(sim))
@@ -824,12 +901,17 @@ test_that("sampling works (vquasibinomial)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vquasibinomial("probit", size = 10, dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("probit", size = 10), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vquasibinomial("probit", size = 10), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
 })
 
 
 
 testthat::skip_on_cran()
-test_that("sampling works (vgamma)", {
+test_that("sampling and fitting works (vgamma)", {
   set.seed(42)
   n_obs <- 200L
   W <- generateW("rectangle", 100, 2, 10)
@@ -845,6 +927,11 @@ test_that("sampling works (vgamma)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("inverse"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("inverse"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
   # log-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vgamma("log", dispersion = 0.9, const = 2))
   expect_true(is.list(sim))
@@ -853,6 +940,12 @@ test_that("sampling works (vgamma)", {
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
 
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("log"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
+
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vgamma("identity", dispersion = 2))
   expect_true(is.list(sim))
@@ -860,6 +953,10 @@ test_that("sampling works (vgamma)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vgamma("identity", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vgamma("identity"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
 })
 
@@ -880,6 +977,11 @@ test_that("sampling works (vinverse.gaussian)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vinverse.gaussian("1/mu^2", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("1/mu^2"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("1/mu^2"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
+
 
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vinverse.gaussian("identity", dispersion = 2))
@@ -888,6 +990,10 @@ test_that("sampling works (vinverse.gaussian)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vinverse.gaussian("identity", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("identity"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
  # log link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vinverse.gaussian("log", dispersion = 2))
@@ -896,6 +1002,10 @@ test_that("sampling works (vinverse.gaussian)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vinverse.gaussian("log", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vinverse.gaussian("log"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 
@@ -915,6 +1025,10 @@ test_that("sampling works (vnormal)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("log", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("log"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("log"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
   # identity-link
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("identity", dispersion = 2))
@@ -923,6 +1037,10 @@ test_that("sampling works (vnormal)", {
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnormal("identity", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("identity"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("identity"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 
  # inverse link
   parameter_inverse <- list(intercept = 50, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
@@ -934,6 +1052,10 @@ test_that("sampling works (vnormal)", {
   sim <- glmstarma.sim(n_obs, parameter_inverse, model_orders, W, family = vnormal("inverse", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("inverse"), control = list(dispersion_est_type = "deviance"))
+  expect_s3_class(fit, "glmstarma")
+  fit <- glmstarma(sim$observations, model_orders, W, family = vnormal("inverse"), control = list(dispersion_est_type = "pearson"))
+  expect_s3_class(fit, "glmstarma")
 })
 
 

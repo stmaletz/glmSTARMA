@@ -2,7 +2,7 @@
 # File: family.R
 # Purpose: Implements family functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-07-13
+# Last modified: 2026-07-14
 # -----------------------------------------------------------------------------
 
 
@@ -267,8 +267,8 @@ vbinomial <- function(link = c("softclipping", "identity", "logit", "probit"), s
     r <- 2 * (y * log(y / mu) + (fam$size - y) * log((fam$size - y) / (fam$size - mu)))
     y_0 <- which(y == 0)
     y_n <- which(y == fam$size)
-    r[y_0] <- 2 * fam$size * log((fam$size) / (fam$size - mu))
-    r[y_n] <- 2 * fam$size * log(fam$size / mu)
+    r[y_0] <- (2 * fam$size * log((fam$size) / (fam$size - mu)))[y_0]
+    r[y_n] <- (2 * fam$size * log(fam$size / mu))[y_n]
     r
   }
 
@@ -293,7 +293,7 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
 
   fam$distribution <- "quasibinomial"
   if(is.null(dispersion)){
-    fam$dispersion <- 0
+    fam$dispersion <- 1
     fam$estimate_dispersion <- TRUE
   } else {
     fam$dispersion <- dispersion
@@ -326,8 +326,8 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
     r <- 2 * (y * log(y / mu) + (fam$size - y) * log((fam$size - y) / (fam$size - mu)))
     y_0 <- which(y == 0)
     y_n <- which(y == fam$size)
-    r[y_0] <- 2 * fam$size * log((fam$size) / (fam$size - mu))
-    r[y_n] <- 2 * fam$size * log(fam$size / mu)
+    r[y_0] <- (2 * fam$size * log((fam$size) / (fam$size - mu)))[y_0]
+    r[y_n] <- (2 * fam$size * log(fam$size / mu))[y_n]
     if(ignore_dispersion){
       return(r)
     } else {
