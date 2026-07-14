@@ -126,7 +126,6 @@ The following families are available:
 \item \code{vgamma()} – Gamma distribution
 \item \code{vinverse.gaussian()} – Inverse Gaussian distribution
 \item \code{vnormal()} – Gaussian distribution
-\item \code{vgarch()} – GARCH distribution
 }
 
 The following copulas are available:

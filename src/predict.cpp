@@ -183,9 +183,11 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
     const unsigned int n_obs_dispersion = pseudo_observations.n_cols + n_ahead;
     const unsigned int dim = ts.n_rows;
 
-    CovariateList covariates_mean(mean_covariates, n_obs_mean, dim, 0, 0);
+    // CovariateList covariates_mean(mean_covariates, n_obs_mean, dim, 0, 0);
+    CovariateList covariates_mean(mean_covariates, ts.n_cols, dim, 0, 0);
     Orders orders_mean(mean_model, dim, n_obs_mean);
-    CovariateList covariates_dispersion(dispersion_covariates, n_obs_dispersion, dim, 0, 0);
+    // CovariateList covariates_dispersion(dispersion_covariates, n_obs_dispersion, dim, 0, 0);
+    CovariateList covariates_dispersion(dispersion_covariates, pseudo_observations.n_cols, dim, 0, 0);
     Orders orders_dispersion(dispersion_model, dim, n_obs_dispersion);
 
     if(orders_mean.n_param_cov > 0 && covariates_mean.has_time_variant_covariates() && covariate_list_mean_new.isNull())

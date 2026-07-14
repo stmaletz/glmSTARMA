@@ -95,6 +95,7 @@ test_that("different control parameters work for dglmstarma", {
                          control = list(parameter_init = params_mean,
                                         parameter_init_dispersion = params_dispersion,
                                         print_progress = FALSE))
+    expect_s3_class(result, "dglmstarma")
 
     # Initialization of feedback term
     result <- dglmstarma(sim$observations, model_orders_mean, model_orders_dispersion, mean_family = vnormal(), 
@@ -102,13 +103,14 @@ test_that("different control parameters work for dglmstarma", {
                      control = list(init_link = sim$link_values[, 1, drop = FALSE],
                                     maxit = 100,
                                     print_progress = FALSE))
+    expect_s3_class(result, "dglmstarma")
 
     result <- dglmstarma(sim$observations, model_orders_mean, list(past_obs = 1, past_mean = 0), mean_family = vnormal(), 
                      dispersion_link = "log", W, mean_covariates = covariates_mean, dispersion_covariates = covariates_dispersion,
                      control = list(init_link = sim$link_values[, 1, drop = FALSE],
                                     maxit = 100,
                                     print_progress = FALSE))
-
+    expect_s3_class(result, "dglmstarma")
 })
 
 
