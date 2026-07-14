@@ -21,7 +21,7 @@
 - Fixed bug in `predict.dglmstarma()` that ignored specified copulas for prediction type `"sample"`
 - Fixed bug in `dglmstarma.control()`, where `parameter_init_dispersion` was not checked
 - Removed the incorrect reference to a `vgarch` family from the `stfamily` help page
-
+- Changed observation transformation in case of the `vpoisson("sqrt")`, `vquasipoisson("sqrt")` and `vnegative.binomial("sqrt")` to `sqrt(x)` as `sqrt(x + 3 / 8) * 2` was causing problems.
 
 # glmsSTARMA 1.0.1
 

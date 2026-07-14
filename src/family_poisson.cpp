@@ -3,7 +3,7 @@
     File: family_poisson.cpp
     Purpose: Implementation of Poisson family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-14
 -----------------------------------------------------------------------------
 */
 
@@ -277,7 +277,7 @@ const bool LogPoisson::valid_link(const arma::mat &x) const
 /*
   Define square root model, i.e. the 'sqrt' link of the Poisson distribution.
   Link function: g(mu) = sqrt(mu)
-  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation
+  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation (Outdated, because caused problems)
   Link transformation: h(psi) = psi
 */
 
@@ -323,7 +323,8 @@ const double SqrtPoisson::derivative_inverse_link(const double x) const
 
 const double SqrtPoisson::observation_trafo(const double x) const
 {
-  return std::sqrt(x + 3.0 / 8.0) * 2.0;
+  // return std::sqrt(x + 3.0 / 8.0) * 2.0;
+  return std::sqrt(x);
 }
 
 const double SqrtPoisson::link_trafo(const double x) const

@@ -106,7 +106,8 @@ test_that("predict works for dglmstarma objects", {
                        season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),
                        season_sin = SpatialConstant(sin(2 * pi / 52 * 1:522)))
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vnegative.binomial("log"))
+                        mean_family = vnegative.binomial("log"),
+                        control = list(maxit = 100, print_progress = FALSE))
     # test predict function
     predictions <- predict(result, n.ahead = 10)
     expect_is(predictions, "list")
@@ -121,7 +122,8 @@ test_that("predict works for dglmstarma objects", {
 
     # inhomogeneous intercept
     result <- dglmstarma(chickenpox, list(intercept = "inhomogeneous", past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vnegative.binomial("log"))
+                        mean_family = vnegative.binomial("log"),
+                        control = list(maxit = 100, print_progress = FALSE))
     # test predict function
     predictions <- predict(result, n.ahead = 10)
     expect_is(predictions, "list")
@@ -136,7 +138,8 @@ test_that("predict works for dglmstarma objects", {
 
     # different copulas
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vquasipoisson("log", copula = "frank", copula_param = 2))
+                        mean_family = vquasipoisson("log", copula = "frank", copula_param = 2),
+                        control = list(maxit = 100, print_progress = FALSE))
     predictions <- predict(result)
     expect_is(predictions, "list")
     expect_equal(length(predictions), 2)
@@ -146,7 +149,8 @@ test_that("predict works for dglmstarma objects", {
 
 
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vquasipoisson("log", copula = "normal", copula_param = 0.5))
+                        mean_family = vquasipoisson("log", copula = "normal", copula_param = 0.5),
+                        control = list(maxit = 100, print_progress = FALSE))
     predictions <- predict(result)
     expect_is(predictions, "list")
     expect_equal(length(predictions), 2)
@@ -155,7 +159,8 @@ test_that("predict works for dglmstarma objects", {
     expect_is(predictions$dispersion, "matrix")
 
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vquasipoisson("log"))
+                        mean_family = vquasipoisson("log"),
+                        control = list(maxit = 100, print_progress = FALSE))
     # test predict function
     predictions <- predict(result, n.ahead = 10, type = "response")
     expect_is(predictions, "list")
@@ -177,7 +182,8 @@ test_that("predict works for dglmstarma objects", {
     expect_true(all(predictions$mean == round(predictions$mean)))
 
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
-                        mean_family = vquasipoisson("log", copula = "frank", copula_param = 2))
+                        mean_family = vquasipoisson("log", copula = "frank", copula_param = 2),
+                        control = list(maxit = 100, print_progress = FALSE))
     predictions <- predict(result, n.ahead = 10, type = "sample")
     expect_is(predictions, "list")
     expect_true(all(predictions$mean >= 0))
@@ -187,11 +193,12 @@ test_that("predict works for dglmstarma objects", {
 
     result <- dglmstarma(chickenpox, list(past_obs = 1), list(past_obs = 1), wlist = W_hungary, 
                         mean_covariates = covariates, dispersion_covariates = covariates,
-                        mean_family = vquasipoisson("log"))
+                        mean_family = vquasipoisson("log"),
+                        control = list(maxit = 100, print_progress = FALSE))
 
     # warning because new covariates are not provided
     expect_warning(predictions <- predict(result, n.ahead = 10, type = "response"))
-    
+
     # with new covariate values 
     predictions <- predict(result, n.ahead = 10, type = "response", 
                             newxreg_mean = list(population = population_hungary[, 1:10], 
