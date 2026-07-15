@@ -123,7 +123,7 @@ test_that("dispersion parameter is valid (vquasipoisson)", {
 testthat::skip_on_cran()
 test_that("dispersion parameter is valid (vnegative.binomial)", {
   expect_error(vnegative.binomial(dispersion = -1))
-  expect_error(vnegative.binomial(dispersion = 0))
+  expect_s3_class(vnegative.binomial(dispersion = 0), "stfamily") # Allowed as this results in the Poisson distribution
   mat <- matrix(c(1, -0.5, 0.2, 1), nrow = 2)
   expect_error(vnegative.binomial(dispersion = mat))
   mat[2, 1] <- NA
@@ -738,14 +738,14 @@ test_that("sampling works (vnegative.binomial)", {
   
   # log-link
   expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = matrix(2, nrow = 100, ncol = n_obs))))
-  # sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 0))
-  # expect_true(is.list(sim))
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 0))
+  expect_true(is.list(sim))
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 2))
   expect_true(is.list(sim))
   expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = matrix(2, nrow = 100, ncol = n_obs), copula = "frank", copula_param = 2)))
-  # sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 0, copula = "frank", copula_param = 2))
-  # expect_true(is.list(sim))
-  # expect_true(all(sim$observations < 10000))
+  sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 0, copula = "frank", copula_param = 2))
+  expect_true(is.list(sim))
+  expect_true(all(sim$observations < 10000))
   sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = vnegative.binomial("log", dispersion = 2, copula = "frank", copula_param = 2))
   expect_true(is.list(sim))
   expect_true(all(sim$observations < 10000))
@@ -1216,6 +1216,104 @@ test_that("time-varying dispersion parameters work in glmstarma", {
  # Prediction via sampling not possible in this case. dglmstarma is needed for that.
 
 })
+
+
+
+
+
+testthat::skip_on_cran()
+test_that("some more code coverage", {
+  set.seed(42)
+  n_obs <- 200L
+  W <- generateW("rectangle", 100, 2, 10)
+  model_orders <- list(intercept = "homogeneous", past_obs = 2, past_mean = 1)
+  model_orders_dispersion <- list(intercept = "homogeneous", past_obs = 1)
+  parameter <- list(intercept = 0.5, past_obs = matrix(c(0.3, 0.2, 0.05), nrow = 3), 
+                    past_mean = matrix(c(0.1, 0.05), nrow = 2))
+  parameter_dispersion <- list(intercept = 1, past_obs = matrix(c(0.3, 0.2), nrow = 2))
+  
+
+  fam <- vpoisson()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vpoisson(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vquasipoisson()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vquasipoisson(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vnegative.binomial()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vnegative.binomial(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vbinomial(size = 10)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vbinomial(size = 10, copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vquasibinomial(size = 10)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vquasibinomial(size = 10, copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vgamma()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vgamma(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vinverse.gaussian()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vinverse.gaussian(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+  fam <- vnormal()
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vnormal(copula = "frank", copula_param = 2)
+  fam$link <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+
+  # Use invalid distribution instead of link to increase code coverage
+  fam <- vpoisson()
+  fam$distribution <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+  fam <- vpoisson(copula = "frank", copula_param = 2)
+  fam$distribution <- "invalid"
+  expect_error(sim <- glmstarma.sim(n_obs, parameter, model_orders, W, family = fam))
+
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

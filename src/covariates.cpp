@@ -61,8 +61,6 @@ CovariateList::CovariateList(const Rcpp::List &covariates, const unsigned int &n
                     }
                     arma_vals = arma_vals.head(n_obs);
                     list_of_covariates.push_back( new SpatialConstantCovariate(arma_vals, dim, burn_in) );
-            }    else {
-                    Rcpp::stop("Covariate not supported");
                 }
             } else {
                 Rcpp::NumericMatrix values = covariates[i];
@@ -83,6 +81,7 @@ CovariateList::CovariateList(const Rcpp::List &covariates, const unsigned int &n
 }
 
 
+// Next two functions are for future extensions of the package, not implemented yet.
 
 /*
     Constructor to create empty CovariateList
@@ -128,6 +127,10 @@ arma::vec CovariateList::get_values_at(const int &k, const int &t) const {
 }
 
 
+
+// Next function are for future extensions of the package, not implemented yet.
+
+
 /*
     Function to delete the last 'to_delete' covariates from the CovariateList
 */
@@ -171,6 +174,8 @@ arma::mat CovariateList::create_design_matrix(const arma::umat& orders, Neighbor
     return design_matrix;
 }
 
+
+// Next function is for future extensions of the package, not implemented yet.
 
 /*
     Function to create a design matrix from some covariates in the CovariateList according to the model orders

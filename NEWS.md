@@ -28,6 +28,7 @@
 - Fixed bug in the `link_trafo` and `derivative_link_trafo` functions of the `SoftClippingBinomial` and `SoftClippingQuasiBinomial` family functions, which caused problems when different values for `n` for different locations are used..
 - Default dispersion parameter for the `vquasibinomial` is now correctly set to 1 instead of 0 (not allowed) if the user does not specify a value and it must be estimated.
 - Fixed bug in `variance_fun` of the `InversGauss` family in `C++`.
+- Fixed bug in the `vnegative.binomial` family which did not allow zero values in the dispersion argument.
 
 
 

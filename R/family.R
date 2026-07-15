@@ -199,7 +199,7 @@ vnegative.binomial <- function(link = c("log", "identity", "sqrt", "softplus"), 
             "copula_param must be a numeric scalar" = is.null(copula_param) || (is.numeric(copula_param) && length(copula_param) == 1),
             "copula_param must be positive" = is.null(copula_param) || copula_param > 0,
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param),
-            "dispersion must be positive" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion > 0)),
+            "dispersion must be non-negative" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion >= 0)),
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
   fam$distribution <- "negative_binomial"
   if(is.null(dispersion)){

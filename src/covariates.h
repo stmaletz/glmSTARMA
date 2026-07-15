@@ -26,12 +26,8 @@ class Covariate{
         this->burn_in = burn_in;
         this->is_time_constant = is_time_constant;
     };
-    Covariate(arma::mat covariate_values, int burn_in, bool is_time_constant) {
-        if(covariate_values.is_rowvec()){
-            values = covariate_values.t();
-        } else {
-            values = covariate_values;
-        }
+    Covariate(const arma::mat &covariate_values, int burn_in, bool is_time_constant) {
+        values = covariate_values;
         this->burn_in = burn_in;
         this->is_time_constant = is_time_constant;
     };

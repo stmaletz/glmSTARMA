@@ -12,43 +12,60 @@ test_that("different control parameters work for glmstarma", {
                     covariates = covariates, family = vpoisson("log"),
                     control = list(parameter_init = list(intercept = 1.5, 
                                                          past_obs = matrix(c(0.5, 0.1), nrow = 2),
-                                                         covariates = matrix(c(0.1, 0.1, 0.5), nrow = 1))))
-
+                                                         covariates = matrix(c(0.1, 0.1, 0.5), nrow = 1)), maxit = 100L))
+    expect_s3_class(result, "glmstarma")
+    
     set.seed(123)
     result <- glmstarma(chickenpox, list(past_obs = 1, past_mean = 1), wlist = W_hungary, 
                     covariates = covariates, family = vpoisson("log"),
-                    control = list(init_link = matrix(runif(20, min = 1, max = 10), nrow = 20)))                                                     
+                    control = list(init_link = matrix(runif(20, min = 1, max = 10), nrow = 20), maxit = 100L))
+    expect_s3_class(result, "glmstarma")
+    result <- glmstarma(chickenpox, list(past_obs = 1, past_mean = 1), wlist = W_hungary, 
+                    covariates = covariates, family = vpoisson("log"),
+                    control = list(init_link = "mean", maxit = 100L))
+    expect_s3_class(result, "glmstarma")
+    set.seed(123)
+    result <- glmstarma(chickenpox, list(past_obs = 1, past_mean = 1), wlist = W_hungary, 
+                    covariates = covariates, family = vpoisson("log"),
+                    control = list(parameter_init = "random", maxit = 100L))
+    expect_s3_class(result, "glmstarma")
+    covariates$season_cos <- covariates$season_cos + 1
+    covariates$season_sin <- covariates$season_sin + 1 
+    result <- glmstarma(chickenpox, list(past_obs = 1, past_mean = 1), wlist = W_hungary, 
+                    covariates = covariates, family = vpoisson("identity"),
+                    control = list(parameter_init = "random", maxit = 100L))
+    expect_s3_class(result, "glmstarma")                                                   
 
     # Constrained optimization
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"),
-                        control = list(constrained = FALSE))
+                        control = list(constrained = FALSE, maxit = 100L))
     expect_s3_class(result, "glmstarma")
 
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"),
-                        control = list(constrain_method = "sum_of_absolutes"))
+                        control = list(constrain_method = "sum_of_absolutes", maxit = 100L))
     expect_s3_class(result, "glmstarma")
 
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"),
-                        control = list(constrain_method = "absolute_sum"))
+                        control = list(constrain_method = "absolute_sum", maxit = 100L))
     expect_s3_class(result, "glmstarma")
 
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("softplus"),
-                        control = list(constrain_method = "soft"))
+                        control = list(constrain_method = "soft", maxit = 100L))
     expect_s3_class(result, "glmstarma")
 
     # Optimization algorithm
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         covariates = covariates, family = vpoisson("log"),
-                        control = list(method = "optim"))   
+                        control = list(method = "optim", maxit = 100L))   
     expect_s3_class(result, "glmstarma")
 
     result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
                         family = vpoisson("identity"),
-                        control = list(method = "optim"))                       
+                        control = list(method = "optim", maxit = 100L))                       
     expect_s3_class(result, "glmstarma")
 
 })

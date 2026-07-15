@@ -29,4 +29,20 @@ test_that("SpatialConstant covariate works correctly", {
 })
 
 
+testthat::skip_on_cran()
+test_that("unnamed covariates work correctly", {
+  dat <- load_data("chickenpox", directory = tempdir())
+  chickenpox <- dat$chickenpox
+  population_hungary <- dat$population_hungary
+  W_hungary <- dat$W_hungary
+  covariates <- list(population_hungary, 
+                      SpatialConstant(cos(2 * pi / 52 * 1:522)),
+                      SpatialConstant(sin(2 * pi / 52 * 1:522)))
+  result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = vpoisson("log"),
+                    control = list(maxit = 100L))
+   expect_s3_class(result, "glmstarma")
+
+})
+
 
