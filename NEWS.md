@@ -6,7 +6,7 @@
 - Added `withr` to the `Suggests` field in the DESCRIPTION file. The package is now used in the `test-data.R` test.
 - Removed redundant checks for NA and infinite values in the `ts` argument of the `glmstarma()` and `dglmstarma()` functions.
 - The log-likelihood of the `QuasiBinomial` family is now more robust against numerical issues.
-- Remove `clone` methods in `C++` that were left over from a preliminary version
+- Removed unused methods in `C++` that were left over from a preliminary version
 
 
 

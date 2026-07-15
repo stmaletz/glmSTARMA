@@ -134,7 +134,6 @@ class LogGamma : public Gamma {
     LogGamma(const Rcpp::RObject &dispersion, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Gamma(dispersion, true, false, copula_obj, "log"), added_constant(constant){};
     LogGamma(const Rcpp::RObject &dispersion, double constant) : Gamma(dispersion, true, false, "log"), added_constant(constant){};
     ~LogGamma() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -169,10 +168,6 @@ const double LogGamma::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogGamma::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 /*
   Define various link functions for Gamma family
@@ -198,7 +193,6 @@ class LinearGamma : public Gamma {
     LinearGamma(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Gamma(dispersion, true, true, copula_obj, "identity"){};
     LinearGamma(const Rcpp::RObject &dispersion) : Gamma(dispersion, true, true, "identity"){};
     ~LinearGamma() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -233,10 +227,7 @@ const double LinearGamma::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearGamma::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
+
 
 
 /*
@@ -257,7 +248,6 @@ class InverseGamma : public Gamma {
     InverseGamma(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Gamma(dispersion, true, true, copula_obj, "inverse"){};
     InverseGamma(const Rcpp::RObject &dispersion) : Gamma(dispersion, true, true, "inverse"){};
     ~InverseGamma() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -292,10 +282,6 @@ const double InverseGamma::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool InverseGamma::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 
 

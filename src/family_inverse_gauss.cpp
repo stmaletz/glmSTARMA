@@ -174,7 +174,6 @@ class NaturalInverseGauss : public InverseGauss {
     NaturalInverseGauss(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : InverseGauss(dispersion, true, true, copula_obj, "1/mu^2"){};
     NaturalInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "1/mu^2"){};
     ~NaturalInverseGauss() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -209,10 +208,6 @@ const double NaturalInverseGauss::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool NaturalInverseGauss::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
     Define inverse link, i.e., link function: g(mu) = 1/mu
@@ -232,7 +227,6 @@ class InverseInverseGauss : public InverseGauss {
     InverseInverseGauss(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : InverseGauss(dispersion, true, true, copula_obj, "inverse"){};
     InverseInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "inverse"){};
     ~InverseInverseGauss() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -268,10 +262,7 @@ const double InverseInverseGauss::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool InverseInverseGauss::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
+
 
 /*
     Define identity link, i.e., link function: g(mu) = mu
@@ -291,7 +282,6 @@ class LinearInverseGauss : public InverseGauss {
     LinearInverseGauss(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : InverseGauss(dispersion, true, true, copula_obj, "identity"){};
     LinearInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "identity"){};
     ~LinearInverseGauss() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LinearInverseGauss::inverse_link(const double x) const
@@ -325,10 +315,6 @@ const double LinearInverseGauss::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearInverseGauss::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 
 /*
@@ -349,7 +335,6 @@ class LogInverseGauss : public InverseGauss {
     LogInverseGauss(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : InverseGauss(dispersion, true, false, copula_obj, "log"){};
     LogInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, false, "log"){};
     ~LogInverseGauss() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LogInverseGauss::inverse_link(const double x) const
@@ -383,10 +368,6 @@ const double LogInverseGauss::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogInverseGauss::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 

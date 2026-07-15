@@ -265,7 +265,6 @@ public:
         }
     };
     virtual const bool valid_expectation(const arma::mat &x) const = 0;
-    virtual const bool valid_link(const arma::mat &x) const = 0;
 };
 
 

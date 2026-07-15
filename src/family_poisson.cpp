@@ -154,7 +154,6 @@ class LinearPoisson : public Poisson {
     LinearPoisson(const bool &fast_sampling, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, true, copula_obj, "identity"){};
     LinearPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "identity"){};
     ~LinearPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LinearPoisson::inverse_link(const double x) const
@@ -188,11 +187,6 @@ const double LinearPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
-
 
 /*
   Define log-linear model, i.e. the 'log' link of the Poisson distribution.
@@ -215,7 +209,6 @@ class LogPoisson : public Poisson {
     LogPoisson(const bool &fast_sampling, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, false, copula_obj, "log"), added_constant(constant){};
     LogPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, true, false, "log"), added_constant(constant){};
     ~LogPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LogPoisson::inverse_link(const double x) const
@@ -249,10 +242,6 @@ const double LogPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 
@@ -275,7 +264,6 @@ class SqrtPoisson : public Poisson {
     SqrtPoisson(const bool &fast_sampling, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, true, copula_obj, "sqrt"){};
     SqrtPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "sqrt"){};
     ~SqrtPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -310,10 +298,6 @@ const double SqrtPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool SqrtPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
   Define approximately linear model, i.e. the 'softplus' link of the Poisson distribution from the work of Jahn et al. (2023)
@@ -335,7 +319,6 @@ class SoftPlusPoisson : public Poisson {
     SoftPlusPoisson(const bool &fast_sampling, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, false, false, copula_obj, "softplus"), tuning_param(constant){};
     SoftPlusPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -371,11 +354,6 @@ const double SoftPlusPoisson::derivative_link_trafo(const double x) const
 {
   double val = exp(x / tuning_param);
   return val / (1.0 + val);
-}
-
-const bool SoftPlusPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
 }
 
 

@@ -147,7 +147,6 @@ class LinearQuasiPoisson : public QuasiPoisson {
     LinearQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, true, copula_obj, "identity"){};
     LinearQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method) : QuasiPoisson(sampling_method, dispersion, true, true, "identity"){};
     ~LinearQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LinearQuasiPoisson::inverse_link(const double x) const
@@ -181,10 +180,7 @@ const double LinearQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
+
 
 
 /*
@@ -208,7 +204,6 @@ class LogQuasiPoisson : public QuasiPoisson {
     LogQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, false, copula_obj, "log"), added_constant(constant){};
     LogQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant) : QuasiPoisson(sampling_method, dispersion, true, false, "log"), added_constant(constant){};
     ~LogQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LogQuasiPoisson::inverse_link(const double x) const
@@ -242,10 +237,6 @@ const double LogQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 
@@ -268,7 +259,6 @@ class SqrtQuasiPoisson : public QuasiPoisson {
     SqrtQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, true, copula_obj, "sqrt"){};
     SqrtQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method) : QuasiPoisson(sampling_method, dispersion, true, true, "sqrt"){};
     ~SqrtQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -303,10 +293,6 @@ const double SqrtQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool SqrtQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
   Define approximately linear model, i.e. the 'softplus' link of the Poisson distribution from the work of Jahn et al. (2023)
@@ -328,7 +314,6 @@ class SoftPlusQuasiPoisson : public QuasiPoisson {
     SoftPlusQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, false, false, copula_obj, "softplus"), tuning_param(constant){};
     SoftPlusQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant) : QuasiPoisson(sampling_method, dispersion, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -364,11 +349,6 @@ const double SoftPlusQuasiPoisson::derivative_link_trafo(const double x) const
 {
   double val = exp(x / tuning_param);
   return val / (1.0 + val);
-}
-
-const bool SoftPlusQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
 }
 
 

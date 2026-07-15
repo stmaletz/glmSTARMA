@@ -158,7 +158,6 @@ class LinearNegativeBinomial : public NegativeBinomial {
     LinearNegativeBinomial(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : NegativeBinomial(dispersion, true, true, copula_obj, "identity"){};
     LinearNegativeBinomial(const Rcpp::RObject &dispersion) : NegativeBinomial(dispersion, true, true, "identity"){};
     ~LinearNegativeBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LinearNegativeBinomial::inverse_link(const double x) const
@@ -192,10 +191,6 @@ const double LinearNegativeBinomial::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearNegativeBinomial::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 
 /*
@@ -217,7 +212,6 @@ class LogNegativeBinomial : public NegativeBinomial {
     LogNegativeBinomial(const Rcpp::RObject &dispersion, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : NegativeBinomial(dispersion, true, false, copula_obj, "log"), added_constant(constant){};
     LogNegativeBinomial(const Rcpp::RObject &dispersion, double constant) : NegativeBinomial(dispersion, true, false, "log"), added_constant(constant){};
     ~LogNegativeBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LogNegativeBinomial::inverse_link(const double x) const
@@ -252,10 +246,6 @@ const double LogNegativeBinomial::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogNegativeBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 
@@ -278,7 +268,6 @@ class SqrtNegativeBinomial : public NegativeBinomial {
     SqrtNegativeBinomial(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : NegativeBinomial(dispersion, true, true, copula_obj, "sqrt"){};
     SqrtNegativeBinomial(const Rcpp::RObject &dispersion) : NegativeBinomial(dispersion, true, true, "sqrt"){};
     ~SqrtNegativeBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double SqrtNegativeBinomial::inverse_link(const double x) const
@@ -312,10 +301,6 @@ const double SqrtNegativeBinomial::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool SqrtNegativeBinomial::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
   Define approximately linear model, i.e. the 'softplus' link of the Poisson distribution from the work of Jahn et al. (2023), but for Negative Binomial marginals,
@@ -337,7 +322,6 @@ class SoftPlusNegativeBinomial : public NegativeBinomial {
     SoftPlusNegativeBinomial(const Rcpp::RObject &dispersion, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : NegativeBinomial(dispersion, false, false, copula_obj, "softplus"), tuning_param(constant){};
     SoftPlusNegativeBinomial(const Rcpp::RObject &dispersion, double constant) : NegativeBinomial(dispersion, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusNegativeBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 
@@ -374,10 +358,6 @@ const double SoftPlusNegativeBinomial::derivative_link_trafo(const double x) con
   return val / (1.0 + val);
 }
 
-const bool SoftPlusNegativeBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 /*
   Factory methods for Negative Binomial family

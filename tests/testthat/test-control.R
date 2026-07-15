@@ -113,6 +113,38 @@ test_that("different control parameters work for dglmstarma", {
     expect_s3_class(result, "dglmstarma")
 })
 
+# Use Dense matrix for W
+
+testthat::skip_on_cran()
+test_that("neighborhood matrix work", {
+    dat <- load_data("chickenpox", directory = tempdir())
+    chickenpox <- dat$chickenpox
+    population_hungary <- dat$population_hungary
+    W_hungary <- dat$W_hungary
+    covariates <- list(population = population_hungary, 
+                       season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),
+                       season_sin = SpatialConstant(sin(2 * pi / 52 * 1:522)))
+    fam <- vpoisson("log")
+
+    # Dense matrix because of user want to use dense matrix
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, use_sparsity = FALSE))
+    expect_s3_class(result, "glmstarma")
+
+    # density matrix because of sparsity threshold
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, sparsity_threshold = 0.001))
+    expect_s3_class(result, "glmstarma")
+
+    # matrix for past mean
+    result <- glmstarma(chickenpox, list(past_obs = 1, past_mean = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam, wlist_past_mean = W_hungary,
+                    control = list(maxit = 100L))
+    expect_s3_class(result, "glmstarma")
+
+})
 
 
 
@@ -120,7 +152,41 @@ test_that("different control parameters work for dglmstarma", {
 
 
 
+## Additional tests for code coverage
+# Not indented for use
 
+testthat::skip_on_cran()
+test_that("cover more code", {
+    dat <- load_data("chickenpox", directory = tempdir())
+    chickenpox <- dat$chickenpox
+    population_hungary <- dat$population_hungary
+    W_hungary <- dat$W_hungary
+    covariates <- list(population = population_hungary, 
+                       season_cos = SpatialConstant(cos(2 * pi / 52 * 1:522)),
+                       season_sin = SpatialConstant(sin(2 * pi / 52 * 1:522)))
+    fam <- vpoisson("log")
+    fam$estimate_dispersion <- TRUE
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, dispersion_est_type = "deviance"))
+    expect_s3_class(result, "glmstarma")
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, dispersion_est_type = "pearson"))
+    expect_s3_class(result, "glmstarma")
+
+
+    fam <- vbinomial("logit", size = max(chickenpox))
+    fam$estimate_dispersion <- TRUE
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, dispersion_est_type = "deviance"))
+    expect_s3_class(result, "glmstarma")
+    result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = fam,
+                    control = list(maxit = 100L, dispersion_est_type = "pearson"))
+    expect_s3_class(result, "glmstarma")
+})
 
 
 
