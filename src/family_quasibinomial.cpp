@@ -3,7 +3,7 @@
     File: family_quasibinomial.cpp
     Purpose: Implementation of QuasiBinomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-07-14
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -238,29 +238,6 @@ class SoftClippingQuasiBinomial : public QuasiBinomial {
     SoftClippingQuasiBinomial(const Rcpp::RObject &dispersion, const arma::uvec &n, double constant) : QuasiBinomial(n, dispersion, false, false, "softclipping"), tuning_param(constant){};
     virtual ~SoftClippingQuasiBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SoftClippingQuasiBinomial(disp_vec, this->n_upper, this->tuning_param, this->copula_object);
-        } else {
-          return new SoftClippingQuasiBinomial(disp_vec, this->n_upper, this->tuning_param);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SoftClippingQuasiBinomial(disp_mat, this->n_upper, this->tuning_param, this->copula_object);
-        } else {
-          return new SoftClippingQuasiBinomial(disp_mat, this->n_upper, this->tuning_param);
-        }
-      }
-    };
 };
 
 
@@ -343,29 +320,6 @@ class IdentityQuasiBinomial : public QuasiBinomial {
     IdentityQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, true, "identity"){};
     virtual ~IdentityQuasiBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new IdentityQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new IdentityQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new IdentityQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new IdentityQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 
@@ -445,29 +399,6 @@ class LogitQuasiBinomial : public QuasiBinomial {
     LogitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, false, "logit"){};
     virtual ~LogitQuasiBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogitQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new LogitQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogitQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new LogitQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 const double LogitQuasiBinomial::inverse_link(const double x) const
@@ -539,29 +470,6 @@ class ProbitQuasiBinomial : public QuasiBinomial {
     ProbitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, false, "probit"){};
     virtual ~ProbitQuasiBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new ProbitQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new ProbitQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new ProbitQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new ProbitQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 const double ProbitQuasiBinomial::inverse_link(const double x) const

@@ -3,7 +3,7 @@
     File: family_inverse_gauss.cpp
     Purpose: Implementation of Inverse Gaussian family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-01-10
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -175,29 +175,6 @@ class NaturalInverseGauss : public InverseGauss {
     NaturalInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "1/mu^2"){};
     ~NaturalInverseGauss() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new NaturalInverseGauss(disp_vec, this->copula_object);
-        } else {
-          return new NaturalInverseGauss(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new NaturalInverseGauss(disp_mat, this->copula_object);
-        } else {
-          return new NaturalInverseGauss(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -256,29 +233,6 @@ class InverseInverseGauss : public InverseGauss {
     InverseInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "inverse"){};
     ~InverseInverseGauss() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new InverseInverseGauss(disp_vec, this->copula_object);
-        } else {
-          return new InverseInverseGauss(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new InverseInverseGauss(disp_mat, this->copula_object);
-        } else {
-          return new InverseInverseGauss(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -338,29 +292,6 @@ class LinearInverseGauss : public InverseGauss {
     LinearInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, true, "identity"){};
     ~LinearInverseGauss() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearInverseGauss(disp_vec, this->copula_object);
-        } else {
-          return new LinearInverseGauss(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LinearInverseGauss(disp_mat, this->copula_object);
-        } else {
-          return new LinearInverseGauss(disp_mat);
-        }
-      }
-    };
 };
 
 const double LinearInverseGauss::inverse_link(const double x) const
@@ -419,29 +350,6 @@ class LogInverseGauss : public InverseGauss {
     LogInverseGauss(const Rcpp::RObject &dispersion) : InverseGauss(dispersion, true, false, "log"){};
     ~LogInverseGauss() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogInverseGauss(disp_vec, this->copula_object);
-        } else {
-          return new LogInverseGauss(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogInverseGauss(disp_mat, this->copula_object);
-        } else {
-          return new LogInverseGauss(disp_mat);
-        }
-      }
-    };
 };
 
 const double LogInverseGauss::inverse_link(const double x) const

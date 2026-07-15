@@ -3,7 +3,7 @@
     File: covariates.h
     Purpose: Declarations for Covariate and CovariateList classes
     Author: Steffen Maletz
-    Last modified: 2025-12-12
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -35,9 +35,7 @@ class Covariate{
         this->burn_in = burn_in;
         this->is_time_constant = is_time_constant;
     };
-    Covariate(const Covariate* to_clone) : burn_in(to_clone->burn_in), is_time_constant(to_clone->is_time_constant), values(to_clone->values) {};
     virtual ~Covariate() = default;
-    virtual Covariate* clone() = 0;
     virtual arma::vec get_values_at(int t) = 0;
     virtual void append_values(arma::mat vals) = 0;
     virtual void delete_last_values(int to_delete) = 0;
@@ -50,7 +48,6 @@ class Covariate{
 class TimeConstantCovariate : public Covariate {
     public:
     TimeConstantCovariate(arma::mat covariate_values, int burn_in) : Covariate(covariate_values, burn_in, true) {};
-    TimeConstantCovariate(const TimeConstantCovariate* to_clone) : Covariate(to_clone) {};
     ~TimeConstantCovariate() = default;
     arma::vec get_values_at(int t){
         if(t >= burn_in){
@@ -58,9 +55,6 @@ class TimeConstantCovariate : public Covariate {
         } else {
             return arma::zeros(values.n_rows);
         }
-    }
-    TimeConstantCovariate* clone(){
-        return new TimeConstantCovariate(this);
     }
     void append_values(arma::mat vals){};
     void delete_last_values(int to_delete){};
@@ -76,9 +70,6 @@ class SpatialConstantCovariate : public Covariate {
     arma::vec returned_value;
     public:
     SpatialConstantCovariate(arma::mat covariate_values, int dim, int burn_in) : Covariate(covariate_values, burn_in, false), dim(dim) {
-        returned_value = arma::vec(dim, arma::fill::zeros);
-    }
-    SpatialConstantCovariate(const SpatialConstantCovariate* to_clone) : Covariate(to_clone), dim(to_clone->dim) {
         returned_value = arma::vec(dim, arma::fill::zeros);
     }
     ~SpatialConstantCovariate() = default;
@@ -97,9 +88,6 @@ class SpatialConstantCovariate : public Covariate {
     void append_values(arma::mat vals){
         values = arma::join_cols(values, vals);
     }
-    SpatialConstantCovariate* clone(){
-        return new SpatialConstantCovariate(this);
-    }
     void delete_last_values(int to_delete){
         values = values.head_rows(values.n_elem - to_delete);
     }
@@ -112,7 +100,6 @@ class SpatialConstantCovariate : public Covariate {
 class DefaultCovariate : public Covariate {
     public:
     DefaultCovariate(arma::mat covariate_values, int burn_in) : Covariate(covariate_values, burn_in, false) {};
-    DefaultCovariate(const DefaultCovariate* to_clone) : Covariate(to_clone) {};
     ~DefaultCovariate() = default;
     arma::vec get_values_at(int t){
         if(t >= burn_in){
@@ -124,9 +111,6 @@ class DefaultCovariate : public Covariate {
         } else {
             return arma::zeros(values.n_rows);
         }
-    }
-    DefaultCovariate* clone(){
-        return new DefaultCovariate(this);
     }
     void append_values(arma::mat vals){
         values = arma::join_rows(values, vals);
@@ -158,7 +142,6 @@ class CovariateList {
         }
     };
     CovariateList(const Rcpp::List &covariates, const unsigned int &n_obs, const unsigned int &dim, const int &burn_in, const unsigned int &shift_interventions);
-    CovariateList(CovariateList* to_clone);
     CovariateList(const unsigned int &n_obs, const unsigned int &dim);
     arma::vec get_values_at(const int &k, const int &t) const;
     bool has_time_variant_covariates() const {
@@ -183,7 +166,6 @@ class CovariateList {
         }
         n_obs += other.n_obs;
     }
-    CovariateList* clone();
     void delete_last_covariates(unsigned int &to_delete);
     void add_covariate(Covariate* cov);
     arma::mat create_design_matrix(const arma::umat &orders, Neighborhood * W_covariates) const;

@@ -3,7 +3,7 @@
     File: family_gamma.cpp
     Purpose: Implementation of Gamma family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-05-21
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -135,29 +135,6 @@ class LogGamma : public Gamma {
     LogGamma(const Rcpp::RObject &dispersion, double constant) : Gamma(dispersion, true, false, "log"), added_constant(constant){};
     ~LogGamma() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogGamma(disp_vec, this->added_constant, this->copula_object);
-        } else {
-          return new LogGamma(disp_vec, this->added_constant);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogGamma(disp_mat, this->added_constant, this->copula_object);
-        } else {
-          return new LogGamma(disp_mat, this->added_constant);
-        }
-      }
-    };
 };
 
 
@@ -222,29 +199,6 @@ class LinearGamma : public Gamma {
     LinearGamma(const Rcpp::RObject &dispersion) : Gamma(dispersion, true, true, "identity"){};
     ~LinearGamma() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearGamma(disp_vec, this->copula_object);
-        } else {
-          return new LinearGamma(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LinearGamma(disp_mat, this->copula_object);
-        } else {
-          return new LinearGamma(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -304,29 +258,6 @@ class InverseGamma : public Gamma {
     InverseGamma(const Rcpp::RObject &dispersion) : Gamma(dispersion, true, true, "inverse"){};
     ~InverseGamma() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new InverseGamma(disp_vec, this->copula_object);
-        } else {
-          return new InverseGamma(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new InverseGamma(disp_mat, this->copula_object);
-        } else {
-          return new InverseGamma(disp_mat);
-        }
-      }
-    };
 };
 
 

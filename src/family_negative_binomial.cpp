@@ -3,7 +3,7 @@
     File: family_negative_binomial.cpp
     Purpose: Implementation of Negative Binomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-07-14
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -159,29 +159,6 @@ class LinearNegativeBinomial : public NegativeBinomial {
     LinearNegativeBinomial(const Rcpp::RObject &dispersion) : NegativeBinomial(dispersion, true, true, "identity"){};
     ~LinearNegativeBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearNegativeBinomial(disp_vec, this->copula_object);
-        } else {
-          return new LinearNegativeBinomial(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LinearNegativeBinomial(disp_mat, this->copula_object);
-        } else {
-          return new LinearNegativeBinomial(disp_mat);
-        }
-      }
-    };
 };
 
 const double LinearNegativeBinomial::inverse_link(const double x) const
@@ -241,29 +218,6 @@ class LogNegativeBinomial : public NegativeBinomial {
     LogNegativeBinomial(const Rcpp::RObject &dispersion, double constant) : NegativeBinomial(dispersion, true, false, "log"), added_constant(constant){};
     ~LogNegativeBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogNegativeBinomial(disp_vec, added_constant, this->copula_object);
-        } else {
-          return new LogNegativeBinomial(disp_vec, added_constant);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogNegativeBinomial(disp_mat, added_constant, this->copula_object);
-        } else {
-          return new LogNegativeBinomial(disp_mat, added_constant);
-        }
-      }
-    };
 };
 
 const double LogNegativeBinomial::inverse_link(const double x) const
@@ -325,29 +279,6 @@ class SqrtNegativeBinomial : public NegativeBinomial {
     SqrtNegativeBinomial(const Rcpp::RObject &dispersion) : NegativeBinomial(dispersion, true, true, "sqrt"){};
     ~SqrtNegativeBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SqrtNegativeBinomial(disp_vec, this->copula_object);
-        } else {
-          return new SqrtNegativeBinomial(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SqrtNegativeBinomial(disp_mat, this->copula_object);
-        } else {
-          return new SqrtNegativeBinomial(disp_mat);
-        }
-      }
-    };
 };
 
 const double SqrtNegativeBinomial::inverse_link(const double x) const
@@ -407,29 +338,6 @@ class SoftPlusNegativeBinomial : public NegativeBinomial {
     SoftPlusNegativeBinomial(const Rcpp::RObject &dispersion, double constant) : NegativeBinomial(dispersion, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusNegativeBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SoftPlusNegativeBinomial(disp_vec, tuning_param, this->copula_object);
-        } else {
-          return new SoftPlusNegativeBinomial(disp_vec, tuning_param);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SoftPlusNegativeBinomial(disp_mat, tuning_param, this->copula_object);
-        } else {
-          return new SoftPlusNegativeBinomial(disp_mat, tuning_param);
-        }
-      }
-    };
 };
 
 

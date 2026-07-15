@@ -3,7 +3,7 @@
     File: family_binomial.cpp
     Purpose: Implementation of Binomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-07-14
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -170,15 +170,6 @@ class SoftClippingBinomial : public Binomial {
     SoftClippingBinomial(const arma::uvec &n, double constant) : Binomial(n, false, false, "softclipping"), tuning_param(constant){};
     virtual ~SoftClippingBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SoftClippingBinomial(this->n_upper, this->tuning_param, this->copula_object);
-      } else {
-        return new SoftClippingBinomial(this->n_upper, this->tuning_param);
-      }
-    };
 };
 
 
@@ -259,15 +250,6 @@ class IdentityBinomial : public Binomial {
     IdentityBinomial(const arma::uvec &n) : Binomial(n, false, true, "identity"){};
     virtual ~IdentityBinomial() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new IdentityBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new IdentityBinomial(this->n_upper);
-      }
-    };
 };
 
 
@@ -345,16 +327,6 @@ class LogitBinomial : public Binomial {
     LogitBinomial(const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, false, copula_obj, "logit"){};
     LogitBinomial(const arma::uvec &n) : Binomial(n, false, false, "logit"){};
     virtual ~LogitBinomial() = default;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LogitBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new LogitBinomial(this->n_upper);
-      }
-    };
-
     virtual const bool valid_link(const arma::mat &x) const;
 };
 
@@ -426,15 +398,6 @@ class ProbitBinomial : public Binomial {
     ProbitBinomial(const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, false, copula_obj, "probit"){};
     ProbitBinomial(const arma::uvec &n) : Binomial(n, false, false, "probit"){};
     virtual ~ProbitBinomial() = default;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new ProbitBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new ProbitBinomial(this->n_upper);
-      }
-    };
     virtual const bool valid_link(const arma::mat &x) const;
 };
 

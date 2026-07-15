@@ -3,7 +3,7 @@
     File: covariates.cpp
     Purpose: Implementation of constructors and functions for CovariateList class
     Author: Steffen Maletz
-    Last modified: 2025-12-12
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -82,21 +82,6 @@ CovariateList::CovariateList(const Rcpp::List &covariates, const unsigned int &n
     }
 }
 
-/*
-    Copy constructor for CovariateList
-
-    Parameters:
-    * to_clone: Pointer to the CovariateList object to clone
-
-    Details:
-    This constructor creates a deep copy of the provided CovariateList object, including cloning each individual Covariate object in the list.
-*/
-CovariateList::CovariateList(CovariateList* to_clone) : n_obs(to_clone->n_obs), dim(to_clone->dim), time_variant_covariates(to_clone->time_variant_covariates), burn_in(to_clone->burn_in), n_covariates(to_clone->n_covariates)
-{
-    for(unsigned int i = 0; i < n_covariates; i++){
-        list_of_covariates.push_back( to_clone->list_of_covariates.at(i)->clone() );
-    }
-}
 
 
 /*
@@ -142,12 +127,6 @@ arma::vec CovariateList::get_values_at(const int &k, const int &t) const {
     return (list_of_covariates.at(k))->get_values_at(t);
 }
 
-/*
-    Function to clone the CovariateList object
-*/
-CovariateList* CovariateList::clone() {
-    return new CovariateList(this);
-}
 
 /*
     Function to delete the last 'to_delete' covariates from the CovariateList

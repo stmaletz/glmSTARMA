@@ -3,7 +3,7 @@
     File: fitting.cpp
     Purpose: Implementation of FittingObject classes
     Author: Steffen Maletz
-    Last modified: 2025-12-07
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -129,14 +129,6 @@ class nloptr : public FittingObject {
         // Set stopping criteria
         nlopt_set_xtol_rel(opt, xtol[0]);
         nlopt_set_maxeval(opt, maxit[0]);
-    }
-    nloptr(nloptr* to_clone) : FittingObject(to_clone), to_optimize(to_clone->to_optimize)
-    {
-        opt = nlopt_copy(to_clone->opt);
-        constrain_param = new arma::uvec(*to_clone->constrain_param);
-    }
-    FittingObject * clone() override {
-        return new nloptr(this);
     }
     arma::vec fit(arma::vec start_value) override
     {
@@ -350,11 +342,6 @@ class optim : public FittingObject {
         opt.control.fnscale = fnscale[0];
         opt.control.maxit = maxit[0];
         opt.set_hessian(false);
-    }
-    optim(const optim &to_clone) : FittingObject(to_clone), opt(to_clone.opt), to_optimize(to_clone.to_optimize) {};
-    FittingObject * clone() override
-    {
-        return new optim(*this);
     }
     arma::vec fit(arma::vec start_value) override
     {

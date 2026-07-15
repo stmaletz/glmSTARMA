@@ -3,7 +3,7 @@
     File: family_poisson.cpp
     Purpose: Implementation of Poisson family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-07-14
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -155,15 +155,6 @@ class LinearPoisson : public Poisson {
     LinearPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "identity"){};
     ~LinearPoisson() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LinearPoisson(use_fast_sampling, this->copula_object);
-      } else {
-        return new LinearPoisson(use_fast_sampling);
-      }
-    };
 };
 
 const double LinearPoisson::inverse_link(const double x) const
@@ -225,15 +216,6 @@ class LogPoisson : public Poisson {
     LogPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, true, false, "log"), added_constant(constant){};
     ~LogPoisson() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LogPoisson(use_fast_sampling, this->added_constant, this->copula_object);
-      } else {
-        return new LogPoisson(use_fast_sampling, this->added_constant);
-      }
-    };
 };
 
 const double LogPoisson::inverse_link(const double x) const
@@ -294,15 +276,6 @@ class SqrtPoisson : public Poisson {
     SqrtPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "sqrt"){};
     ~SqrtPoisson() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SqrtPoisson(use_fast_sampling, this->copula_object);
-      } else {
-        return new SqrtPoisson(use_fast_sampling);
-      }
-    };
 };
 
 
@@ -363,15 +336,6 @@ class SoftPlusPoisson : public Poisson {
     SoftPlusPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusPoisson() = default;
     virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SoftPlusPoisson(use_fast_sampling, this->tuning_param, this->copula_object);
-      } else {
-        return new SoftPlusPoisson(use_fast_sampling, this->tuning_param);
-      }
-    };
 };
 
 

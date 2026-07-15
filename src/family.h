@@ -3,7 +3,7 @@
     File: family.h
     Purpose: Declaration of Family classes
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -125,7 +125,6 @@ public:
         }
     };
     virtual ~Family() = default;
-    virtual Family* clone() const = 0;
     
     static Family * create(const Rcpp::List &family, Rcpp::S4 &copula_obj);
     static Family * create(const Rcpp::List &family);
