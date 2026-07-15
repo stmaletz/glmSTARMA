@@ -16,6 +16,10 @@
 
 const arma::vec QuasiPoisson::random_observation_independent(const arma::vec &expectation) const
 {
+    if(!this->const_dispersion && dispersion_matrix.n_cols != 1)
+    {
+      Rcpp::stop("Dispersion is not constant. Cannot generate new observations without new dispersion values.");
+    }  
     arma::vec observations(expectation.n_elem, arma::fill::zeros);
     arma::vec uniforms(expectation.n_elem, arma::fill::randu);
     double disp;
@@ -29,6 +33,10 @@ const arma::vec QuasiPoisson::random_observation_independent(const arma::vec &ex
 
 const arma::vec QuasiPoisson::random_observation(const arma::vec &expectation) const
 {
+    if(!this->const_dispersion && dispersion_matrix.n_cols != 1)
+    {
+        Rcpp::stop("Dispersion is not constant. Cannot generate new observations without new dispersion values.");
+    }
     arma::vec observations(expectation.n_elem, arma::fill::zeros);
     arma::vec copula_values(expectation.n_elem);
     copula_values = Rcpp::as<arma::vec>(this->copula_sample(1, this->copula_object));
