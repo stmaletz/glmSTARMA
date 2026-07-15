@@ -26,6 +26,8 @@
 - Fixed bug in `dev.resids`-function of `vbinomial` and `vquasibinomial` family functions,  which caused problems when observed values were on the boundary of the support.
 - Fixed bug in the `link_trafo` and `derivative_link_trafo` functions of the `SoftClippingBinomial` and `SoftClippingQuasiBinomial` family functions, which caused problems when different values for `n` for different locations are used..
 - Default dispersion parameter for the `vquasibinomial` is now correctly set to 1 instead of 0 (not allowed) if the user does not specify a value and it must be estimated.
+- Fixed bug in `variance_fun` of the `InversGauss` family in `C++`.
+
 
 
 # glmsSTARMA 1.0.1

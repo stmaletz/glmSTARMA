@@ -176,6 +176,7 @@ test_that("predict works for dglmstarma objects", {
     expect_is(predictions$mean, "matrix")
     expect_is(predictions$dispersion, "matrix")
 
+    set.seed(42)
     predictions <- predict(result, n.ahead = 10, type = "sample")
     expect_is(predictions, "list")
     expect_true(all(predictions$mean >= 0))
