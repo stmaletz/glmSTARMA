@@ -19,7 +19,7 @@
 #' - Jørgensen, B. (1987), Exponential Dispersion Models. Journal of the Royal Statistical Society: Series B (Methodological), 49(2), 127-145. \doi{10.1111/j.2517-6161.1987.tb01685.x}
 #' - Knight, M., Leeming, K., Nason, G., & Nunes, M. (2020). Generalized Network Autoregressive Processes and the GNAR Package. Journal of Statistical Software, 96(5), 1–36. \doi{10.18637/jss.v096.i05}
 #' - Maletz, S., Fokianos, K., & Fried, R. (2024). Spatio-Temporal Count Autoregression. Data Science in Science, 3(1). \doi{10.1080/26941899.2024.2425171}
-#' - Meyer, S., Held, L., & Höhle, M. (2017). Spatio-Temporal Analysis of Epidemic Phenomena Using the R Package surveillance. Journal of Statistical Software, 77(11), 1–55. \doi{10.18637/jss.v077.i11}
+#' - Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. \doi{10.48550/arXiv.2607.08276}#' - Meyer, S., Held, L., & Höhle, M. (2017). Spatio-Temporal Analysis of Epidemic Phenomena Using the R Package surveillance. Journal of Statistical Software, 77(11), 1–55. \doi{10.18637/jss.v077.i11}
 #' - Otto, P. (2024). A multivariate spatial and spatiotemporal ARCH Model. Spatial Statistics, 60. \doi{10.1016/j.spasta.2024.100823}
 #' - Pfeifer, P. E., & Deutsch, S. J. (1980). A Three-Stage Iterative Procedure for Space-Time Modeling Phillip. Technometrics, 22(1), 35–47. \doi{10.2307/1268381}
 #' - Smyth, G.K. (1989), Generalized Linear Models with Varying Dispersion. Journal of the Royal Statistical Society: Series B (Methodological), 51(1), 47-60. \doi{10.1111/j.2517-6161.1989.tb01747.x}

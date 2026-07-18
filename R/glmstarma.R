@@ -2,7 +2,7 @@
 # File: glmstarma.R
 # Purpose: Implement fitting of glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-07-09
+# Last modified: 2026-07-18
 # -----------------------------------------------------------------------------
 
 
@@ -78,10 +78,10 @@
 #'     - \code{message} An optional message by the optimization algorithm.
 #'  * \code{call} The function call.
 #' @references 
-# - TODO: Add reference to paper when available
 #' - Cliff, A. D., & Ord, J. K. (1975). Space-Time Modelling with an Application to Regional Forecasting. Transactions of the Institute of British Geographers, 64, 119–128. \doi{10.2307/621469}
 #' - Jahn, M., Weiß, C.H., & Kim, H., (2023), Approximately linear INGARCH models for spatio-temporal counts, \emph{Journal of the Royal Statistical Society Series C: Applied Statistics}, 72(2), 476–497, \doi{10.1093/jrsssc/qlad018}
 #' - Maletz, S., Fokianos, K., & Fried, R. (2024). Spatio-Temporal Count Autoregression. \emph{Data Science in Science}, 3(1), \doi{10.1080/26941899.2024.2425171}
+#' - Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. \doi{10.48550/arXiv.2607.08276}
 #' - Pfeifer, P. E., & Deutsch, S. J. (1980). A Three-Stage Iterative Procedure for Space-Time Modeling Phillip. Technometrics, 22(1), 35–47. \doi{10.2307/1268381}
 #' @seealso \code{\link{stfamily}}, \code{\link{glmstarma.control}}, \code{\link{dglmstarma}}, \code{\link{TimeConstant}}, \code{\link{SpatialConstant}}
 #' @examples

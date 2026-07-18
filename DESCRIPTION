@@ -1,8 +1,8 @@
 Package: glmSTARMA
 Type: Package
 Title: (Double) Generalized Linear Models for Spatio-Temporal Data
-Version: 1.0.2
-Date: 2026-01-14
+Version: 1.1.0
+Date: 2026-07-18
 Author: Steffen Maletz [aut, cre] (<https://orcid.org/0009-0004-4851-0947>),
   Konstantinos Fokianos [aut] (<https://orcid.org/0000-0002-0051-711X>),
   Roland Fried [aut] (<https://orcid.org/0000-0002-9830-9713>),

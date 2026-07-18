@@ -2,7 +2,7 @@
 # File: dglmstarma.R
 # Purpose: Implement fitting of dglmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-07-09
+# Last modified: 2026-07-18
 # -----------------------------------------------------------------------------
 
 
@@ -88,8 +88,8 @@
 #'  * \code{call} The function call.
 #'  * \code{control} The control parameters used for fitting the model.
 #' @references 
-# TODO: Add reference to paper when available
 #' - Jørgensen, B. (1987), Exponential Dispersion Models. Journal of the Royal Statistical Society: Series B (Methodological), 49: 127-145. \doi{10.1111/j.2517-6161.1987.tb01685.x}
+#' - Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. \doi{10.48550/arXiv.2607.08276}
 #' - Smyth, G.K. (1989), Generalized Linear Models with Varying Dispersion. Journal of the Royal Statistical Society: Series B (Methodological), 51: 47-60. \doi{10.1111/j.2517-6161.1989.tb01747.x}
 #' @seealso \code{\link{stfamily}}, \code{\link{glmstarma.control}}, \code{\link{dglmstarma}}, \code{\link{TimeConstant}}, \code{\link{SpatialConstant}}
 #' @examples
