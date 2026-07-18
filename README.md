@@ -132,6 +132,7 @@ fit <- glmstarma(
 ### References
 -   Jahn, M., Weiß, C.H., Kim, H.Y. (2023), Approximately linear INGARCH models for spatio-temporal counts, Journal of the Royal Statistical Society Series C: Applied Statistics, 72(2), 476-497, [DOI: 10.1093/jrsssc/qlad018](doi.org/10.1093/jrsssc/qlad018)
 -   Maletz, S., Fokianos, K., & Fried, R. (2024). Spatio-Temporal Count Autoregression. Data Science in Science, 3(1). [DOI: 10.1080/26941899.2024.2425171](doi.org/10.1080/26941899.2024.2425171)
+- Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. [DOI: 10.48550/arXiv.2607.08276](doi.org/10.48550/arXiv.2607.08276)
 -   Smyth, G.K. (1989), Generalized Linear Models with Varying Dispersion. Journal of the Royal Statistical Society: Series B (Methodological), 51(1), 47-60. [DOI: 10.1111/j.2517-6161.1989.tb01747.x](doi.org/10.1111/j.2517-6161.1989.tb01747.x)
 
 
