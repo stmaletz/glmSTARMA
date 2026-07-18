@@ -3,7 +3,7 @@
     File: family_quasipoisson.cpp
     Purpose: Implementation of QuasiPoisson family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -16,6 +16,10 @@
 
 const arma::vec QuasiPoisson::random_observation_independent(const arma::vec &expectation) const
 {
+    if(!this->const_dispersion && dispersion_matrix.n_cols != 1)
+    {
+      Rcpp::stop("Dispersion is not constant. Cannot generate new observations without new dispersion values.");
+    }  
     arma::vec observations(expectation.n_elem, arma::fill::zeros);
     arma::vec uniforms(expectation.n_elem, arma::fill::randu);
     double disp;
@@ -29,6 +33,10 @@ const arma::vec QuasiPoisson::random_observation_independent(const arma::vec &ex
 
 const arma::vec QuasiPoisson::random_observation(const arma::vec &expectation) const
 {
+    if(!this->const_dispersion && dispersion_matrix.n_cols != 1)
+    {
+        Rcpp::stop("Dispersion is not constant. Cannot generate new observations without new dispersion values.");
+    }
     arma::vec observations(expectation.n_elem, arma::fill::zeros);
     arma::vec copula_values(expectation.n_elem);
     copula_values = Rcpp::as<arma::vec>(this->copula_sample(1, this->copula_object));
@@ -147,30 +155,6 @@ class LinearQuasiPoisson : public QuasiPoisson {
     LinearQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, true, copula_obj, "identity"){};
     LinearQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method) : QuasiPoisson(sampling_method, dispersion, true, true, "identity"){};
     ~LinearQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearQuasiPoisson(disp_vec, sampling_method, this->copula_object);
-        } else {
-          return new LinearQuasiPoisson(disp_vec, sampling_method);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LinearQuasiPoisson(disp_mat, sampling_method, this->copula_object);
-        } else {
-          return new LinearQuasiPoisson(disp_mat, sampling_method);
-        }
-      }
-    };
 };
 
 const double LinearQuasiPoisson::inverse_link(const double x) const
@@ -204,10 +188,7 @@ const double LinearQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
+
 
 
 /*
@@ -231,30 +212,6 @@ class LogQuasiPoisson : public QuasiPoisson {
     LogQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, false, copula_obj, "log"), added_constant(constant){};
     LogQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant) : QuasiPoisson(sampling_method, dispersion, true, false, "log"), added_constant(constant){};
     ~LogQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogQuasiPoisson(disp_vec, sampling_method, this->added_constant, this->copula_object);
-        } else {
-          return new LogQuasiPoisson(disp_vec, sampling_method, this->added_constant);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogQuasiPoisson(disp_mat, sampling_method, this->added_constant, this->copula_object);
-        } else {
-          return new LogQuasiPoisson(disp_mat, sampling_method, this->added_constant);
-        }
-      }
-    };
 };
 
 const double LogQuasiPoisson::inverse_link(const double x) const
@@ -288,17 +245,13 @@ const double LogQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 
 /*
   Define square root model, i.e. the 'sqrt' link of the Poisson distribution.
   Link function: g(mu) = sqrt(mu)
-  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation (of Poisson for approximation)
+  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation (of Poisson for approximation) (Outdated, because caused problems)
   Link transformation: h(psi) = psi
 */
 
@@ -314,32 +267,6 @@ class SqrtQuasiPoisson : public QuasiPoisson {
     SqrtQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, true, true, copula_obj, "sqrt"){};
     SqrtQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method) : QuasiPoisson(sampling_method, dispersion, true, true, "sqrt"){};
     ~SqrtQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SqrtQuasiPoisson(disp_vec, sampling_method, this->copula_object);
-        } else {
-          return new SqrtQuasiPoisson(disp_vec, sampling_method);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SqrtQuasiPoisson(disp_mat, sampling_method, this->copula_object);
-        } else {
-          return new SqrtQuasiPoisson(disp_mat, sampling_method);
-        }
-      }
-    };
-
-
 };
 
 
@@ -360,7 +287,8 @@ const double SqrtQuasiPoisson::derivative_inverse_link(const double x) const
 
 const double SqrtQuasiPoisson::observation_trafo(const double x) const
 {
-  return 2.0 * std::sqrt(x + 3.0/8.0);
+  // return 2.0 * std::sqrt(x + 3.0/8.0);
+  return std::sqrt(x);
 }
 
 const double SqrtQuasiPoisson::link_trafo(const double x) const
@@ -373,10 +301,6 @@ const double SqrtQuasiPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool SqrtQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
   Define approximately linear model, i.e. the 'softplus' link of the Poisson distribution from the work of Jahn et al. (2023)
@@ -398,30 +322,6 @@ class SoftPlusQuasiPoisson : public QuasiPoisson {
     SoftPlusQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiPoisson(sampling_method, dispersion, false, false, copula_obj, "softplus"), tuning_param(constant){};
     SoftPlusQuasiPoisson(const Rcpp::RObject &dispersion, const std::string& sampling_method, double constant) : QuasiPoisson(sampling_method, dispersion, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusQuasiPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SoftPlusQuasiPoisson(disp_vec, sampling_method, tuning_param, this->copula_object);
-        } else {
-          return new SoftPlusQuasiPoisson(disp_vec, sampling_method, tuning_param);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SoftPlusQuasiPoisson(disp_mat, sampling_method, tuning_param, this->copula_object);
-        } else {
-          return new SoftPlusQuasiPoisson(disp_mat, sampling_method, tuning_param);
-        }
-      }
-    };
 };
 
 
@@ -457,11 +357,6 @@ const double SoftPlusQuasiPoisson::derivative_link_trafo(const double x) const
 {
   double val = exp(x / tuning_param);
   return val / (1.0 + val);
-}
-
-const bool SoftPlusQuasiPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
 }
 
 

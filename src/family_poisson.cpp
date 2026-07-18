@@ -3,7 +3,7 @@
     File: family_poisson.cpp
     Purpose: Implementation of Poisson family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -154,16 +154,6 @@ class LinearPoisson : public Poisson {
     LinearPoisson(const bool &fast_sampling, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, true, copula_obj, "identity"){};
     LinearPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "identity"){};
     ~LinearPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LinearPoisson(use_fast_sampling, this->copula_object);
-      } else {
-        return new LinearPoisson(use_fast_sampling);
-      }
-    };
 };
 
 const double LinearPoisson::inverse_link(const double x) const
@@ -197,11 +187,6 @@ const double LinearPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
-
 
 /*
   Define log-linear model, i.e. the 'log' link of the Poisson distribution.
@@ -224,16 +209,6 @@ class LogPoisson : public Poisson {
     LogPoisson(const bool &fast_sampling, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, false, copula_obj, "log"), added_constant(constant){};
     LogPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, true, false, "log"), added_constant(constant){};
     ~LogPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LogPoisson(use_fast_sampling, this->added_constant, this->copula_object);
-      } else {
-        return new LogPoisson(use_fast_sampling, this->added_constant);
-      }
-    };
 };
 
 const double LogPoisson::inverse_link(const double x) const
@@ -267,17 +242,13 @@ const double LogPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 
 /*
   Define square root model, i.e. the 'sqrt' link of the Poisson distribution.
   Link function: g(mu) = sqrt(mu)
-  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation
+  Observation transformation: h(y) = 2.0 * sqrt(y + 3/8) Anscombe transformation (Outdated, because caused problems)
   Link transformation: h(psi) = psi
 */
 
@@ -293,16 +264,6 @@ class SqrtPoisson : public Poisson {
     SqrtPoisson(const bool &fast_sampling, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, true, true, copula_obj, "sqrt"){};
     SqrtPoisson(const bool &fast_sampling) : Poisson(fast_sampling, true, true, "sqrt"){};
     ~SqrtPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SqrtPoisson(use_fast_sampling, this->copula_object);
-      } else {
-        return new SqrtPoisson(use_fast_sampling);
-      }
-    };
 };
 
 
@@ -323,7 +284,8 @@ const double SqrtPoisson::derivative_inverse_link(const double x) const
 
 const double SqrtPoisson::observation_trafo(const double x) const
 {
-  return std::sqrt(x + 3.0 / 8.0) * 2.0;
+  // return std::sqrt(x + 3.0 / 8.0) * 2.0;
+  return std::sqrt(x);
 }
 
 const double SqrtPoisson::link_trafo(const double x) const
@@ -336,10 +298,6 @@ const double SqrtPoisson::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool SqrtPoisson::valid_link(const arma::mat &x) const
-{
-  return x.is_finite() && arma::all(arma::vectorise(x) > 0.0);
-}
 
 /*
   Define approximately linear model, i.e. the 'softplus' link of the Poisson distribution from the work of Jahn et al. (2023)
@@ -361,16 +319,6 @@ class SoftPlusPoisson : public Poisson {
     SoftPlusPoisson(const bool &fast_sampling, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Poisson(fast_sampling, false, false, copula_obj, "softplus"), tuning_param(constant){};
     SoftPlusPoisson(const bool &fast_sampling, double constant) : Poisson(fast_sampling, false, false, "softplus"), tuning_param(constant){};
     ~SoftPlusPoisson() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SoftPlusPoisson(use_fast_sampling, this->tuning_param, this->copula_object);
-      } else {
-        return new SoftPlusPoisson(use_fast_sampling, this->tuning_param);
-      }
-    };
 };
 
 
@@ -406,11 +354,6 @@ const double SoftPlusPoisson::derivative_link_trafo(const double x) const
 {
   double val = exp(x / tuning_param);
   return val / (1.0 + val);
-}
-
-const bool SoftPlusPoisson::valid_link(const arma::mat &x) const
-{
-  return true;
 }
 
 

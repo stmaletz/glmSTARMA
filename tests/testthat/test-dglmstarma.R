@@ -13,6 +13,12 @@ test_that("ts is validated", {
                         mean_covariates = covariates, dispersion_covariates = covariates,
                         wlist = W_hungary, mean_family = vquasipoisson("log"))
     expect_s3_class(result, "dglmstarma")
+
+    result <- dglmstarma(chickenpox, list(past_obs = 1), dispersion_model = list(past_obs = 1),
+                        mean_covariates = covariates, dispersion_covariates = covariates,
+                        wlist = W_hungary, mean_family = vnegative.binomial("log"))
+    expect_s3_class(result, "dglmstarma")
+
     # not allowed: vpoisson family with dispersion model
     expect_error(dglmstarma(chickenpox, list(past_obs = 1), dispersion_model = list(past_obs = 1),
                         mean_covariates = covariates, dispersion_covariates = covariates,
@@ -97,6 +103,7 @@ test_that("ts is validated", {
     result <- dglmstarma(chickenpox, list(past_obs = 1), dispersion_model = list(past_obs = 1),
                         mean_covariates = covariates, dispersion_covariates = covariates,
                         wlist = W_hungary, mean_family = vnormal("identity"))
+    print(result)
     expect_s3_class(result, "dglmstarma")
 })
 

@@ -76,6 +76,11 @@ test_that("maxOrder is valid",{
   expect_no_message(generateW(method = "rectangle", dim = dim, maxOrder = 15, width = 4))
   expect_error(generateW(method = "line", dim = dim, maxOrder = 11))
   expect_warning(generateW(method = "circle", dim = dim, maxOrder = 11))
+
+  expect_equal(length(generateW(method = "line", dim = dim, maxOrder = 0)), 1)
+  expect_equal(length(generateW(method = "circle", dim = dim, maxOrder = 0)), 1)
+  expect_equal(length(generateW(method = "rectangle", dim = dim, maxOrder = 0, width = 4)), 1)
+
 })
 
 testthat::skip_on_cran()

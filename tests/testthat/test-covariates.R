@@ -11,6 +11,7 @@ test_that("TimeConstant covariate works correctly", {
   expect_true(!is.null(attr(result, "const")))
   expect_equal(attr(result, "const"), "time")
   expect_s3_class(result, "time_constant")  
+  print(result)
 })
 
 testthat::skip_on_cran()
@@ -24,7 +25,24 @@ test_that("SpatialConstant covariate works correctly", {
   expect_true(!is.null(attr(result, "const")))
   expect_equal(attr(result, "const"), "space")
   expect_s3_class(result, "spatial_constant")  
+  print(result)
 })
 
+
+testthat::skip_on_cran()
+test_that("unnamed covariates work correctly", {
+  dat <- load_data("chickenpox", directory = tempdir())
+  chickenpox <- dat$chickenpox
+  population_hungary <- dat$population_hungary
+  W_hungary <- dat$W_hungary
+  covariates <- list(population_hungary, 
+                      SpatialConstant(cos(2 * pi / 52 * 1:522)),
+                      SpatialConstant(sin(2 * pi / 52 * 1:522)))
+  result <- glmstarma(chickenpox, list(past_obs = 1), wlist = W_hungary, 
+                    covariates = covariates, family = vpoisson("log"),
+                    control = list(maxit = 100L))
+   expect_s3_class(result, "glmstarma")
+
+})
 
 

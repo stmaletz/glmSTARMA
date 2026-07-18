@@ -3,7 +3,7 @@
     File: family_quasibinomial.cpp
     Purpose: Implementation of QuasiBinomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -112,23 +112,10 @@ const double QuasiBinomial::log_likelihood(const double &observation, const doub
 {
     int n = n_upper(index_n_upper);
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
-    double log_comb = std::lgamma(n + 1) - std::lgamma(observation + 1) - std::lgamma(n - observation + 1);
-    double dev = 0.0;
-    if (observation > 0)
-    {
-      log_comb += observation * std::log(observation / n);
-      dev += observation * std::log( observation / expectation );
-    }
-    if (observation < n)
-    {
-      log_comb += (n - observation) * std::log(1.0 - observation / n);
-      dev += (n - observation) * std::log( (n - observation) / (n - expectation) );
-    }
-    log_comb *= -2.0;
-    dev *= 2.0 / dispersion_;
-    dev +=  log_comb;
-    dev += std::log(dispersion_);
-    return -0.5 * dev;
+    double logL_sat = R::dbinom(observation, n, observation / n, true);
+    double logL_fit = R::dbinom(observation, n, expectation / n, true);
+    double logL_Q = logL_sat - (logL_sat - logL_fit) / dispersion_ - 0.5 * std::log(dispersion_);
+    return logL_Q;
 }
 
 
@@ -142,7 +129,7 @@ const double QuasiBinomial::deviance_residual(const double &observation, const d
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
     if(observation <= 0.0)
     {
-        return 2.0 * n * std::log((n - observation) / (n - expectation));
+        return 2.0 * n * std::log(n / (n - expectation));
     } else if(observation >= n)
     {
         return 2.0 * n * std::log(n / expectation);
@@ -230,30 +217,6 @@ class SoftClippingQuasiBinomial : public QuasiBinomial {
     SoftClippingQuasiBinomial(const Rcpp::RObject &dispersion, const arma::uvec &n, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiBinomial(n, dispersion, false, false, copula_obj, "softclipping"), tuning_param(constant){};
     SoftClippingQuasiBinomial(const Rcpp::RObject &dispersion, const arma::uvec &n, double constant) : QuasiBinomial(n, dispersion, false, false, "softclipping"), tuning_param(constant){};
     virtual ~SoftClippingQuasiBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new SoftClippingQuasiBinomial(disp_vec, this->n_upper, this->tuning_param, this->copula_object);
-        } else {
-          return new SoftClippingQuasiBinomial(disp_vec, this->n_upper, this->tuning_param);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new SoftClippingQuasiBinomial(disp_mat, this->n_upper, this->tuning_param, this->copula_object);
-        } else {
-          return new SoftClippingQuasiBinomial(disp_mat, this->n_upper, this->tuning_param);
-        }
-      }
-    };
 };
 
 
@@ -295,22 +258,20 @@ const double SoftClippingQuasiBinomial::observation_trafo(const double x) const
 
 const double SoftClippingQuasiBinomial::link_trafo(const double x) const
 {
-    double value = inverse_link(x) / n_upper(index_n_upper);
-    index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+    unsigned int n = n_upper(index_n_upper);  
+    double value = inverse_link(x) / n;
+    // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
     return value;
 }
 
 const double SoftClippingQuasiBinomial::derivative_link_trafo(const double x) const
 {
-  double value = derivative_inverse_link(x) / n_upper(index_n_upper);
-  index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+  unsigned int n = n_upper(index_n_upper);
+  double value = derivative_inverse_link(x) / n;
+  // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
   return value;
 }
 
-const bool SoftClippingQuasiBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 /*
   Define identity link for Quasi-Binomial family
@@ -333,30 +294,6 @@ class IdentityQuasiBinomial : public QuasiBinomial {
     IdentityQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiBinomial(n, dispersion, false, true, copula_obj, "identity"){};
     IdentityQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, true, "identity"){};
     virtual ~IdentityQuasiBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new IdentityQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new IdentityQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new IdentityQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new IdentityQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 
@@ -399,20 +336,7 @@ const double IdentityQuasiBinomial::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool IdentityQuasiBinomial::valid_link(const arma::mat &x) const
-{
-  bool is_valid = x.is_finite() && arma::all(arma::vectorise(x) >= 0.0);
-  if(is_valid)
-  {
-    if(n_upper.n_elem > 1)
-    {
-      return arma::all(arma::all(x <= arma::repmat(n_upper, 1, x.n_cols)));
-    } else {
-      return arma::all(arma::vectorise(x) <= n_upper(0));
-    }
-  }
-  return false;
-}
+
 
 
 
@@ -435,30 +359,6 @@ class LogitQuasiBinomial : public QuasiBinomial {
     LogitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiBinomial(n, dispersion, false, false, copula_obj, "logit"){};
     LogitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, false, "logit"){};
     virtual ~LogitQuasiBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LogitQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new LogitQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogitQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new LogitQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 const double LogitQuasiBinomial::inverse_link(const double x) const
@@ -496,10 +396,6 @@ const double LogitQuasiBinomial::derivative_link_trafo(const double x) const
   return value;
 }
 
-const bool LogitQuasiBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 const double LogitQuasiBinomial::observation_trafo(const double x) const
@@ -529,30 +425,6 @@ class ProbitQuasiBinomial : public QuasiBinomial {
     ProbitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : QuasiBinomial(n, dispersion, false, false, copula_obj, "probit"){};
     ProbitQuasiBinomial(const Rcpp::RObject dispersion, const arma::uvec &n) : QuasiBinomial(n, dispersion, false, false, "probit"){};
     virtual ~ProbitQuasiBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new ProbitQuasiBinomial(disp_vec, this->n_upper, this->copula_object);
-        } else {
-          return new ProbitQuasiBinomial(disp_vec, this->n_upper);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new ProbitQuasiBinomial(disp_mat, this->n_upper, this->copula_object);
-        } else {
-          return new ProbitQuasiBinomial(disp_mat, this->n_upper);
-        }
-      }
-    };
 };
 
 const double ProbitQuasiBinomial::inverse_link(const double x) const
@@ -586,10 +458,6 @@ const double ProbitQuasiBinomial::derivative_link_trafo(const double x) const
   return R::dnorm( x, 0.0, 1.0, false);
 }
 
-const bool ProbitQuasiBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 const double ProbitQuasiBinomial::observation_trafo(const double x) const

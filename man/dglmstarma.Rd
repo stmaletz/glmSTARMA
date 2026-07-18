@@ -154,6 +154,7 @@ dglmstarma(chickenpox, model_autoregressive, dispersion_model = list(past_obs = 
 \references{
 \itemize{
 \item Jørgensen, B. (1987), Exponential Dispersion Models. Journal of the Royal Statistical Society: Series B (Methodological), 49: 127-145. \doi{10.1111/j.2517-6161.1987.tb01685.x}
+\item Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. \doi{10.48550/arXiv.2607.08276}
 \item Smyth, G.K. (1989), Generalized Linear Models with Varying Dispersion. Journal of the Royal Statistical Society: Series B (Methodological), 51: 47-60. \doi{10.1111/j.2517-6161.1989.tb01747.x}
 }
 }

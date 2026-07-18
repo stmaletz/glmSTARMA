@@ -2,7 +2,7 @@
 # File: family.R
 # Purpose: Implements family functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-01-10
+# Last modified: 2026-07-14
 # -----------------------------------------------------------------------------
 
 
@@ -49,7 +49,6 @@
 #'   \item \code{vgamma()} – Gamma distribution
 #'   \item \code{vinverse.gaussian()} – Inverse Gaussian distribution
 #'   \item \code{vnormal()} – Gaussian distribution
-#'   \item \code{vgarch()} – GARCH distribution
 #' }
 #'
 #' The following copulas are available:
@@ -200,7 +199,7 @@ vnegative.binomial <- function(link = c("log", "identity", "sqrt", "softplus"), 
             "copula_param must be a numeric scalar" = is.null(copula_param) || (is.numeric(copula_param) && length(copula_param) == 1),
             "copula_param must be positive" = is.null(copula_param) || copula_param > 0,
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param),
-            "dispersion must be positive" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion > 0)),
+            "dispersion must be non-negative" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion >= 0)),
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
   fam$distribution <- "negative_binomial"
   if(is.null(dispersion)){
@@ -260,16 +259,16 @@ vbinomial <- function(link = c("softclipping", "identity", "logit", "probit"), s
   }
 
   fam$variance <- function(mu, dispersion, ignore_dispersion = FALSE){
-      p <- mu / size
-      size * p * (1 - p)
+      p <- mu / fam$size
+      fam$size * p * (1 - p)
   }
   fam$dev.resids <- function (y, mu, dispersion, ignore_dispersion = FALSE) 
   {
-    r <- 2 * (y * log(y / mu) + (size - y) * log((size - y) / (size - mu)))
+    r <- 2 * (y * log(y / mu) + (fam$size - y) * log((fam$size - y) / (fam$size - mu)))
     y_0 <- which(y == 0)
-    y_n <- which(y == size)
-    r[y_0] <- 2 * size * log((size - mu) / (size - mu))
-    r[y_n] <- 2 * size * log(size / mu)
+    y_n <- which(y == fam$size)
+    r[y_0] <- (2 * fam$size * log((fam$size) / (fam$size - mu)))[y_0]
+    r[y_n] <- (2 * fam$size * log(fam$size / mu))[y_n]
     r
   }
 
@@ -294,7 +293,7 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
 
   fam$distribution <- "quasibinomial"
   if(is.null(dispersion)){
-    fam$dispersion <- 0
+    fam$dispersion <- 1
     fam$estimate_dispersion <- TRUE
   } else {
     fam$dispersion <- dispersion
@@ -319,16 +318,16 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
     fam$copula_param <- NULL
   }
   fam$variance <- function(mu, dispersion, ignore_dispersion = FALSE){
-      p <- mu / size
-      size * p * (1 - p) * dispersion^(1 - ignore_dispersion)
+      p <- mu / fam$size
+      fam$size * p * (1 - p) * dispersion^(1 - ignore_dispersion)
   }
   fam$dev.resids <- function (y, mu, dispersion, ignore_dispersion = FALSE) 
   {
-    r <- 2 * (y * log(y / mu) + (size - y) * log((size - y) / (size - mu)))
+    r <- 2 * (y * log(y / mu) + (fam$size - y) * log((fam$size - y) / (fam$size - mu)))
     y_0 <- which(y == 0)
-    y_n <- which(y == size)
-    r[y_0] <- 2 * size * log((size - mu) / (size - mu))
-    r[y_n] <- 2 * size * log(size / mu)
+    y_n <- which(y == fam$size)
+    r[y_0] <- (2 * fam$size * log((fam$size) / (fam$size - mu)))[y_0]
+    r[y_n] <- (2 * fam$size * log(fam$size / mu))[y_n]
     if(ignore_dispersion){
       return(r)
     } else {
@@ -342,8 +341,10 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
 
 #' @rdname stfamily
 #' @export
-vgamma <- function(link = c("inverse", "log", "identity"), dispersion = NULL, copula = NULL, copula_param = NULL){
-  stopifnot("copula_param must be a numeric scalar" = is.null(copula_param) || (is.numeric(copula_param) && length(copula_param) == 1),
+vgamma <- function(link = c("inverse", "log", "identity"), dispersion = NULL, const = 1, copula = NULL, copula_param = NULL){
+  stopifnot("const must be a non-negative scalar" = (is.numeric(const) && length(const) == 1 && const >= 0),
+            "const must not be infinite" =  (!is.infinite(const)),
+            "copula_param must be a numeric scalar" = is.null(copula_param) || (is.numeric(copula_param) && length(copula_param) == 1),
             "copula_param must be positive" = is.null(copula_param) || copula_param > 0,
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param),
             "dispersion must be positive" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion > 0)),
@@ -351,6 +352,7 @@ vgamma <- function(link = c("inverse", "log", "identity"), dispersion = NULL, co
   fam <- list()
   fam$link <- match.arg(link)
   fam$distribution <- "gamma"
+  fam$const <- ifelse(is.null(const), 1, const)
   fam$non_negative_parameters <- (fam$link %in% c("identity", "inverse"))
 
   if(is.null(dispersion)){
@@ -457,7 +459,11 @@ vnormal <- function(link = c("identity", "log", "inverse"), dispersion = NULL, c
 
   fam$variance <- function(mu, dispersion, ignore_dispersion = FALSE){
       if(ignore_dispersion){
-        return(matrix(1, nrow = nrow(mu), ncol = ncol(mu)))
+        if(is.matrix(mu)){
+          return(matrix(1, nrow = nrow(mu), ncol = ncol(mu)))
+        } else {
+          return(1)
+        }
       } else {
         return(dispersion)
       }

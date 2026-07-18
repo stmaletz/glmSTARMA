@@ -5,6 +5,7 @@
 \title{Control Parameters for \code{dglmstarma} Fitting}
 \usage{
 dglmstarma.control(
+  dispersion_constant = 1,
   parameter_init = "zero",
   parameter_init_dispersion = "zero",
   use_sparsity = TRUE,
@@ -43,6 +44,8 @@ dglmstarma.control(
 )
 }
 \arguments{
+\item{dispersion_constant}{Numeric constant, that is used transform the pseudo observations in the dispersion model with a log-link to avoid numerical issues. See details.}
+
 \item{parameter_init}{Character or list. Start values for parameter estimation. See details.}
 
 \item{parameter_init_dispersion}{Character or list. Start values for dispersion parameter estimation. See details.}
@@ -148,6 +151,8 @@ List of control parameters to be passed as an an argument to \code{dglmstarma}.
 }
 \details{
 This function is called internally in \code{dglmstarma} to validate control parameters in the \code{control} argument.
+
+In case of a log-link for the dispersion model, the pseudo observations are transformed by \code{log(pseudo_obs + dispersion_constant)} to avoid numerical issues when fitting the dispersion model.
 
 The arguments \code{constraint_tol}, \code{gradtol}, \code{changetol}, \code{trace}, \code{fnscale}, \code{maxit}, \code{abstol}, \code{reltol}, \code{lmm}, \code{factr}, and \code{pgtol} are passed to the optimization routines and control the convergence behavior and output.
 Some of these arguments are not used by all optimization methods.

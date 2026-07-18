@@ -3,7 +3,7 @@
     File: family_binomial.cpp
     Purpose: Implementation of Binomial family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -88,7 +88,7 @@ const double Binomial::deviance_residual(const double &observation, const double
     index_n_upper = (index_n_upper + 1) % n_upper.n_elem; // Update index for next call
     if(observation <= 0.0)
     {
-        return 2.0 * n * std::log((n - observation) / (n - expectation));
+        return 2.0 * n * std::log(n / (n - expectation));
     } else if(observation >= n)
     {
         return 2.0 * n * std::log(n / expectation);
@@ -169,16 +169,6 @@ class SoftClippingBinomial : public Binomial {
     SoftClippingBinomial(const arma::uvec &n, double constant, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, false, copula_obj, "softclipping"), tuning_param(constant){};
     SoftClippingBinomial(const arma::uvec &n, double constant) : Binomial(n, false, false, "softclipping"), tuning_param(constant){};
     virtual ~SoftClippingBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new SoftClippingBinomial(this->n_upper, this->tuning_param, this->copula_object);
-      } else {
-        return new SoftClippingBinomial(this->n_upper, this->tuning_param);
-      }
-    };
 };
 
 
@@ -220,22 +210,20 @@ const double SoftClippingBinomial::observation_trafo(const double x) const
 
 const double SoftClippingBinomial::link_trafo(const double x) const
 {
-    double value = inverse_link(x) / n_upper(index_n_upper);
-    index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+    unsigned int n = n_upper(index_n_upper);
+    double value = inverse_link(x) / n;
+    // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
     return value;
 }
 
 const double SoftClippingBinomial::derivative_link_trafo(const double x) const
 {
-  double value = derivative_inverse_link(x) / n_upper(index_n_upper);
-  index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
+  unsigned int n = n_upper(index_n_upper);
+  double value = derivative_inverse_link(x) / n;
+  // index_n_upper = (index_n_upper + 1) % n_upper.n_elem;
   return value;
 }
 
-const bool SoftClippingBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 /*
   Implementation of the Identity link for the Binomial family, i.e., g(mu) = mu
@@ -256,16 +244,6 @@ class IdentityBinomial : public Binomial {
     IdentityBinomial(const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, true, copula_obj, "identity"){};
     IdentityBinomial(const arma::uvec &n) : Binomial(n, false, true, "identity"){};
     virtual ~IdentityBinomial() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new IdentityBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new IdentityBinomial(this->n_upper);
-      }
-    };
 };
 
 
@@ -308,20 +286,6 @@ const double IdentityBinomial::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool IdentityBinomial::valid_link(const arma::mat &x) const
-{
-  bool is_valid = x.is_finite() && arma::all(arma::vectorise(x) >= 0.0);
-  if(is_valid)
-  {
-    if(n_upper.n_elem > 1)
-    {
-      return arma::all(arma::all(x <= arma::repmat(n_upper, 1, x.n_cols)));
-    } else {
-      return arma::all(arma::vectorise(x) <= n_upper(0));
-    }
-  }
-  return false;
-}
 
 
 
@@ -343,17 +307,6 @@ class LogitBinomial : public Binomial {
     LogitBinomial(const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, false, copula_obj, "logit"){};
     LogitBinomial(const arma::uvec &n) : Binomial(n, false, false, "logit"){};
     virtual ~LogitBinomial() = default;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new LogitBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new LogitBinomial(this->n_upper);
-      }
-    };
-
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double LogitBinomial::inverse_link(const double x) const
@@ -391,10 +344,7 @@ const double LogitBinomial::derivative_link_trafo(const double x) const
   return value;
 }
 
-const bool LogitBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
+
 
 
 const double LogitBinomial::observation_trafo(const double x) const
@@ -424,16 +374,6 @@ class ProbitBinomial : public Binomial {
     ProbitBinomial(const arma::uvec &n, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Binomial(n, false, false, copula_obj, "probit"){};
     ProbitBinomial(const arma::uvec &n) : Binomial(n, false, false, "probit"){};
     virtual ~ProbitBinomial() = default;
-    virtual Family* clone() const
-    {
-      if(use_dependence)
-      {
-        return new ProbitBinomial(this->n_upper, this->copula_object);
-      } else {
-        return new ProbitBinomial(this->n_upper);
-      }
-    };
-    virtual const bool valid_link(const arma::mat &x) const;
 };
 
 const double ProbitBinomial::inverse_link(const double x) const
@@ -467,10 +407,7 @@ const double ProbitBinomial::derivative_link_trafo(const double x) const
   return R::dnorm( x, 0.0, 1.0, false);
 }
 
-const bool ProbitBinomial::valid_link(const arma::mat &x) const
-{
-  return true;
-}
+
 
 
 const double ProbitBinomial::observation_trafo(const double x) const

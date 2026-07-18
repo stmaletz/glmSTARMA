@@ -1,0 +1,23 @@
+citHeader("To cite glmSTARMA in publications use:")
+
+bibentry(
+  bibtype = "Misc",
+  title = "glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models",
+  author = personList(
+    person("Steffen", "Maletz"),
+    person("Konstantinos", "Fokianos"),
+    person("Roland", "Fried")
+  ),
+  year = "2026",
+  doi = "10.48550/arXiv.2607.08276",
+  eprint = "2607.08276",
+  eprinttype = "arXiv",
+  url = "https://arxiv.org/abs/2607.08276",
+  note = "Preprint",
+  textVersion = paste(
+    "Maletz S, Fokianos K, and Fried R (2026).",
+    "\"glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models.\"",
+    "arXiv:2607.08276.",
+    "doi:10.48550/arXiv.2607.08276."
+  )
+)

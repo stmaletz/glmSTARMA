@@ -277,6 +277,16 @@ test_that("wlist arguments are validated", {
                    wlist = W_invalid2, pseudo_observations = "deviance", 
                    mean_covariates = covariates_mean, 
                    dispersion_covariates = covariates_dispersion))
+    # matrices in different wlist arguments have different dimensions
+    W_past_obs <- W
+    W_past_mean <- generateW("rectangle", 50, 2, 10)
+    expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W_past_obs, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion,
+                   wlist_past_mean = W_past_mean))
+
     # correct case: sparse matrices
     W_sparse <- lapply(W, function(mat) as(mat, "dgCMatrix"))
     result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
@@ -587,8 +597,7 @@ test_that("family argument is validated", {
                               past_obs = 2, past_mean = 1, 
                               covariates = c(0, 0))
     model_orders_dispersion <- list(intercept = "homogeneous", 
-                                    past_obs = 1, 
-                                    covariates = c(0, 0))
+                                    past_obs = 1)
     covariates_mean <- list(season = SpatialConstant(sin(2 * pi / 12 * seq(n_obs))),
                             location = TimeConstant(rnorm(100, sd = 0.81)))
 
@@ -602,7 +611,39 @@ test_that("family argument is validated", {
     params_dispersion <- list(intercept = 0.5, 
                               past_obs = matrix(c(0.5, 0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
+    # different copulas                          
     family <- vnormal(copula = "frank", copula_param = 2)
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
+    family <- vnormal(copula = "normal", copula_param = 0.5)
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
+    family <- vnormal()
+    result <- dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion)
+    expect_true(is.list(result))
+
+    # family is not allowed for the mean model
+    family <- vpoisson()
+    expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
+                   model_orders_dispersion, mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance", 
+                   mean_covariates = covariates_mean, 
+                   dispersion_covariates = covariates_dispersion))
+
     # family not specified
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = NULL, 
@@ -823,14 +864,14 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
     params_dispersion <- list(intercept = 0.5, 
                               past_obs = matrix(c(0.5, -0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
-    family <- vpoisson("identity", copula = "frank", copula_param = 2)
+    family <- vquasipoisson("identity", copula = "frank", copula_param = 2)
 
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = family, 
                    wlist = W, pseudo_observations = "deviance", 
                    mean_covariates = covariates_mean_positive, 
                    dispersion_covariates = covariates_dispersion_positive))
-    family <- vpoisson("log", copula = "frank", copula_param = 2)               
+    family <- vquasipoisson("log", copula = "frank", copula_param = 2)               
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = family, dispersion_link = "identity",
                    wlist = W, pseudo_observations = "deviance", 
@@ -846,14 +887,14 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
                               past_obs = matrix(c(0.5, 0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
 
-    family <- vpoisson("identity", copula = "frank", copula_param = 2)
+    family <- vquasipoisson("identity", copula = "frank", copula_param = 2)
 
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = family, 
                    wlist = W, pseudo_observations = "deviance", 
                    mean_covariates = covariates_mean_negative, 
                    dispersion_covariates = covariates_dispersion_positive))
-    family <- vpoisson("log", copula = "frank", copula_param = 2)               
+    family <- vquasipoisson("log", copula = "frank", copula_param = 2)               
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = family, dispersion_link = "identity",
                    wlist = W, pseudo_observations = "deviance", 
@@ -869,7 +910,7 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
                               past_obs = matrix(c(0.5, NA), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
 
-    family <- vpoisson("log", copula = "frank", copula_param = 2)
+    family <- vquasipoisson("log", copula = "frank", copula_param = 2)
 
     expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
                    model_orders_dispersion, mean_family = family, 
@@ -879,20 +920,31 @@ test_that("errors and warnings are thrown if invalid parameters are provided", {
 
     # warning if parameters might lead to exploding values (sum of ar coefficients >= 1)
     params_mean <- list(intercept = 0.6, 
-                        past_mean = matrix(c(0.2, 0.1), nrow = 2), 
-                        past_obs = matrix(c(0.2, 0.4, 0.1), nrow = 3), 
-                        covariates = matrix(c(0.9, 0.2), ncol = 2))
+                    past_mean = matrix(c(0.2, 0.1), nrow = 2), 
+                    past_obs = matrix(c(0.3, 0.4, 0.1), nrow = 3))
     params_dispersion <- list(intercept = 0.5, 
-                              past_obs = matrix(c(0.5, 0.2), nrow = 2), 
-                              covariates = matrix(c(0.1, 0.75), ncol = 2))
+                          past_obs = matrix(c(0.5, 0.2), nrow = 2))
+    family <- vquasipoisson("log", copula = "frank", copula_param = 2)
+    
+    expect_warning(result <- dglmstarma.sim(5, params_mean, params_dispersion, 
+                                list(intercept = "homogeneous", past_obs = 2, past_mean = 1), 
+                                list(intercept = "homogeneous", past_obs = 1), mean_family = family, 
+                   wlist = W, pseudo_observations = "deviance",
+                   n_start = 3)) 
+     expect_true(is.list(result))
+    # warning for exploding dispersion model
+    params_mean <- list(intercept = 0.6, 
+                    past_mean = matrix(c(0.25, 0.1), nrow = 2), 
+                    past_obs = matrix(c(0.2, 0.1, 0.1), nrow = 3))
+    params_dispersion <- list(intercept = 0.5, 
+                          past_obs = matrix(c(0.55, 0.5), nrow = 2))
+    family <- vquasipoisson("log", copula = "frank", copula_param = 2)
 
-    family <- vpoisson("log", copula = "frank", copula_param = 2)
-
-    expect_error(dglmstarma.sim(n_obs, params_mean, params_dispersion, model_orders_mean, 
-                   model_orders_dispersion, mean_family = family, 
-                   wlist = W, pseudo_observations = "deviance", 
-                   mean_covariates = covariates_mean_negative, 
-                   dispersion_covariates = covariates_dispersion_negative))  
+    expect_warning(result <- dglmstarma.sim(5, params_mean, params_dispersion, list(intercept = "homogeneous", past_obs = 2, past_mean = 1), 
+                         list(intercept = "homogeneous", past_obs = 1), mean_family = family, 
+                         wlist = W, pseudo_observations = "deviance",
+                         n_start = 3))
+     expect_true(is.list(result))
 })
 
 
@@ -918,7 +970,7 @@ test_that("generated values match distribution", {
                         past_mean = matrix(c(0.2, 0.1), nrow = 2), 
                         past_obs = matrix(c(0.2, 0.1, 0.05), nrow = 3), 
                         covariates = matrix(c(0.9, 0.2), ncol = 2))
-    params_dispersion <- list(intercept = 0.5, 
+    params_dispersion <- list(intercept = 0.2, 
                               past_obs = matrix(c(0.5, 0.2), nrow = 2), 
                               covariates = matrix(c(0.1, 0.75), ncol = 2))
     

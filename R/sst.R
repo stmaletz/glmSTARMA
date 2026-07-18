@@ -21,7 +21,7 @@
 #' }
 #'
 #' @details
-#' This dataset contains monthly sea surface temperature anomalies (in degree Celsius) at 25 spatial locations in the Pacific Ocean over a time period of 33 years (396 months) from January 1970 to December 2002.
+#' This dataset contains monthly sea surface temperature anomalies (in degree Celsius) at 1230 (30 x 41 grid) spatial locations in the Pacific Ocean over a time period of 33 years (396 months) from January 1970 to December 2002.
 #'
 #' The neighborhood matrices in the list \code{W_directed} for orders 2, 3, 4, and 5 correspond to neighbors with the location directly north, east, south, and west. 
 #' Coefficients estimated using these matrices then reflect directed dependencies.

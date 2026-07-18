@@ -3,7 +3,7 @@
     File: family_normal.cpp
     Purpose: Implementation of Normal family for different link functions
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -139,30 +139,6 @@ class LinearNormal : public Normal {
     LinearNormal(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Normal(dispersion, true, false, copula_obj, "identity"){};
     LinearNormal(const Rcpp::RObject &dispersion) : Normal(dispersion, true, false, "identity"){};
     ~LinearNormal() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearNormal(disp_vec, this->copula_object);
-        } else {
-          return new LinearNormal(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LinearNormal(disp_mat, this->copula_object);
-        } else {
-          return new LinearNormal(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -197,10 +173,6 @@ const double LinearNormal::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LinearNormal::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 
 /*
@@ -223,30 +195,6 @@ class LogNormal : public Normal {
     LogNormal(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Normal(dispersion, true, false, copula_obj, "log"){};
     LogNormal(const Rcpp::RObject &dispersion) : Normal(dispersion, true, false, "log"){};
     ~LogNormal() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new LinearNormal(disp_vec, this->copula_object);
-        } else {
-          return new LinearNormal(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new LogNormal(disp_mat, this->copula_object);
-        } else {
-          return new LogNormal(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -283,10 +231,6 @@ const double LogNormal::derivative_link_trafo(const double x) const
   return 1.0;
 }
 
-const bool LogNormal::valid_link(const arma::mat &x) const
-{
-  return true;
-}
 
 /*
   Inverse link for Normal family, i.e. g(mu) = 1/mu
@@ -307,30 +251,6 @@ class InverseNormal : public Normal {
     InverseNormal(const Rcpp::RObject &dispersion, const Rcpp::Nullable<Rcpp::S4> &copula_obj) : Normal(dispersion, true, true, copula_obj, "inverse"){};
     InverseNormal(const Rcpp::RObject &dispersion) : Normal(dispersion, true, true, "inverse"){};
     ~InverseNormal() = default;
-    virtual const bool valid_link(const arma::mat &x) const;
-    virtual Family* clone() const
-    {
-      Rcpp::NumericMatrix disp_mat;
-      Rcpp::NumericVector disp_vec;
-      if(this->const_dispersion)
-      {
-        disp_vec = Rcpp::NumericVector::create(this->dispersion);
-        if(use_dependence)
-        { 
-          return new InverseNormal(disp_vec, this->copula_object);
-        } else {
-          return new InverseNormal(disp_vec);
-        }
-      } else {
-        disp_mat = Rcpp::wrap(this->dispersion_matrix);
-        if(use_dependence)
-        { 
-          return new InverseNormal(disp_mat, this->copula_object);
-        } else {
-          return new InverseNormal(disp_mat);
-        }
-      }
-    };
 };
 
 
@@ -363,11 +283,6 @@ const double InverseNormal::link_trafo(const double x) const
 const double InverseNormal::derivative_link_trafo(const double x) const
 {
   return 1.0;
-}
-
-const bool InverseNormal::valid_link(const arma::mat &x) const
-{
-  return true;
 }
 
 

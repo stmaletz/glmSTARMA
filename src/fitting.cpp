@@ -3,7 +3,7 @@
     File: fitting.cpp
     Purpose: Implementation of FittingObject classes
     Author: Steffen Maletz
-    Last modified: 2025-12-07
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -31,8 +31,9 @@ class optim_model : public Functor
 
     arma::vec score;
     arma::mat information;
+    unsigned int n_obs;
 
-    optim_model(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma) : ts_vec(arma::vectorise(ts.tail_cols(model_orders->n_obs_effective))), orders(model_orders), design(design), family(fam), W_ma(W_ma), score(model_orders->n_param), information(model_orders->n_param, model_orders->n_param) {};
+    optim_model(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const unsigned int &n_obs) : ts_vec(arma::vectorise(ts.tail_cols(model_orders->n_obs_effective))), orders(model_orders), design(design), family(fam), W_ma(W_ma), score(model_orders->n_param), information(model_orders->n_param, model_orders->n_param), n_obs(n_obs) {};
     ~optim_model()
     {
         orders = nullptr;
@@ -42,14 +43,14 @@ class optim_model : public Functor
     }
 
     double operator()(const arma::vec &x) override {
-        return -Model::log_likelihood(x, score, information, ts_vec, design, orders, W_ma, family, false, false);
+        return -Model::log_likelihood(x, score, information, ts_vec, design, orders, W_ma, family, false, false, n_obs);
     }
     void Gradient(const arma::vec &x, arma::vec &gr) override {
-        Model::log_likelihood(x, gr, information, ts_vec, design, orders, W_ma, family, true, false);
+        Model::log_likelihood(x, gr, information, ts_vec, design, orders, W_ma, family, true, false, n_obs);
         gr = -gr;
     }
     void Hessian(const arma::vec &x, arma::mat &he) override {
-        Model::log_likelihood(x, score, he, ts_vec, design, orders, W_ma, family, true, true);
+        Model::log_likelihood(x, score, he, ts_vec, design, orders, W_ma, family, true, true, n_obs);
         he = -he;
     }
 };
@@ -72,7 +73,7 @@ class nloptr : public FittingObject {
         delete constrain_param;
         delete constrain_param2;
     }
-    nloptr(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("nloptr", "SLSQP"), to_optimize(ts, model_orders, design, fam, W_ma)
+    nloptr(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("nloptr", "SLSQP"), to_optimize(ts, model_orders, design, fam, W_ma, model_orders->n_obs_effective)
     {
         Rcpp::LogicalVector constrained = control["constrained"]; // Default TRUE
         Rcpp::NumericVector constraint_tol = control["constraint_tol"]; // Default 1e-8
@@ -129,20 +130,18 @@ class nloptr : public FittingObject {
         nlopt_set_xtol_rel(opt, xtol[0]);
         nlopt_set_maxeval(opt, maxit[0]);
     }
-    nloptr(nloptr* to_clone) : FittingObject(to_clone), to_optimize(to_clone->to_optimize)
+    arma::vec fit(arma::vec start_value) override
     {
-        opt = nlopt_copy(to_clone->opt);
-        constrain_param = new arma::uvec(*to_clone->constrain_param);
-    }
-    FittingObject * clone() override {
-        return new nloptr(this);
+        return fit(start_value, to_optimize.orders->n_obs_effective);
     }
 
-    arma::vec fit(arma::vec start_value) override 
+
+    arma::vec fit(arma::vec start_value, const unsigned int &n_obs) override 
     {
         fcount = 0;
         gcount = 0;
         ccount = 0;
+        to_optimize.n_obs = n_obs;
         double* start = new double[start_value.n_elem];
         for(unsigned int i = 0; i < start_value.n_elem; i++){
             start[i] = start_value(i);
@@ -150,6 +149,7 @@ class nloptr : public FittingObject {
         double min_f = 0.0;
         start_vector = arma::vec(start_value);
 
+        
         auto start_time = std::chrono::high_resolution_clock::now();
         nlopt_result res = nlopt_optimize(opt, start, &min_f);
         auto stop_time = std::chrono::high_resolution_clock::now();
@@ -182,14 +182,14 @@ class nloptr : public FittingObject {
         if(grad)
         {
             gcount++;
-            value = -Model::log_likelihood(param, score, model->information, model->ts_vec, model->design, model->orders, model->W_ma, model->family, true, false);
+            value = -Model::log_likelihood(param, score, model->information, model->ts_vec, model->design, model->orders, model->W_ma, model->family, true, false, model->n_obs);
             for(unsigned int i = 0; i < n; i++){
                 grad[i] = -score(i);
             }
         }
         else
         {
-            value = -Model::log_likelihood(param, score, model->information, model->ts_vec, model->design, model->orders, model->W_ma, model->family, false, false);
+            value = -Model::log_likelihood(param, score, model->information, model->ts_vec, model->design, model->orders, model->W_ma, model->family, false, false, model->n_obs);
         }
         return value;
     }
@@ -311,7 +311,7 @@ class optim : public FittingObject {
     Roptim<optim_model> opt;
     optim_model to_optimize;
     public:
-    optim(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("optim", fam->only_positive_parameters ? "L-BFGS-B" : "BFGS"), to_optimize(ts, model_orders, design, fam, W_ma)
+    optim(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("optim", fam->only_positive_parameters ? "L-BFGS-B" : "BFGS"), to_optimize(ts, model_orders, design, fam, W_ma, model_orders->n_obs_effective)
     {
         if(fam->only_positive_parameters)
         {
@@ -343,14 +343,14 @@ class optim : public FittingObject {
         opt.control.maxit = maxit[0];
         opt.set_hessian(false);
     }
-    optim(const optim &to_clone) : FittingObject(to_clone), opt(to_clone.opt), to_optimize(to_clone.to_optimize) {};
-    FittingObject * clone() override
-    {
-        return new optim(*this);
-    }
-
     arma::vec fit(arma::vec start_value) override
     {
+        return fit(start_value, to_optimize.orders->n_obs_effective);
+    }
+
+    arma::vec fit(arma::vec start_value, const unsigned int &n_obs) override
+    {
+        to_optimize.n_obs = n_obs;
         start_vector = arma::vec(start_value);
         arma::vec start(start_value);
 

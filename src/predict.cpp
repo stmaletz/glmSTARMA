@@ -3,7 +3,7 @@
     File: predict.cpp
     Purpose: Implementation of predict functions for glmstarma and dglmstarma models
     Author: Steffen Maletz
-    Last modified: 2025-12-07
+    Last modified: 2026-07-13
 -----------------------------------------------------------------------------
 */
 
@@ -44,7 +44,7 @@ arma::mat glmstarma_predict(const unsigned int &n_ahead, const std::string &pred
 
     const unsigned int n_obs = ts.n_cols + n_ahead;
     const unsigned int dim = ts.n_rows;
-    CovariateList covariates(covariate_list, n_obs, dim, 0, 0);
+    CovariateList covariates(covariate_list, ts.n_cols, dim, 0, 0);
     Orders orders(model, dim, n_obs);
 
     if(orders.n_param_cov > 0 && covariates.has_time_variant_covariates() && new_covariates.isNull())
@@ -84,12 +84,14 @@ arma::mat glmstarma_predict(const unsigned int &n_ahead, const std::string &pred
     W_ar->set_parameter_matrices(ar_params);
     W_ma->set_parameter_matrices(ma_params);
     W_covariates->set_parameter_matrices(cov_params);
+    const arma::vec inter = (intercept.n_elem == 1) ? arma::vec(ts.n_rows).fill(intercept(0)) : intercept;
 
     arma::mat ts_extended(ts.n_rows, ts.n_cols + n_ahead, arma::fill::zeros);
     ts_extended.head_cols(ts.n_cols) = ts;
     arma::mat link_values_extended(ts.n_rows, ts.n_cols + n_ahead, arma::fill::zeros);
     link_values_extended.head_cols(ts.n_cols) = fam->link(fitted_values);
     arma::mat predictions(ts.n_rows, n_ahead, arma::fill::zeros);
+
 
     unsigned int n_new_obs = 0;
     arma::mat new_obs_;
@@ -102,7 +104,7 @@ arma::mat glmstarma_predict(const unsigned int &n_ahead, const std::string &pred
 
     for(unsigned int t = ts.n_cols; t < n_obs; t++)
     {
-        Model::calculate_link_value_at(t, link_values_extended, ts_extended, orders, fam, intercept, &covariates, W_ar, W_ma, W_covariates, false);
+        Model::calculate_link_value_at(t, link_values_extended, ts_extended, orders, fam, inter, &covariates, W_ar, W_ma, W_covariates, false);
         arma::vec prediction = link_values_extended.col(t);
         prediction = (pred_type != "link") ? fam->inverse_link(prediction) : prediction;
         prediction = (pred_type == "sample") ? fam->sample(prediction) : prediction; // TODO: Dispersion beachten
@@ -181,9 +183,11 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
     const unsigned int n_obs_dispersion = pseudo_observations.n_cols + n_ahead;
     const unsigned int dim = ts.n_rows;
 
-    CovariateList covariates_mean(mean_covariates, n_obs_mean, dim, 0, 0);
+    // CovariateList covariates_mean(mean_covariates, n_obs_mean, dim, 0, 0);
+    CovariateList covariates_mean(mean_covariates, ts.n_cols, dim, 0, 0);
     Orders orders_mean(mean_model, dim, n_obs_mean);
-    CovariateList covariates_dispersion(dispersion_covariates, n_obs_dispersion, dim, 0, 0);
+    // CovariateList covariates_dispersion(dispersion_covariates, n_obs_dispersion, dim, 0, 0);
+    CovariateList covariates_dispersion(dispersion_covariates, pseudo_observations.n_cols, dim, 0, 0);
     Orders orders_dispersion(dispersion_model, dim, n_obs_dispersion);
 
     if(orders_mean.n_param_cov > 0 && covariates_mean.has_time_variant_covariates() && covariate_list_mean_new.isNull())
@@ -231,6 +235,7 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
     W_ar_mean->set_parameter_matrices(ar_params_mean);
     W_ma_mean->set_parameter_matrices(ma_params_mean);
     W_covariates_mean->set_parameter_matrices(cov_params_mean);
+    const arma::vec inter_mean = (intercept_mean.n_elem == 1) ? arma::vec(ts.n_rows).fill(intercept_mean(0)) : intercept_mean;
 
     arma::vec param_est_dispersion = Model::init_param(parameter_est_dispersion, orders_dispersion, pseudo_observations, fam_dispersion);
     arma::vec intercept_dispersion(orders_dispersion.n_param_intercept);
@@ -241,6 +246,8 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
     W_ar_dispersion->set_parameter_matrices(ar_params_dispersion);
     W_ma_dispersion->set_parameter_matrices(ma_params_dispersion);
     W_covariates_dispersion->set_parameter_matrices(cov_params_dispersion);
+    const arma::vec inter_dispersion = (intercept_dispersion.n_elem == 1) ? arma::vec(ts.n_rows).fill(intercept_dispersion(0)) : intercept_dispersion;
+
 
     arma::mat ts_extended(ts.n_rows, ts.n_cols + n_ahead, arma::fill::zeros);
     ts_extended.head_cols(ts.n_cols) = ts;
@@ -267,18 +274,6 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
     arma::vec temp_prediction_mean(ts.n_rows);
     arma::vec temp_prediction_dispersion(ts.n_rows);
 
-    arma::vec inter_mean(ts.n_rows);
-    arma::vec inter_dispersion(ts.n_rows);
-    if(intercept_mean.n_elem == 1){
-        inter_mean.fill(intercept_mean(0));
-    } else {
-        inter_mean = intercept_mean;
-    }
-    if(intercept_dispersion.n_elem == 1){
-        inter_dispersion.fill(intercept_dispersion(0));
-    } else {
-        inter_dispersion = intercept_dispersion;
-    }
 
     for(unsigned int t = ts.n_cols; t < ts.n_cols + std::min(n_new_obs, n_ahead); t++)
     {
@@ -309,6 +304,7 @@ Rcpp::List dglmstarma_predict(const unsigned int &n_ahead, const std::string &pr
             predictions_dispersion.col(t - ts.n_cols) = temp_prediction_dispersion;
             predictions_mean.col(t - ts.n_cols) = temp_prediction_mean;
             ts_extended.col(t) = (pred_type_mean == "link") ? fam_mean->inverse_link(temp_prediction_mean) : temp_prediction_mean;
+            // Rcpp::Rcout << "t: " << t << ", temp_prediction_mean: " << temp_prediction_mean.t() << "\n";
             pseudo_observations_extended.col(t) = (pred_type_mean != "sample") ? temp_dispersion : ((pseudo_obs_type == "deviance") ? fam_mean->deviance_residual(ts_extended.col(t), temp_prediction_mean) : fam_mean->pearson_residual(ts_extended.col(t), temp_prediction_mean));
         }
     }

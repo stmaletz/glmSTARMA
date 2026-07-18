@@ -131,6 +131,7 @@ glmstarma(chickenpox, model_autoregressive, W_hungary, family = vpoisson("log"),
 \item Cliff, A. D., & Ord, J. K. (1975). Space-Time Modelling with an Application to Regional Forecasting. Transactions of the Institute of British Geographers, 64, 119–128. \doi{10.2307/621469}
 \item Jahn, M., Weiß, C.H., & Kim, H., (2023), Approximately linear INGARCH models for spatio-temporal counts, \emph{Journal of the Royal Statistical Society Series C: Applied Statistics}, 72(2), 476–497, \doi{10.1093/jrsssc/qlad018}
 \item Maletz, S., Fokianos, K., & Fried, R. (2024). Spatio-Temporal Count Autoregression. \emph{Data Science in Science}, 3(1), \doi{10.1080/26941899.2024.2425171}
+\item Maletz, S., Fokianos, K., & Fried, R. (2026). glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models. \doi{10.48550/arXiv.2607.08276}
 \item Pfeifer, P. E., & Deutsch, S. J. (1980). A Three-Stage Iterative Procedure for Space-Time Modeling Phillip. Technometrics, 22(1), 35–47. \doi{10.2307/1268381}
 }
 }

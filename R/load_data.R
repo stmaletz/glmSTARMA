@@ -105,10 +105,11 @@ delete_glmSTARMA_data <- function(name = NULL) {
             if(!file.exists(target)){
                 message("The dataset '", nam, "' is not in the cache.", call. = FALSE)
                 rtrn_val <- FALSE
+            } else {
+              unlink(target)
+              msg <- paste0("Deleted: ", nam)
+              message(msg)
             }
-            unlink(target)
-            msg <- paste0("Deleted: ", nam)
-            message(msg)
         }
         return(invisible(rtrn_val))
     }

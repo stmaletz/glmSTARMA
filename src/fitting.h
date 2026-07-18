@@ -3,7 +3,7 @@
     File: fitting.h
     Purpose: Declaration of FittingObject class
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-07-15
 -----------------------------------------------------------------------------
 */
 
@@ -52,19 +52,8 @@ class FittingObject{
         grcounter = 0;
         info_counter = 0;
     };
-    FittingObject(FittingObject* to_clone) : method(to_clone->method), algorithm(to_clone->algorithm)
-    {
-        fcounter = to_clone->fcounter;
-        grcounter = to_clone->grcounter;
-        info_counter = to_clone->info_counter;
-        fitting_time = to_clone->fitting_time;
-        start_vector = to_clone->start_vector;
-        converged = to_clone->converged;
-        convergence_code = to_clone->convergence_code;
-        message = to_clone->message;
-    };
-    virtual FittingObject * clone() = 0;
     virtual ~FittingObject() = default;
+    virtual arma::vec fit(arma::vec start_value, const unsigned int &n_obs) = 0;
     virtual arma::vec fit(arma::vec start_value) = 0;
     Rcpp::List get_algorithm_info() const 
     {

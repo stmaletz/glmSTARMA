@@ -77,7 +77,7 @@ Rcpp::List glmstarma_cpp(const arma::mat &ts, const Rcpp::List &covariate_list,
     {
         W_ma->set_parameter_matrices(ma_params);
     }
-    
+
     // Prepare output:
     arma::vec fitted = model_design.update_design(estimation, &orders, fam, W_ma);
     double dispersion_est = 1.0;
@@ -101,7 +101,7 @@ Rcpp::List glmstarma_cpp(const arma::mat &ts, const Rcpp::List &covariate_list,
     arma::vec score(estimation.n_elem);
     arma::mat information(estimation.n_elem, estimation.n_elem);
     
-    double log_likelihood = Model::log_likelihood(estimation, score, information, ts_vec, &model_design, &orders, W_ma, fam, true, true);
+    double log_likelihood = Model::log_likelihood(estimation, score, information, ts_vec, &model_design, &orders, W_ma, fam, true, true, orders.n_obs_effective);
     log_likelihood /= orders.n_obs_effective;
     log_likelihood *= ts.n_cols;
     arma::mat variance_estimation = Model::variance_estimation(estimation, ts_vec, &model_design, fam, information, W_ma, &orders);

@@ -44,11 +44,15 @@
 residuals.glmstarma <- function(object, type = c("response", "pearson", "deviance"), drop_init = TRUE, ignore_dispersion = TRUE){
     type <- match.arg(type)
     res <- object$ts - object$fitted.values
+    disp <- object$dispersion
+    if(is.null(disp)){
+        disp <- object$family$dispersion
+    }
     if(type == "pearson"){
-        res <- res / sqrt(object$family$variance(object$fitted.values, object$dispersion_est, ignore_dispersion))
+        res <- res / sqrt(object$family$variance(object$fitted.values, disp, ignore_dispersion))
     }
     if(type == "deviance"){
-        res <- object$family$dev.resids(object$ts, object$fitted.values, object$dispersion_est, ignore_dispersion)
+        res <- object$family$dev.resids(object$ts, object$fitted.values, disp, ignore_dispersion)
     }
     if(drop_init && object$max_time_lag > 0){
         res <- res[, -seq(object$max_time_lag), drop = FALSE]
