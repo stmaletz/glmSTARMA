@@ -3,7 +3,7 @@ citHeader("To cite glmSTARMA in publications use:")
 bibentry(
   bibtype = "Misc",
   title = "glmSTARMA -- An R-Package for fitting autoregressive spatio-temporal models following generalized linear models",
-  author = personList(
+  author = c(
     person("Steffen", "Maletz"),
     person("Konstantinos", "Fokianos"),
     person("Roland", "Fried")
