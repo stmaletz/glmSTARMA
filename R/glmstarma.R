@@ -7,7 +7,7 @@
 
 
 #' @rdname glmstarma
-#' @title Fit STARMA Models based on generalized linear models
+#' @title Fit STARMA Models based on Generalized Linear Models
 #' @description The function \code{glmstarma} estimates a multivariate time series model based on generalised linear models (GLM). The primary application is for spatio-temporal data, but different applications, like time-varying network data can be ttacked by this methodology.
 #' The model framework links the mean of the time series conditional on the past, to a linear predictor. This linear predictor allows regression on past observations, past values of the linear predictor and covariates, as described in the details.
 #' Various distributions with several link-functions are available.

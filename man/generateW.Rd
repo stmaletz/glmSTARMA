@@ -2,7 +2,7 @@
 % Please edit documentation in R/generateW.R
 \name{generateW}
 \alias{generateW}
-\title{Generate spatial weight matrices for simulation}
+\title{Generate Spatial Weight Matrices for Simulation}
 \usage{
 generateW(
   method = c("rectangle", "line", "circle", "full", "independent"),

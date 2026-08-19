@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_data.R
 \name{delete_glmSTARMA_data}
 \alias{delete_glmSTARMA_data}
-\title{Delete cached example datasets}
+\title{Delete Cached Example Datasets}
 \usage{
 delete_glmSTARMA_data(name = NULL)
 }

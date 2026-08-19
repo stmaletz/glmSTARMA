@@ -3,7 +3,7 @@
 \name{residuals.glmstarma}
 \alias{residuals.glmstarma}
 \alias{residuals.dglmstarma}
-\title{Residuals for glmstarma and dglmstarma Models}
+\title{Residuals of \code{glmstarma} and \code{dglmstarma} Models}
 \usage{
 \method{residuals}{glmstarma}(
   object,

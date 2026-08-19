@@ -8,7 +8,7 @@
 
 
 #' @name information_criteria
-#' @title Information Criteria for glmstarma and dglmstarma objects
+#' @title Information Criteria for \code{glmstarma} and \code{dglmstarma} Objects
 #' @description Compute AIC, BIC, and QIC and (Quasi-)log-likelihood for \code{glmstarma} and \code{dglmstarma} objects.
 #' @param object An object of class \code{glmstarma} or \code{dglmstarma}
 #' @param k Numeric; penalty per parameter to be used. Default is \code{2} (standard AIC).

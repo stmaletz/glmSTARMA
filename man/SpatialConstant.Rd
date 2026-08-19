@@ -2,7 +2,7 @@
 % Please edit documentation in R/covariates.R
 \name{SpatialConstant}
 \alias{SpatialConstant}
-\title{Creates a spatial constant covariate}
+\title{Create a Spatial Constant Covariate}
 \usage{
 SpatialConstant(x)
 }

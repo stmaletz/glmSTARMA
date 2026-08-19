@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 #' @rdname TimeConstant
-#' @title Creates a time constant covariate
+#' @title Create a Time Constant Covariate
 #'
 #' @description This functions assigns a \code{const} attribute set to \code{"time"} to a numeric vector.
 #'
@@ -27,7 +27,7 @@ TimeConstant <- function(x){
 }
 
 #' @rdname SpatialConstant
-#' @title Creates a spatial constant covariate
+#' @title Create a Spatial Constant Covariate
 #'
 #' @description This function assigns a \code{const} attribute set to \code{"space"} to a numeric vector.
 #'

@@ -8,7 +8,7 @@
 #' @rdname fitted.glmstarma
 #' @name fitted.glmstarma
 #' @aliases fitted.dglmstarma
-#' @title Fitted values for glmstarma Models
+#' @title Fitted Values for \code{glmstarma} Models
 #' @description Compute fitted values for \code{glmstarma} and \code{dglmstarma} models.
 #' @param object A \code{glmstarma} or \code{dglmstarma} object.
 #' @param drop_init Logical; if \code{TRUE}, initial first \code{max_time_lag} columns of fitted values are dropped.

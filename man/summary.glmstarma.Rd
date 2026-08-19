@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_glmstarma.R
 \name{summary.glmstarma}
 \alias{summary.glmstarma}
-\title{Summarize the results of a glmstarma model}
+\title{Summarize \code{glmstarma} Model Results}
 \usage{
 \method{summary}{glmstarma}(object, ...)
 }

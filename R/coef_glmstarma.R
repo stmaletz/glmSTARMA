@@ -7,7 +7,7 @@
 
 #' @rdname coef.glmstarma
 #' @aliases coef.dglmstarma
-#' @title Extract Coefficients of glmstarma and dglmstarma Models
+#' @title Extract Coefficients of \code{glmstarma} and \code{dglmstarma} Models
 #' @description Extracts model coefficients from objects of class \code{glmstarma} and \code{dglmstarma}.
 #' @param object An object of class \code{glmstarma} or \code{dglmstarma}
 #' @param asList Logical; if \code{TRUE}, returns coefficients as a list, or otherwise as a numeric vector. Default is \code{FALSE}.

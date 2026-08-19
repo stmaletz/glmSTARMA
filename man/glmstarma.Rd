@@ -2,7 +2,7 @@
 % Please edit documentation in R/glmstarma.R
 \name{glmstarma}
 \alias{glmstarma}
-\title{Fit STARMA Models based on generalized linear models}
+\title{Fit STARMA Models based on Generalized Linear Models}
 \usage{
 glmstarma(
   ts,

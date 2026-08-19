@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_data.R
 \name{load_data}
 \alias{load_data}
-\title{Load example datasets}
+\title{Load Example Datasets}
 \usage{
 load_data(
   name = NULL,

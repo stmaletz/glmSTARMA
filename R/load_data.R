@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-#' @title Load example datasets
+#' @title Load Example Datasets
 #'
 #' @description Download and return datasets from the glmSTARMA GitHub repository 
 #'
@@ -71,7 +71,7 @@ load_data <- function(name = NULL, refresh = FALSE, directory = tools::R_user_di
 
 
 
-#' @title Delete cached example datasets
+#' @title Delete Cached Example Datasets
 #' @description Delete one or more cached example datasets downloaded via \code{load_data()}.
 #' @param name Name(s) of the dataset(s) to delete. One or more of \code{"rota"}, \code{"chickenpox"}, or \code{"sst"}. If \code{NULL} (default), no action is taken.
 #' @return Invisibly returns \code{TRUE} if all specified datasets were deleted, \code{FALSE} otherwise.

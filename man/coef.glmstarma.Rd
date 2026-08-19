@@ -3,7 +3,7 @@
 \name{coef.glmstarma}
 \alias{coef.glmstarma}
 \alias{coef.dglmstarma}
-\title{Extract Coefficients of glmstarma and dglmstarma Models}
+\title{Extract Coefficients of \code{glmstarma} and \code{dglmstarma} Models}
 \usage{
 \method{coef}{glmstarma}(object, asList = FALSE)
 

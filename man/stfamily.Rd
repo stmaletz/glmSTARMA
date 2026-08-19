@@ -10,7 +10,7 @@
 \alias{vgamma}
 \alias{vinverse.gaussian}
 \alias{vnormal}
-\title{Families for spatio-temporal GLMs}
+\title{Families for Spatio-Temporal GLMs}
 \usage{
 vpoisson(
   link = c("log", "identity", "sqrt", "softplus"),

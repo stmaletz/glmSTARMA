@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary_glmstarma.R
 \name{summary.dglmstarma}
 \alias{summary.dglmstarma}
-\title{Summarize a dglmstarma Model}
+\title{Summarize \code{dglmstarma} Model Results}
 \usage{
 \method{summary}{dglmstarma}(object, phi = 1, alternative = c("two.sided", "less", "greater"), ...)
 }

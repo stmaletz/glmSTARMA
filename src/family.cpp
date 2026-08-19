@@ -3,7 +3,7 @@
     File: family.cpp
     Purpose: Implementation of Family factory methods
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-08-11
 -----------------------------------------------------------------------------
 */
 
@@ -19,35 +19,35 @@ using namespace Rcpp;
 Family * Family::create(const Rcpp::List &family, Rcpp::S4& copula_obj)
 {
   std::string distribution = Rcpp::as<std::string>(family["distribution"]);
-  if(distribution == "poisson")
+  if(distribution == "Poisson")
   {
     return Poisson::create(family, copula_obj);
   }
-  else if(distribution == "negative_binomial")
+  else if(distribution == "Negative Binomial")
   {
     return NegativeBinomial::create(family, copula_obj);
   }
-  else if(distribution == "binomial")
+  else if(distribution == "Binomial")
   {
     return Binomial::create(family, copula_obj);
   }
-  else if(distribution == "quasibinomial")
+  else if(distribution == "Quasibinomial")
   {
     return QuasiBinomial::create(family, copula_obj);
   }
-  else if(distribution == "quasipoisson")
+  else if(distribution == "Quasipoisson")
   {
     return QuasiPoisson::create(family, copula_obj);
   }
-  else if(distribution == "gamma")
+  else if(distribution == "Gamma")
   {
     return Gamma::create(family, copula_obj);
   }
-  else if(distribution == "inverse_gaussian")
+  else if(distribution == "Inverse Gaussian")
   {
     return InverseGauss::create(family, copula_obj);
   }
-  else if(distribution == "gaussian")
+  else if(distribution == "Gaussian")
   {
     return Normal::create(family, copula_obj);
   }
@@ -63,35 +63,35 @@ Family * Family::create(const Rcpp::List &family, Rcpp::S4& copula_obj)
 
 Family * Family::create(const Rcpp::List &family){
   std::string distribution = Rcpp::as<std::string>(family["distribution"]);
-  if(distribution == "poisson")
+  if(distribution == "Poisson")
   {
     return Poisson::create(family);
   }
-  else if(distribution == "negative_binomial")
+  else if(distribution == "Negative Binomial")
   {
     return NegativeBinomial::create(family);
   }
-  else if(distribution == "binomial")
+  else if(distribution == "Binomial")
   {
     return Binomial::create(family);
   }
-  else if(distribution == "quasibinomial")
+  else if(distribution == "Quasibinomial")
   {
     return QuasiBinomial::create(family);
   }
-  else if(distribution == "quasipoisson")
+  else if(distribution == "Quasipoisson")
   {
     return QuasiPoisson::create(family);
   }
-  else if(distribution == "gamma")
+  else if(distribution == "Gamma")
   {
     return Gamma::create(family);
   }
-  else if(distribution == "inverse_gaussian")
+  else if(distribution == "Inverse Gaussian")
   {
     return InverseGauss::create(family);
   }
-  else if(distribution == "gaussian")
+  else if(distribution == "Gaussian")
   {
     return Normal::create(family);
   }

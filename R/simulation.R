@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 #' @rdname glmstarma.sim
-#' @title Simulate spatial time-series based on generalized linear models
+#' @title Simulate Spatial Time Series based on GLMs
 #' @description Generates a simulated multivariate time series based on a GLM-like model (see \code{\link{glmstarma}} for details)
 #'
 #' @param ntime Number of observation times to be simulated
@@ -127,12 +127,13 @@ glmstarma.sim <- function(ntime, parameters, model, family = NULL, wlist, covari
         copula_obj <- NULL
     }
     result <- glmstarma_sim_cpp(ntime, parameters, model, wlist, wlist_past_mean, family, covariates, wlist_covariates, copula_obj, n_start, control)
+    class(result) <- "glmstarma_sim"
     return(result)
 }
 
 
 #' @rdname dglmstarma.sim
-#' @title Simulate spatial time-series based on double generalized linear models
+#' @title Simulate Spatial Time Series based on DGLMs
 #' @description Generates a simulated multivariate time series based on a GLM-like model (see \code{\link{dglmstarma}} for details)
 #'
 #' @param ntime Number of observation times to be simulated
@@ -345,5 +346,6 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
                                  mean_covariates, dispersion_covariates, wlist_past_mean, wlist_covariates,
                                  wlist_pseudo_obs, wlist_past_dispersion, wlist_covariates_dispersion,
                                  control, copula_obj, n_start)
+    class(result) <- "dglmstarma_sim"
     return(result)
 }

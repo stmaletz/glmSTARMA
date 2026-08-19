@@ -9,7 +9,7 @@
 \alias{BIC.dglmstarma}
 \alias{logLik.glmstarma}
 \alias{logLik.dglmstarma}
-\title{Information Criteria for glmstarma and dglmstarma objects}
+\title{Information Criteria for \code{glmstarma} and \code{dglmstarma} Objects}
 \usage{
 \method{AIC}{glmstarma}(object, k = 2, adjust = TRUE)
 

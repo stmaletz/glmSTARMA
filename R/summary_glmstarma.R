@@ -7,7 +7,7 @@
 
 
 #' @rdname summary.glmstarma
-#' @title Summarize the results of a glmstarma model
+#' @title Summarize \code{glmstarma} Model Results
 #'
 #' @description This functions summarizes the model fit of a glmstarma model
 #'
@@ -150,7 +150,7 @@ summary.glmstarma <- function(object, ...) {
 
 
 #' @rdname summary.dglmstarma
-#' @title Summarize a dglmstarma Model
+#' @title Summarize \code{dglmstarma} Model Results
 #'
 #' @description This functions summarizes the model fit of a dglmstarma model.
 #'

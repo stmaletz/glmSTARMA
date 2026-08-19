@@ -2,11 +2,11 @@
 # File: family.R
 # Purpose: Implements family functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2026-07-14
+# Last modified: 2026-08-11
 # -----------------------------------------------------------------------------
 
 
-#' @title Families for spatio-temporal GLMs
+#' @title Families for Spatio-Temporal GLMs
 #' @name stfamily
 #' @aliases vpoisson vquasipoisson vnegative.binomial vbinomial vquasibinomial vgamma vinverse.gaussian vnormal
 #' @description
@@ -101,7 +101,7 @@ vpoisson <- function(link = c("log", "identity", "sqrt", "softplus"), const = 1,
             "copula_param must be a numeric scalar" = is.null(copula_param) || (is.numeric(copula_param) && length(copula_param) == 1),
             "copula_param must be positive" = is.null(copula_param) || copula_param > 0,
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param))
-  fam$distribution <- "poisson"
+  fam$distribution <- "Poisson"
   fam$non_negative_parameters <- FALSE
   if(fam$link %in% c("identity", "sqrt")){
     fam$non_negative_parameters <- TRUE
@@ -146,7 +146,7 @@ vquasipoisson <- function(link = c("log", "identity", "sqrt", "softplus"), dispe
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param),
             "dispersion must be positive" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion > 0)),
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
-  fam$distribution <- "quasipoisson"
+  fam$distribution <- "Quasipoisson"
   fam$non_negative_parameters <- FALSE
   fam$sampling_method <- match.arg(sampling_method)
   if(fam$link %in% c("identity", "sqrt")){
@@ -201,7 +201,7 @@ vnegative.binomial <- function(link = c("log", "identity", "sqrt", "softplus"), 
             "copula_param must be specified when copula is specified" = is.null(copula) || !is.null(copula_param),
             "dispersion must be non-negative" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion >= 0)),
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
-  fam$distribution <- "negative_binomial"
+  fam$distribution <- "Negative Binomial"
   if(is.null(dispersion)){
     fam$dispersion <- 0
     fam$estimate_dispersion <- TRUE
@@ -243,7 +243,7 @@ vbinomial <- function(link = c("softclipping", "identity", "logit", "probit"), s
             "size must be a positive integer" = (is.numeric(size) && is.vector(size) && all(size > 0) && all(size == floor(size))),
             "size must not contain infinite values" = is.null(size) || !any(is.infinite(size)))
   
-  fam$distribution <- "binomial"
+  fam$distribution <- "Binomial"
   fam$non_negative_parameters <- FALSE
   fam$dispersion <- 1
   fam$estimate_dispersion <- FALSE
@@ -291,7 +291,7 @@ vquasibinomial <- function(link = c("softclipping", "identity", "logit", "probit
             "dispersion must be positive" = is.null(dispersion) || (is.numeric(dispersion) && all(dispersion > 0)),
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
 
-  fam$distribution <- "quasibinomial"
+  fam$distribution <- "Quasibinomial"
   if(is.null(dispersion)){
     fam$dispersion <- 1
     fam$estimate_dispersion <- TRUE
@@ -351,7 +351,7 @@ vgamma <- function(link = c("inverse", "log", "identity"), dispersion = NULL, co
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
   fam <- list()
   fam$link <- match.arg(link)
-  fam$distribution <- "gamma"
+  fam$distribution <- "Gamma"
   fam$const <- ifelse(is.null(const), 1, const)
   fam$non_negative_parameters <- (fam$link %in% c("identity", "inverse"))
 
@@ -395,7 +395,7 @@ vinverse.gaussian <- function(link = c("1/mu^2", "inverse", "identity", "log"), 
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
   fam <- list()
   fam$link <- match.arg(link)
-  fam$distribution <- "inverse_gaussian"
+  fam$distribution <- "Inverse Gaussian"
   fam$non_negative_parameters <- (fam$link %in% c("1/mu^2", "identity", "inverse"))
 
   if(is.null(dispersion)){
@@ -440,7 +440,7 @@ vnormal <- function(link = c("identity", "log", "inverse"), dispersion = NULL, c
             "dispersion must not contain infinite values" = is.null(dispersion) || !any(is.infinite(dispersion)))
   fam <- list()
   fam$link <- match.arg(link)
-  fam$distribution <- "gaussian"
+  fam$distribution <- "Gaussian"
   fam$non_negative_parameters <- FALSE
   if(is.null(dispersion)){
     fam$dispersion <- 1.0

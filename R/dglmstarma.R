@@ -7,7 +7,7 @@
 
 
 #' @rdname dglmstarma
-#' @title Fit STARMA Models based on double generalized linear models
+#' @title Fit STARMA Models based on Double Generalized Linear Models
 #' @description The function \code{dglmstarma} estimates a multivariate time series model based on double generalized linear models (DGLM) introduced by Smyth (1989). The primary application is for spatio-temporal data, but different applications, such as network data, are also feasible.
 #' Conditionally on the past, each component of the multivariate time series is assumed to follow a distribution from the exponential dispersion family, see Jørgensen (1987).
 #' In contrast to standard generalized linear models, the dispersion parameter of the distribution is allowed to vary.

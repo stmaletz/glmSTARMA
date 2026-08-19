@@ -2,7 +2,7 @@
 % Please edit documentation in R/covariates.R
 \name{TimeConstant}
 \alias{TimeConstant}
-\title{Creates a time constant covariate}
+\title{Create a Time Constant Covariate}
 \usage{
 TimeConstant(x)
 }

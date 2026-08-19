@@ -2,7 +2,7 @@
 % Please edit documentation in R/dglmstarma.R
 \name{dglmstarma}
 \alias{dglmstarma}
-\title{Fit STARMA Models based on double generalized linear models}
+\title{Fit STARMA Models based on Double Generalized Linear Models}
 \usage{
 dglmstarma(
   ts,

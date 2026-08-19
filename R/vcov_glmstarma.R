@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-#' @title Variance-Covariance Matrix for glmstarma and dglmstarma objects
+#' @title Variance-Covariance Matrix of \code{glmstarma} and \code{dglmstarma} Objects
 #' @description Computes the variance-covariance matrix for \code{glmstarma} and \code{dglmstarma} objects.
 #' @param object An object of class \code{glmstarma} or \code{dglmstarma} for which the variance-covariance matrix is to be computed.
 #' @param return_value A character string specifying which variance-covariance matrix to return. Options are "mean", "dispersion", or "both". Default is "mean".

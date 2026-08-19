@@ -3,7 +3,7 @@
 \name{fitted.glmstarma}
 \alias{fitted.glmstarma}
 \alias{fitted.dglmstarma}
-\title{Fitted values for glmstarma Models}
+\title{Fitted Values for \code{glmstarma} Models}
 \usage{
 \method{fitted}{glmstarma}(object, drop_init = TRUE)
 

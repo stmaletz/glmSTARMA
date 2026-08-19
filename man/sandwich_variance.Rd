@@ -4,7 +4,7 @@
 \alias{vcov.dglmstarma}
 \alias{sandwich_variance}
 \alias{vcov.glmstarma}
-\title{Variance-Covariance Matrix for glmstarma and dglmstarma objects}
+\title{Variance-Covariance Matrix of \code{glmstarma} and \code{dglmstarma} Objects}
 \usage{
 \method{vcov}{dglmstarma}(object, return_value = c("mean", "dispersion", "both"))
 

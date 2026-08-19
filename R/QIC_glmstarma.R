@@ -8,7 +8,7 @@
 
 #' @name QIC
 #' @rdname QIC
-#' @title Quasi Information Criterion (QIC) for glmstarma and dglmstarma objects
+#' @title Quasi Information Criterion (QIC) for \code{glmstarma} and \code{dglmstarma} Objects
 #'
 #' @description Generic function to compute the QIC (Pan, 2001), a model selection criterion
 #' commonly used for Generalized Estimating Equations (GEE) and related models.

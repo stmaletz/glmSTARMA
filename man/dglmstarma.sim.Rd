@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulation.R
 \name{dglmstarma.sim}
 \alias{dglmstarma.sim}
-\title{Simulate spatial time-series based on double generalized linear models}
+\title{Simulate Spatial Time Series based on DGLMs}
 \usage{
 dglmstarma.sim(
   ntime,

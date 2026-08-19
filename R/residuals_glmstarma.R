@@ -8,7 +8,7 @@
 #' @rdname residuals-glmstarma
 #' @name residuals.glmstarma
 #' @aliases residuals.glmstarma residuals.dglmstarma
-#' @title Residuals for glmstarma and dglmstarma Models
+#' @title Residuals of \code{glmstarma} and \code{dglmstarma} Models
 #' @description Compute residuals for fitted \code{glmstarma} and \code{dglmstarma} models.
 #' @param object A fitted \code{glmstarma} or \code{dglmstarma} object.
 #' @param type Type of residuals to compute. Options are \code{"response"} (raw residuals), \code{"pearson"}. See details.

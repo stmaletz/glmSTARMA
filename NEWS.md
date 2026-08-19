@@ -1,3 +1,15 @@
+# glmsSTARMA 1.2.0
+
+## New features
+- Added the `plot()` method for spatially constant covariates.
+- Output of `generateW()` is now assigned the class `generateW` for which `print()` and `plot()` methods are provided.
+
+## Improvements
+- Updated documentation and help-page titles.
+- Updated the names of the distributions in the `stfamily` class used internally. 
+- Improved output of the `print()` method for spatially constant and time constant covariates.
+
+
 # glmsSTARMA 1.1.0
 
 ## New Features

@@ -4,7 +4,7 @@
 \alias{QIC}
 \alias{QIC.glmstarma}
 \alias{QIC.dglmstarma}
-\title{Quasi Information Criterion (QIC) for glmstarma and dglmstarma objects}
+\title{Quasi Information Criterion (QIC) for \code{glmstarma} and \code{dglmstarma} Objects}
 \usage{
 QIC(object, ...)
 
