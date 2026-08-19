@@ -62,6 +62,7 @@ CovariateList::CovariateList(const Rcpp::List &covariates, const unsigned int &n
                     arma_vals = arma_vals.head(n_obs);
                     list_of_covariates.push_back( new SpatialConstantCovariate(arma_vals, dim, burn_in) );
                 }
+            // Buffer
             } else {
                 Rcpp::NumericMatrix values = covariates[i];
                 arma::mat arma_vals = Rcpp::as<arma::mat>( values );

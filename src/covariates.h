@@ -116,6 +116,8 @@ class DefaultCovariate : public Covariate {
     }
 };
 
+// End of Covariate Classes
+
 /*
     Class to manage a list of covariates
 */
