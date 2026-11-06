@@ -2,57 +2,21 @@
 # File: print_glmstarma.R
 # Purpose: Implement print functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2025-11-14
+# Last modified: 2026-08-21
 # -----------------------------------------------------------------------------
 
-#' @exportS3Method base::print
-print.glmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-
-  # Hilfsfunktion für den wiederholten Blockdruck
-  print_coef_block <- function(name, coef_matrix, model_matrix) {
-    if (!is.null(coef_matrix) && nrow(coef_matrix) > 0) {
-      cat("\n", name, " Coefficients:\n", sep = "")
-      max_width <- max(nchar(formatC(coef_matrix, digits = digits, format = "f")))
-      mat <- formatC(coef_matrix, digits = digits, format = "f", flag = "", width = max_width)
-      mat[model_matrix == 0] <- "."
-      colnames(mat) <- colnames(model_matrix)
-      rownames(mat) <- rownames(model_matrix)
-      print.default(mat, print.gap = 2L, quote = FALSE)
+# Help function for printing the spatio-temporal parameters
+print_coef_block <- function(coef_list, model_list, digits, title = NULL){
+    if(!is.null(title)){
+      title_length <- nchar(title)
+      left_padding <- floor((50 - title_length) / 2)
+      right_padding <- ceiling((50 - title_length) / 2)
+      cat(strrep("=", 50), "\n")
+      cat(strrep(" ", left_padding), title, strrep(" ", right_padding), "\n", sep = "")
+      cat(strrep("=", 50), "\n\n")
     }
-  }
-
-  cat("\nCall:\n", paste(deparse(x$call), collapse = "\n"), "\n\n", sep = "")
-
-  if (length(stats::coef(x)) > 0) {
-    coeffs <- stats::coef(x, TRUE)
-    
-    cat("Estimated Coefficients:\n")
     cat("Intercept:\n")
-    print.default(format(drop(coeffs$intercept), digits = digits), print.gap = 2L, quote = FALSE)
-
-    print_coef_block("Autoregressive", coeffs$past_obs, x$model$past_obs)
-    print_coef_block("Moving-Average", coeffs$past_mean, x$model$past_mean)
-    print_coef_block("Covariate", coeffs$covariates, x$model$covariates)
-
-  } else {
-    cat("No coefficients\n")
-  }
-
-  invisible(x)
-}
-
-#' @exportS3Method base::print
-print.dglmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-
-  print_coef_block <- function(coef_list, model_list, digits, title){
-    title_length <- nchar(title)
-    left_padding <- floor((50 - title_length) / 2)
-    right_padding <- ceiling((50 - title_length) / 2)
-    cat(strrep("=", 50), "\n")
-    cat(strrep(" ", left_padding), title, strrep(" ", right_padding), "\n", sep = "")
-    cat(strrep("=", 50), "\n\n")
-    cat("Intercept:\n")
-    print(format(drop(coef_list$intercept), digits = digits), quote = FALSE)
+    print.default(format(drop(coef_list$intercept), digits = digits), print.gap = 2L, quote = FALSE)
 
     print_subblock <- function(name, coef_matrix, model_matrix){
       if(!is.null(coef_matrix) && nrow(coef_matrix) > 0){
@@ -73,6 +37,24 @@ print.dglmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\n")
   }
 
+
+#' @exportS3Method base::print
+print.glmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat("\nCall:\n", paste(deparse(x$call), collapse = "\n"), "\n\n", sep = "")
+
+  if (length(stats::coef(x)) > 0) {
+    coeffs <- stats::coef(x, TRUE)
+    
+    cat("Estimated Coefficients:\n")
+    print_coef_block(coeffs, x$model, digits)
+  } else {
+    cat("No coefficients\n")
+  }
+  invisible(x)
+}
+
+#' @exportS3Method base::print
+print.dglmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   cat("\nCall:\n", paste(deparse(x$call), collapse = "\n"), "\n\n")
 
   if(length(x$mean$coefficients) > 0){
@@ -89,10 +71,6 @@ print.dglmstarma <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 
   invisible(x)
 }
-
-
-
-
 
 
 

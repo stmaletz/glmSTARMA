@@ -3,7 +3,7 @@
     File: simulation.cpp
     Purpose: Implementation of simulation functions for glmstarma and dglmstarma models
     Author: Steffen Maletz
-    Last modified: 2026-01-12
+    Last modified: 2026-11-05
 -----------------------------------------------------------------------------
 */
 
@@ -117,7 +117,7 @@ Rcpp::List glmstarma_sim_cpp(const Rcpp::IntegerVector& n_obs_in_time, const Rcp
 
     Neighborhood* W_ar = Neighborhood::create(wlist_ar, sparsity_threshold, use_sparsity);
     Neighborhood * W_ma = Neighborhood::create_neighbor(model_order.n_param_ma, wlist_ma, W_ar, dim, sparsity_threshold, use_sparsity);
-    Neighborhood * W_covariates = Neighborhood::create_neighbor(model_order.n_param_ma, wlist_covariates, W_ar, dim, sparsity_threshold, use_sparsity);
+    Neighborhood * W_covariates = Neighborhood::create_neighbor(model_order.n_param_cov, wlist_covariates, W_ar, dim, sparsity_threshold, use_sparsity);
 
     // Set parameters for simulation
     Parameter param(parameters, &model_order);
@@ -349,9 +349,12 @@ Rcpp::List dglmstarma_sim_cpp(const unsigned int& n_obs_in_time, const Rcpp::Lis
     W_ma_mean->set_parameter_matrices(param_mean.ma_params);
     W_covariates_mean->set_parameter_matrices(param_mean.cov_params);
     param_dispersion.set_param_vector(orders_dispersion);
-    W_ar_dispersion->set_parameter_matrices(param_dispersion.ar_params);
-    W_ma_dispersion->set_parameter_matrices(param_dispersion.ma_params);
-    W_covariates_dispersion->set_parameter_matrices(param_dispersion.cov_params);
+    if(!const_dispersion_model){
+        W_ar_dispersion->set_parameter_matrices(param_dispersion.ar_params);
+        W_ma_dispersion->set_parameter_matrices(param_dispersion.ma_params);
+        W_covariates_dispersion->set_parameter_matrices(param_dispersion.cov_params);
+    }
+    
 
     // Calculate unconditional (mean) of link values as initial mean values
     arma::vec denominator(1, arma::fill::zeros);

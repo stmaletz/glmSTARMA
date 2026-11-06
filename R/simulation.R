@@ -2,7 +2,7 @@
 # File: simulation.R
 # Purpose: Implement simulation functions for glmSTARMA models
 # Author: Steffen Maletz
-# Last modified: 2025-05-21
+# Last modified: 2026-08-27
 # -----------------------------------------------------------------------------
 
 #' @rdname glmstarma.sim
@@ -128,6 +128,7 @@ glmstarma.sim <- function(ntime, parameters, model, family = NULL, wlist, covari
     }
     result <- glmstarma_sim_cpp(ntime, parameters, model, wlist, wlist_past_mean, family, covariates, wlist_covariates, copula_obj, n_start, control)
     class(result) <- "glmstarma_sim"
+    result$family <- family
     return(result)
 }
 
@@ -346,6 +347,9 @@ dglmstarma.sim <- function(ntime, parameters_mean, parameters_dispersion, model_
                                  mean_covariates, dispersion_covariates, wlist_past_mean, wlist_covariates,
                                  wlist_pseudo_obs, wlist_past_dispersion, wlist_covariates_dispersion,
                                  control, copula_obj, n_start)
+    result$mean_family <- mean_family
+    result$dispersion_family <- dispersion_family
     class(result) <- "dglmstarma_sim"
     return(result)
 }
+

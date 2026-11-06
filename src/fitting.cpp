@@ -62,18 +62,16 @@ class optim_model : public Functor
 class nloptr : public FittingObject {
     nlopt_opt opt;
     optim_model to_optimize;
-    arma::uvec * constrain_param;
-    arma::uvec * constrain_param2;
+    arma::uvec constrain_param;
+    arma::uvec constrain_param2;
     public:
     inline static int fcount = 0;
     inline static int gcount = 0;
     inline static int ccount = 0;
     ~nloptr(){
         nlopt_destroy(opt);
-        delete constrain_param;
-        delete constrain_param2;
     }
-    nloptr(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("nloptr", "SLSQP"), to_optimize(ts, model_orders, design, fam, W_ma, model_orders->n_obs_effective)
+    nloptr(const arma::mat &ts, const Orders * model_orders, Design * design, Family * fam, Neighborhood * W_ma, const Rcpp::List control) : FittingObject("nloptr", "SLSQP"), to_optimize(ts, model_orders, design, fam, W_ma, model_orders->n_obs_effective), constrain_param(model_orders->n_param, arma::fill::zeros), constrain_param2(model_orders->n_param, arma::fill::zeros)
     {
         Rcpp::LogicalVector constrained = control["constrained"]; // Default TRUE
         Rcpp::NumericVector constraint_tol = control["constraint_tol"]; // Default 1e-8
@@ -85,45 +83,41 @@ class nloptr : public FittingObject {
         nlopt_set_min_objective(opt, neg_log_likelihood, &to_optimize);
 
         if(fam->only_positive_parameters){
-            double* lb = new double[model_orders->n_param];
-            for(int i = 0; i < model_orders->n_param; i++){
-                lb[i] = 0.0;
-            }
-            nlopt_set_lower_bounds(opt, lb);
+            std::vector<double> lb(model_orders->n_param, 0.0);
+            nlopt_set_lower_bounds(opt, lb.data());
         }
         
-        constrain_param = new arma::uvec(model_orders->n_param);
-        constrain_param2 = new arma::uvec(model_orders->n_param);
         if(model_orders->n_param_ma > 0){
-            constrain_param->subvec(0, model_orders->n_param_intercept - 1).fill(1);
-            constrain_param2->subvec(0, model_orders->n_param_intercept - 1).fill(1);
+            // Check if n_param_ma or n_param_intercept
+            constrain_param.subvec(0, model_orders->n_param_ma - 1).fill(1);
+            constrain_param2.subvec(0, model_orders->n_param_ma - 1).fill(1);
         }
         if(model_orders->n_param_ar > 0)
         {
-            constrain_param->subvec(model_orders->n_param_ma + model_orders->n_param_intercept, model_orders->n_param_ma + model_orders->n_param_intercept + model_orders->n_param_ar - 1).fill(1);
+            constrain_param.subvec(model_orders->n_param_ma + model_orders->n_param_intercept, model_orders->n_param_ma + model_orders->n_param_intercept + model_orders->n_param_ar - 1).fill(1);
         }
 
         if(constrained[0] & (fam->only_positive_parameters || (constrain_method[0] == "sum_of_absolutes"))){
-            nlopt_add_inequality_constraint(opt, constraint_sum_of_absolutes, constrain_param, constraint_tol[0]);
+            nlopt_add_inequality_constraint(opt, constraint_sum_of_absolutes, &constrain_param, constraint_tol[0]);
         } else if(constrained[0] & (constrain_method[0] == "absolute_sum")){
             if(!fam->only_positive_parameters){
-                // All autoregressive and moving average parameters in [−1, 1]
-                // If non-negative parameters are needed, a constraint is already set above
-                double* lb = new double[model_orders->n_param];
-                double* ub = new double[model_orders->n_param];
-                for(int i = 0; i < model_orders->n_param; i++){
-                    lb[i] = constrain_param->at(i) > 0 ? -1.0 : -HUGE_VAL;
-                    ub[i] = constrain_param->at(i) > 0 ? 1.0 : HUGE_VAL;
+                std::vector<double> lb(model_orders->n_param);
+                std::vector<double> ub(model_orders->n_param);
+
+                for(unsigned int i = 0; i < model_orders->n_param; i++){
+                    lb[i] = constrain_param[i] > 0 ? -1.0 : -HUGE_VAL;
+                    ub[i] = constrain_param[i] > 0 ?  1.0 :  HUGE_VAL;
                 }
-                nlopt_set_lower_bounds(opt, lb);
-                nlopt_set_upper_bounds(opt, ub);
+
+                nlopt_set_lower_bounds(opt, lb.data());
+                nlopt_set_upper_bounds(opt, ub.data());
             }
-            nlopt_add_inequality_constraint(opt, constraint_absolute_sum_lower, constrain_param, constraint_tol[0]);
-            nlopt_add_inequality_constraint(opt, constraint_absolute_sum_upper, constrain_param, constraint_tol[0]);
+            nlopt_add_inequality_constraint(opt, constraint_absolute_sum_lower, &constrain_param, constraint_tol[0]);
+            nlopt_add_inequality_constraint(opt, constraint_absolute_sum_upper, &constrain_param, constraint_tol[0]);
         } else if(constrained[0] & (constrain_method[0] == "soft") & (fam->link_name == "softplus" || fam->link_name == "softclipping")){
             // Only available for softplus and softclipping link functions
-            nlopt_add_inequality_constraint(opt, constraint_soft, constrain_param, constraint_tol[0]);
-            nlopt_add_inequality_constraint(opt, constraint_sum_of_absolutes, constrain_param2, constraint_tol[0]);
+            nlopt_add_inequality_constraint(opt, constraint_soft, &constrain_param, constraint_tol[0]);
+            nlopt_add_inequality_constraint(opt, constraint_sum_of_absolutes, &constrain_param2, constraint_tol[0]);
         }
 
         // Set stopping criteria
@@ -142,16 +136,14 @@ class nloptr : public FittingObject {
         gcount = 0;
         ccount = 0;
         to_optimize.n_obs = n_obs;
-        double* start = new double[start_value.n_elem];
-        for(unsigned int i = 0; i < start_value.n_elem; i++){
-            start[i] = start_value(i);
-        }
+        std::vector<double> start(start_value.begin(), start_value.end());
+
         double min_f = 0.0;
         start_vector = arma::vec(start_value);
 
         
         auto start_time = std::chrono::high_resolution_clock::now();
-        nlopt_result res = nlopt_optimize(opt, start, &min_f);
+        nlopt_result res = nlopt_optimize(opt, start.data(), &min_f);
         auto stop_time = std::chrono::high_resolution_clock::now();
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop_time - start_time);
@@ -164,12 +156,7 @@ class nloptr : public FittingObject {
         converged = (res > 0 && res <= 4);
         message = Rcpp::CharacterVector("No message available");
 
-        arma::vec res_vec(start_value.n_elem);
-        for(int i = 0; i < start_value.n_elem; i++)
-        {
-            res_vec(i) = start[i];
-        }
-        delete[] start;
+        arma::vec res_vec(start.data(), start.size());
         return res_vec;
     }
 
@@ -197,12 +184,15 @@ class nloptr : public FittingObject {
     static double constraint_sum_of_absolutes(unsigned int n, const double *x, double *grad, void *func_data){
         // sum_i |x_i| <= 1 (smooth approximation)
         ccount++;
+        /*
         arma::uvec* y = static_cast<arma::uvec*>(func_data);
         arma::uvec temp;
         if(y)
         {
             temp = *y;
         }
+        */
+        const arma::uvec& temp = *static_cast<const arma::uvec*>(func_data);
         if(grad){
             for(int i = 0; i < n; i++)
             {
@@ -220,12 +210,15 @@ class nloptr : public FittingObject {
     static double constraint_absolute_sum_lower(unsigned int n, const double *x, double *grad, void *func_data){
         // sum_i x_i >= -1
         ccount++;
+        /*
         arma::uvec* y = static_cast<arma::uvec*>(func_data);
         arma::uvec temp;
         if(y)
         {
             temp = *y;
         }
+        */
+        const arma::uvec& temp = *static_cast<const arma::uvec*>(func_data);
         double value = 0.0;
         for(int i = 0; i < n; i++)
         {
@@ -243,12 +236,15 @@ class nloptr : public FittingObject {
     static double constraint_absolute_sum_upper(unsigned int n, const double *x, double *grad, void *func_data){
         // sum_i x_i <= 1
         ccount++;
+        /*
         arma::uvec* y = static_cast<arma::uvec*>(func_data);
         arma::uvec temp;
         if(y)
         {
             temp = *y;
         }
+        */
+        const arma::uvec& temp = *static_cast<const arma::uvec*>(func_data);
         double value = 0.0;
         for(int i = 0; i < n; i++)
         {
@@ -267,9 +263,12 @@ class nloptr : public FittingObject {
     static double constraint_soft(unsigned int n, const double *x, double *grad, void *func_data){
         // sum_i max(0, x_i) <= 1  with smooth Approximation
         ccount++;
+        /*
         arma::uvec* y = static_cast<arma::uvec*>(func_data);
         arma::uvec mask;
         if(y) mask = *y;
+        */
+        const arma::uvec& mask = *static_cast<const arma::uvec*>(func_data);
         const double eps = 1e-8; // smoothing parameter
         double value = 0.0;
 

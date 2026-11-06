@@ -3,11 +3,18 @@
 ## New features
 - Added the `plot()` method for spatially constant covariates.
 - Output of `generateW()` is now assigned the class `generateW` for which `print()` and `plot()` methods are provided.
+- Output of `glmstarma.sim()` and `dglmstarma.sim()` is now assigned the classes `glmstarma_sim` and `dglmstarma_sim` with `print()`, `summary()`, and `plot()` and additional accessor methods available.
 
 ## Improvements
 - Updated documentation and help-page titles.
 - Updated the names of the distributions in the `stfamily` class used internally. 
 - Improved output of the `print()` method for spatially constant and time constant covariates.
+- Removed redundant code from the `print.glmstarma` and `print.dglmstarma` functions
+
+## Bug Fixes
+- Fixed a bug in `glmstarma` and `glmstarma.sim`, where for spatial weight matrices for covariates were not initialized correctly.
+- Fixed a bug in `dglmstarma.sim`, which caused a crash when the dispersion model is time-constant.
+- Fixed bug in the function for calculating the log-likelihood of the Gamma family.
 
 
 # glmsSTARMA 1.1.0

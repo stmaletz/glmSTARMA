@@ -3,7 +3,7 @@
     File: family_gamma.cpp
     Purpose: Implementation of Gamma family for different link functions
     Author: Steffen Maletz
-    Last modified: 2026-07-15
+    Last modified: 2026-11-04
 -----------------------------------------------------------------------------
 */
 
@@ -82,7 +82,7 @@ const arma::vec Gamma::random_observation(const arma::vec &expectation, const ar
 const double Gamma::log_likelihood(const double &observation, const double &expectation, const double &dispersion_) const 
 {
   double shap = 1.0 / dispersion_;
-  return R::dgamma(observation, shap, expectation * dispersion, true);
+  return R::dgamma(observation, shap, expectation * dispersion_, true);
 }
 
 

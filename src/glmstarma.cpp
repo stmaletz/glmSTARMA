@@ -3,7 +3,7 @@
     File: glmstarma.cpp
     Purpose: Implementation of the main glmstarma fitting function called from R
     Author: Steffen Maletz
-    Last modified: 2025-12-06
+    Last modified: 2026-11-05
 -----------------------------------------------------------------------------
 */
 
@@ -45,7 +45,7 @@ Rcpp::List glmstarma_cpp(const arma::mat &ts, const Rcpp::List &covariate_list,
 
     Neighborhood * W_ar = Neighborhood::create(wlist_ar, sparsity_threshold, use_sparsity);
     Neighborhood * W_ma = Neighborhood::create_neighbor(orders.n_param_ma, wlist_ma, W_ar, dim, sparsity_threshold, use_sparsity);
-    Neighborhood * W_covariates = Neighborhood::create_neighbor(orders.n_param_ma, wlist_covariates, W_ar, dim, sparsity_threshold, use_sparsity);
+    Neighborhood * W_covariates = Neighborhood::create_neighbor(orders.n_param_cov, wlist_covariates, W_ar, dim, sparsity_threshold, use_sparsity);
 
     // Initialize model
     arma::mat link_init = Model::init_link(init_method_link, orders, ts, fam);

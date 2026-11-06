@@ -19,35 +19,35 @@ using namespace Rcpp;
 Family * Family::create(const Rcpp::List &family, Rcpp::S4& copula_obj)
 {
   std::string distribution = Rcpp::as<std::string>(family["distribution"]);
-  if(distribution == "Poisson")
+  if(distribution == "poisson")
   {
     return Poisson::create(family, copula_obj);
   }
-  else if(distribution == "Negative Binomial")
+  else if(distribution == "negative_binomial")
   {
     return NegativeBinomial::create(family, copula_obj);
   }
-  else if(distribution == "Binomial")
+  else if(distribution == "binomial")
   {
     return Binomial::create(family, copula_obj);
   }
-  else if(distribution == "Quasibinomial")
+  else if(distribution == "quasibinomial")
   {
     return QuasiBinomial::create(family, copula_obj);
   }
-  else if(distribution == "Quasipoisson")
+  else if(distribution == "quasipoisson")
   {
     return QuasiPoisson::create(family, copula_obj);
   }
-  else if(distribution == "Gamma")
+  else if(distribution == "gamma")
   {
     return Gamma::create(family, copula_obj);
   }
-  else if(distribution == "Inverse Gaussian")
+  else if(distribution == "inverse_gaussian")
   {
     return InverseGauss::create(family, copula_obj);
   }
-  else if(distribution == "Gaussian")
+  else if(distribution == "gaussian")
   {
     return Normal::create(family, copula_obj);
   }
@@ -63,35 +63,35 @@ Family * Family::create(const Rcpp::List &family, Rcpp::S4& copula_obj)
 
 Family * Family::create(const Rcpp::List &family){
   std::string distribution = Rcpp::as<std::string>(family["distribution"]);
-  if(distribution == "Poisson")
+  if(distribution == "poisson")
   {
     return Poisson::create(family);
   }
-  else if(distribution == "Negative Binomial")
+  else if(distribution == "negative_binomial")
   {
     return NegativeBinomial::create(family);
   }
-  else if(distribution == "Binomial")
+  else if(distribution == "binomial")
   {
     return Binomial::create(family);
   }
-  else if(distribution == "Quasibinomial")
+  else if(distribution == "quasibinomial")
   {
     return QuasiBinomial::create(family);
   }
-  else if(distribution == "Quasipoisson")
+  else if(distribution == "quasipoisson")
   {
     return QuasiPoisson::create(family);
   }
-  else if(distribution == "Gamma")
+  else if(distribution == "gamma")
   {
     return Gamma::create(family);
   }
-  else if(distribution == "Inverse Gaussian")
+  else if(distribution == "inverse_gaussian")
   {
     return InverseGauss::create(family);
   }
-  else if(distribution == "Gaussian")
+  else if(distribution == "gaussian")
   {
     return Normal::create(family);
   }
